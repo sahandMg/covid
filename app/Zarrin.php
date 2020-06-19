@@ -130,7 +130,9 @@ class Zarrin
 
             } else {
 
-
+                DB::table('transactions')->where('trans_id', $trans->trans_id)->update([
+                    'status' => 'canceled'
+                ]);
                 return redirect()->route('PaymentCanceled', ['transid' => $trans->trans_id]);
             }
         }
