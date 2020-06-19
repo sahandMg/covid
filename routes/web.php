@@ -19,6 +19,6 @@ Route::get('/', function () {
 
 Route::get('@admin/signup','AuthController@adminSignup')->name('adminSignup');
 Route::post('signup','AuthController@post_adminSignup')->name('adminSignup');
-Route::get('zarin/callback','TransactionController@ZarrinCallback');
-Route::get('zarin/failed/{id}','TransactionController@failedPage')->name('PaymentCanceled');
-Route::get('zarin/success/{id}','TransactionController@successPage')->name('PaymentSuccess');
+Route::get('zarrin/callback','TransactionController@ZarrinCallback');
+Route::get('zarrin/failed','TransactionController@failedPage')->name('PaymentCanceled');
+Route::get('zarrin/success','TransactionController@successPage')->name('PaymentSuccess');

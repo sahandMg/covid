@@ -67,7 +67,7 @@ class TransactionController extends Controller
 
     public function failedPage(Request $request){
 
-        $transactionId = $request->id;
+        $transactionId = $request->Authority;
         $trans = Transaction::where('trans_id',$transactionId)->first();
         if(is_null($trans)){
 
@@ -79,7 +79,7 @@ class TransactionController extends Controller
     }
     public function successPage(Request $request){
 
-        $transactionId = $request->id;
+        $transactionId = $request->Authority;
         $trans = Transaction::where('trans_id',$transactionId)->first();
         if(is_null($trans)){
 
