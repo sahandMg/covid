@@ -50,6 +50,7 @@ Route::group(['prefix'=>'device','middleware'=>'token'],function() {
     Route::post('sharing', 'DeviceController@sharing');
 });
 
+// ======== Shopping Routes ========
 Route::group(['prefix'=>'shop','middleware'=>['token','guest:admin']],function (){
 
     Route::post('add','ShopController@addItem');

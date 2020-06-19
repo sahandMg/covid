@@ -62,7 +62,7 @@ class Zarrin
                 $trans->trans_id = 'Zarrin_' . strtoupper(uniqid());
                 $trans->status = 'unpaid';
                 $trans->amount = $total_price;
-                $trans->authority = $result->Authority;
+                $trans->authority = $result['Authority'];
                 $trans->user_id = Auth::guard('user')->id();
                 $trans->admin_id = DB::table('shared_keys')->where('user_id', Auth::guard('user')->id())->first()->admin_id;
                 $trans->save();

@@ -38,12 +38,12 @@ class TransactionController extends Controller
 
         try{
 
-            $zarrin = new ZarrinTest($request->all());
+            $zarrin = new Zarrin($request->all());
             $result = $zarrin->create();
-
             if($result["Status"] != 404){
 // TODO How to redirect user to a webpage in app
-                return redirect('https://www.zarinpal.com/pg/StartPay/' . $result["Authority"]);
+
+                return $resp = ['status'=>200,'body'=>['type'=>'link','message'=> ['https://www.zarinpal.com/pg/StartPay/' . $result["Authority"]]]];
             }else{
 
                 return $resp = ['status'=>500,'body'=>['type'=>'error','message'=> ['err'=>'مشکلی در ارتباط با درگاه پیش آمده است، لطفا دوباره تلاش کنید']]];
