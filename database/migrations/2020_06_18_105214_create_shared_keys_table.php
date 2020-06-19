@@ -14,7 +14,7 @@ class CreateSharedKeysTable extends Migration
     public function up()
     {
         Schema::create('shared_keys', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('admin_id');
             $table->string('key');

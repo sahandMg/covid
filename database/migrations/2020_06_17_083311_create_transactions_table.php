@@ -13,17 +13,18 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
-//        Schema::create('transactions', function (Blueprint $table) {
-//            $table->increments('id');
-//            $table->string('amount')->nullable();
-//            $table->string('trans_id')->nullable();
-//            $table->boolean('completed')->default(0);
-//            $table->text('authority')->nullable();
-//            $table->unsignedInteger('user_id')->nullable();
-//            $table->text('basket');
-//            $table->foreign('admin_id')->references('id')->on('admins');
-//            $table->timestamps();
-//        });
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('amount')->nullable();
+            $table->string('trans_id')->nullable();
+            $table->string('status')->nullable();
+            $table->text('authority')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedInteger('admin_id')->nullable();
+            $table->foreign('admin_id')->references('id')->on('admins');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->timestamps();
+        });
     }
 
     /**

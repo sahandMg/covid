@@ -20,7 +20,7 @@ class DeviceMiddleware
 
         if(!$request->has('unique_id')){
 
-            return response(['status'=>404,'body'=>'Send the device id']);
+            return response(['status'=>404,'body'=>'Send the device unique_id']);
         }
         if(!$request->has('power')){
 
@@ -35,13 +35,13 @@ class DeviceMiddleware
             return response(['status'=>404,'body'=>'Send the device pushed number']);
         }
 
-        $id = $request->unique_id;
-        $device = Device::where('unique_id',$id)->first();
-
-        if(is_null($device)){
-
-            return response('device not found');
-        }
+//        $id = $request->unique_id;
+//        $device = Device::where('unique_id',$id)->first();
+//
+//        if(is_null($device)){
+//
+//            return response('device not found');
+//        }
 
         return $next($request);
     }

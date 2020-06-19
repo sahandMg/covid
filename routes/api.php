@@ -57,3 +57,8 @@ Route::group(['prefix'=>'shop','middleware'=>['token','guest:admin']],function (
     Route::post('remove','ShopController@removeItem');
 });
 Route::post('shop/item/list','ShopController@itemsList')->middleware('token');
+
+Route::group(['prefix'=>'trans','middleware'=>'token'],function (){
+
+    Route::post('create','TransactionController@create');
+});

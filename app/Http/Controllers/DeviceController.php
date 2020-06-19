@@ -29,7 +29,7 @@ class DeviceController extends Controller
 //            'w_ssid'=>'required',
 //            'city'=>'required',
 //            'region'=>'required',
-//            'unique_id'=>'required|unique:devices'
+            'unique_id'=>'required'
         ]);
         if($validator->fails()){
 
@@ -55,6 +55,8 @@ class DeviceController extends Controller
                 if($request->has('password')){
                     $device->update(['password'=>$request->password]);
                 }
+
+                DeviceLog::where('device_id',$device->id)->whereNull('admin_id')->update(['admin_id'=> Auth::guard('admin')->id()]);
             }
             DB::table('admin_device')->insert([
                 'admin_id'=>Auth::guard('admin')->id(),
@@ -162,34 +164,45 @@ class DeviceController extends Controller
      * Data returns : time and date
      * Device Middleware will check the entry data and validate them
      */
-//    TODO Under 20% ?? consider type of the message
+//    TODO Under 20% send Notif. consider type of the message
     public function sendData(Request $request){
 
-            $device = Device::where('unique_id',$request->unique_id)->first();
+        $device = Device::where('unique_id',$request->unique_id)->first();
 
-            if(is_null($device)){
+        if(is_null($device)){
 
-                $device = new Device();
-                $device->unique_id = $request->unique_id;
-//                $device->name = $request->name;
-//                $device->ssid = $request->ssid;
-//                $device->w_ssid = $request->w_ssid;
-//                $device->city = $request->city;
-//                $device->region = $request->region;
-                $device->save();
-            }
-            $d_log = new DeviceLog();
-            $d_log->power = $request->power;
-            $d_log->capacity = $request->capacity;
-            $d_log->push = $request->push;
-            $d_log->device_id = $device->id;
+            $device = new Device();
+            $device->unique_id = $request->unique_id;
+        //                $device->name = $request->name;
+        //                $device->ssid = $request->ssid;
+        //                $device->w_ssid = $request->w_ssid;
+        //                $device->city = $request->city;
+        //                $device->region = $request->region;
+            $device->save();
+        }
+        $d_log = new DeviceLog();
+        $d_log->power = $request->power;
+        $d_log->capacity = $request->capacity;
+        $d_log->push = $request->push;
+        $d_log->device_id = $device->id;
+
+        if(!is_null($device->admin)){
+
             $d_log->admin_id = $device->admin->id;
+        }
             $d_log->save();
             $dateTime = Jalalian::fromCarbon(Carbon::now())->toString();
             $date = explode(' ',$dateTime)[0];
             $time = explode(' ',$dateTime)[1];
-            return ['status'=>200,'date'=>$date,'time'=>$time];
+
+        if($request->power < 20){
+
         }
+        if($request->capacity < 20){
+
+        }
+            return ['status'=>200,'date'=>$date,'time'=>$time];
+    }
 
     //    ============ send device list to related admin and user (if admin key has been registered before)  ============
 
