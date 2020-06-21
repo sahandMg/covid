@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repo;
 use App\ShopItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -233,6 +234,26 @@ class ShopController extends Controller
             $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
 
             return $resp;
+        }
+    }
+
+    //    ============ Getting User Address for cart  ============
+
+    /*
+     * Data Needed : token
+     * Data returns : data
+     *
+     */
+    public function userAddress(Request $request,Repo $repo){
+
+        $user = Auth::guard($repo->getGuard())->user();
+        if(!is_null($user->address)){
+
+            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>[$user->address]]];
+
+        }else{
+
+            return $resp = ['status'=>404,'body'=>['type'=>'data','message'=>['آدرس یافت نشد']]];
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Log;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -36,8 +37,32 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $exception)
     {
+        $log = new Log();
+        $log->message = $exception->getMessage() == null ?
+            'No Error --> '. $exception->getFile().' & Code = '.$exception->getCode().
+            ' & IP --> '.$this->ipFinder():
+            $exception->getMessage().' In --> '.$exception->getFile().
+            ' At line --> '.$exception->getLine().' & IP --> '.$this->ipFinder();
+        $log->save();
         parent::report($exception);
     }
+
+    private function ipFinder(){
+
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            if(isset($_SERVER['REMOTE_ADDR'])){
+
+                $ip = $_SERVER['REMOTE_ADDR'];
+            }else{
+                $ip = 'Unknown';
+            }
+        }
+        return $ip;
+}
 
     /**
      * Render an exception into an HTTP response.

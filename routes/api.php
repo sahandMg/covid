@@ -23,7 +23,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('signup','AuthController@signup');
 Route::post('login','AuthController@login');
 Route::post('logout','AuthController@logout');
+Route::post('password/recover','AuthController@passwordRecover');
 Route::post('user/check','AuthController@userCheck')->middleware('token');
+Route::post('user/update/profile','AuthController@updateProfile')->middleware('token');
+Route::post('user/address','ShopController@userAddress')->middleware('token');
 
 Route::post('test',function(Request $request){
 
@@ -63,3 +66,5 @@ Route::group(['prefix'=>'trans','middleware'=>'token'],function (){
 
     Route::post('create','TransactionController@create');
 });
+
+Route::post('issue','IssueController@create')->middleware('token');

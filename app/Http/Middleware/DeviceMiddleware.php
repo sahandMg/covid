@@ -18,6 +18,11 @@ class DeviceMiddleware
     {
 
 
+        if(!$request->has('pass') || $request->pass != 'raiwan2020'){
+
+            return response(['status'=>404,'body'=>'Fake Device!']);
+        }
+
         if(!$request->has('unique_id')){
 
             return response(['status'=>404,'body'=>'Send the device unique_id']);

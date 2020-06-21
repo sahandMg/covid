@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Admin;
 use App\Device;
 use App\DeviceLog;
+use App\Report;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -88,14 +89,14 @@ class DeviceController extends Controller
 
                     $device->update(['name'=>$request->name]);
                 }
-                if($request->has('ssid')){
-
-                    $device->update(['ssid'=>$request->ssid]);
-                }
-                if($request->has('w_ssid')){
-
-                    $device->update(['w_ssid'=>$request->w_ssid]);
-                }
+//                if($request->has('ssid')){
+//
+//                    $device->update(['ssid'=>$request->ssid]);
+//                }
+//                if($request->has('w_ssid')){
+//
+//                    $device->update(['w_ssid'=>$request->w_ssid]);
+//                }
                 if($request->has('city')){
 
                     $device->update(['city'=>$request->city]);
@@ -210,7 +211,7 @@ class DeviceController extends Controller
      * Data Needed : token
      * Data returns : devices_list
      */
-    // TODO Naqesa
+
     public function get_Devices(Request $request){
 
         try{
@@ -227,6 +228,11 @@ class DeviceController extends Controller
                 $devices = DB::table('devices')
                     ->join('device_logs', 'devices.id', '=', 'device_logs.device_id')
                     ->where('devices.admin_id',$admin_id)->orderBy('device_logs.id','desc')->select('d_name','power','capacity','region','city')->get();
+                if(count($devices) == 0){
+
+                    $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'هیچ دستگاهی ثبت نشده است']]];
+                    return $resp;
+                }
                 $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$devices]];
                 return $resp;
             }
@@ -311,8 +317,118 @@ class DeviceController extends Controller
      *
      */
 
-//     TODO !!!!!!!!!!!!  Naqese !!!!!!!!!!
+
     public function liquidChart(Request $request){
+
+        $validator = Validator::make($request->all(),[
+            'filter_name'=>'required',
+            'unique_id'=>'required',
+        ]);
+        if($validator->fails()){
+
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$validator->errors()]];
+            return $resp;
+        }
+        try{
+
+            $device = Device::where('unique_id',$request->unique_id)->first();
+            if(is_null($device)){
+
+                return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['دستگاهی یافت نشد']]];
+            }
+            $deviceReports = DB::table('reports')->where('device_id',$device->id)->orderBy('created_at','desc')->select('id','total_pushed','created_at')->get();
+
+            if(count($deviceReports) == 0){
+
+                return $resp = ['status'=>200,'body'=>['type'=>'error','message'=>['اطلاعاتی برای این دستگاه وجود ندارد']]];
+            }
+            if($request->filter_name == 'day'){
+
+                $result = [];
+
+                foreach ($deviceReports as $deviceReport){
+
+
+                    array_push($result,['total_pushed'=>$deviceReport->total_pushed,'date'=> Jalalian::fromCarbon(Carbon::parse($deviceReport->created_at))->format('%A %d %B %y') ]);
+                }
+
+                return $result;
+
+            }elseif ($request->filter_name == 'week'){
+
+                $total_push = 0;
+                $endDate = Carbon::parse($deviceReports[count($deviceReports)-1]->created_at);
+                $today = Carbon::now();
+                $today2 = Carbon::now();
+                $result = [];
+                $i = 1;
+                while ($today->greaterThanOrEqualTo($endDate)){
+
+                    foreach ($deviceReports as $deviceReport){
+
+                        $queryDate = Carbon::parse($deviceReport->created_at);
+                        $today = Carbon::now();
+
+                        if($queryDate->greaterThanOrEqualTo($today->subDays(7*$i)) && $queryDate->lessThanOrEqualTo(Carbon::now()->subDays(7*($i-1)))){
+
+                            $total_push = $total_push + $deviceReport->total_pushed;
+
+                        }else{
+
+                        }
+                    }
+                    array_push($result,['total_pushed'=>$total_push,'date'=>Jalalian::fromCarbon($today2)->format('%d %B %y').'*'.Jalalian::fromCarbon($today2)->subDays(7)->format('%d %B %y')]);
+                    $total_push = 0;
+                    $i += 1;
+                }
+
+                return $result;
+            }
+
+            elseif ($request->filter_name == 'month'){
+
+                $total_push = 0;
+                $endDate = Carbon::parse($deviceReports[count($deviceReports)-1]->created_at);
+                $today = Carbon::now();
+                $today2 = Carbon::now();
+                $result = [];
+                $i = 1;
+                while ($today2->greaterThanOrEqualTo($endDate)){
+
+                    foreach ($deviceReports as $deviceReport){
+
+                        $queryDate = Carbon::parse($deviceReport->created_at);
+                        $today = Carbon::now();
+
+                        if($queryDate->greaterThanOrEqualTo($queryDate->firstOfMonth()) && $queryDate->lessThanOrEqualTo(Carbon::now()->subMonths($i-1))){
+
+                            $total_push = $total_push + $deviceReport->total_pushed;
+
+                        }else{
+
+                        }
+                    }
+                    array_push($result,['total_pushed'=>$total_push,'date'=>$today2.'*'.$today2->subMonths(1)]);
+
+                    $total_push = 0;
+
+                    $i += 1;
+                }
+                return $result;
+            }
+//            return $deviceReports;
+
+        }catch (\Exception $exception){
+
+            return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage().' '.$exception->getLine()]];
+        }
+
+
+    }
+
+
+//     TODO !!!!!!!!!!!!  Naqese !!!!!!!!!!
+    public function liquidChart2(Request $request){
 
 
         $validator = Validator::make($request->all(),[
@@ -398,4 +514,16 @@ class DeviceController extends Controller
         }
 //        return array_values(array_unique($temp));
     }
+
+    //    ============ Getting Transactions List  ============
+
+    /*
+     * Data Needed : token
+     * Data returns : data
+     */
+//    TODO How makes Transactions ???
+    public function transList(){
+
+    }
+
 }

@@ -82,7 +82,7 @@ return [
         'string' => 'The :attribute may not be greater than :max characters.',
         'array' => 'The :attribute may not have more than :max items.',
     ],
-    'mimes' => 'باشد :attribute  باید به یکی از فرمت‌های :values.',
+    'mimes' => 'باشد :attribute :values باید به یکی از فرمت های',
     'mimetypes' => 'The :attribute must be a file of type: :values.',
     'min' => [
         'numeric' => 'The :attribute must be at least :min.',
@@ -150,6 +150,7 @@ return [
         'name'=>'نام',
         'p_name'=>'نام محصول',
         'address'=>'آدرس',
+        'title'=>'موضوع',
         'img'=>'عکس',
         'price'=>'قیمت',
         'desc'=>'توضیحات',

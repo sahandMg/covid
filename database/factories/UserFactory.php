@@ -40,3 +40,12 @@ $factory->define(\App\Device::class, function (Faker $faker) {
         'created_at'=> Carbon::create(rand(2015,2020), rand(1,12), rand(1,29))
     ];
 });
+
+$factory->define(\App\Report::class, function (Faker $faker) {
+    return [
+        'device_id' => rand(2,36),
+        'admin_id'=> 3,
+        'total_pushed'=> rand(1,100),
+        'created_at'=> Carbon::create(rand(2015,2020), rand(1,12), rand(1,29))
+    ];
+});
