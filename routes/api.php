@@ -27,6 +27,7 @@ Route::post('password/recover','AuthController@passwordRecover');
 Route::post('user/check','AuthController@userCheck')->middleware('token');
 Route::post('user/update/profile','AuthController@updateProfile')->middleware('token');
 Route::post('user/address','ShopController@userAddress')->middleware('token');
+Route::post('switch-account','AuthController@switchAccountType')->middleware('token');
 
 Route::post('test',function(Request $request){
 
@@ -34,9 +35,10 @@ Route::post('test',function(Request $request){
 });
 // ======== Device Manager Routes ========
 
+Route::post('device/add','DeviceController@add')->middleware('token');
+
 Route::group(['prefix'=>'device','middleware'=>['token','guest:admin']],function(){
 
-    Route::post('add','DeviceController@add');
     Route::post('update','DeviceController@update');
     Route::post('remove','DeviceController@remove');
 });

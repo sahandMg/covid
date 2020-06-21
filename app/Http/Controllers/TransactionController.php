@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repo;
 use App\Transaction;
 use App\Zarrin;
 use App\ZarrinTest;
@@ -23,12 +24,13 @@ class TransactionController extends Controller
      * Data returns : data
      *
      */
-    public function create(Request $request){
+    public function create(Request $request,Repo $repo){
 
         $validator = Validator::make($request->all(),[
 
             'cart'=>'required',
             'address'=>'required',
+            'phone'=>'required',
         ]);
         if($validator->fails()){
 
@@ -39,7 +41,7 @@ class TransactionController extends Controller
         try{
 
             $zarrin = new Zarrin($request->all());
-            $result = $zarrin->create();
+            $result = $zarrin->create($repo);
             if($result["Status"] != 404){
 // TODO How to redirect user to a webpage in app
 

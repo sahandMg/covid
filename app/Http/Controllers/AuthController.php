@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Admin;
 use App\Master;
 use App\Repo;
+use App\SharedKey;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -82,7 +83,7 @@ class AuthController extends Controller
             'name'=>'required',
             'email'=>'required|email|unique:users|unique:admins',
             'password'=>'required|confirmed|min:6',
-            'role'=>'required'
+//            'role'=>'required'
 //            'phone'=>'required|numeric'
         ]);
         if($validator->fails()){
@@ -97,28 +98,46 @@ class AuthController extends Controller
             $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$validator->errors()]];
             return $resp;
         }
-        if($request->role == '0'){
 
-            try{
-                $user = new User();
-                $user->name = $request->name;
-                $user->password = Hash::make($request->password);
-                $user->email = $request->email;
+        try{
+            $user = new User();
+            $user->name = $request->name;
+            $user->password = Hash::make($request->password);
+            $user->email = $request->email;
 //            $user->phone = $repo->convertp2e($request->phone);
-                $user->save();
-                $token = JWTAuth::fromUser($user);
-                $user->update(['token'=>$token]);
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'کاربر با موفقیت ثبت شد']]];
-            }catch (\Exception $exception){
+            $user->save();
+            $token = JWTAuth::fromUser($user);
+            $user->update(['token'=>$token]);
+            $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'کاربر با موفقیت ثبت شد']]];
+        }catch (\Exception $exception){
 
-                $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
-            }
-
-            return $resp;
-        }else{
-
-            return $this->post_adminSignup($request);
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
         }
+
+        return $resp;
+
+//        if($request->role == '0'){
+
+//            try{
+//                $user = new User();
+//                $user->name = $request->name;
+//                $user->password = Hash::make($request->password);
+//                $user->email = $request->email;
+////            $user->phone = $repo->convertp2e($request->phone);
+//                $user->save();
+//                $token = JWTAuth::fromUser($user);
+//                $user->update(['token'=>$token]);
+//                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'کاربر با موفقیت ثبت شد']]];
+//            }catch (\Exception $exception){
+//
+//                $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
+//            }
+//
+//            return $resp;
+//        }else{
+//
+//            return $this->post_adminSignup($request);
+//        }
 
     }
 
@@ -180,17 +199,17 @@ class AuthController extends Controller
 
                 $user = User::where('email',$request->email)->first();
                 $user->update(['token'=>$token]);
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token]]];
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'user','code'=>0]]];
             }elseif($token = Auth::guard('admin')->attempt(['email'=>$request->email,'password'=>$request->password])){
                 $user = Admin::where('email',$request->email)->first();
                 $user->update(['token'=>$token]);
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token]]];
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'admin','code'=> $user->key]]];
             }
             elseif($token = Auth::guard('master')->attempt(['email'=>$request->email,'password'=>$request->password])){
 
                 $user = Master::where('email',$request->email)->first();
                 $user->update(['token'=>$token]);
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token]]];
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'master','code'=>0]]];
             }
             else{
                 $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'ایمیل و یا کلمه عبور نادرست است']]];
@@ -276,6 +295,35 @@ class AuthController extends Controller
 
     }
 
+    public function switchAccountType(Repo $repo){
+
+
+        if($repo->getGuard() == 'user'){
+            $sharedUser = SharedKey::where('user_id',Auth::guard('user')->id())->first();
+            if(is_null($sharedUser)){
+
+                $user = Auth::guard('user')->user();
+                $admin = new Admin();
+                $admin->name = $user->name;
+                $admin->password = $user->password;
+                $admin->email = $user->email;
+                $admin->key = strtoupper(uniqid());
+                $admin->save();
+                $token = JWTAuth::fromUser($admin);
+                $admin->update(['token'=>$token]);
+                $user->update(['email'=>Str::random().'@yy.com']);
+                $token = Auth::guard('admin')->login($admin);
+                return $token;
+            }else{
+                return 400;
+            }
+
+//            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['succ'=>'سطح دسترسی ارتقا یافت','token'=>$token]]];
+        }else{
+//            return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['امکان تغییر سطح دسترسی وجود ندارد']]];
+        }
+
+    }
     public function userCheck(){
 
         return  ['status'=>200,'body'=>['type'=>'success','message'=> ['scc'=>'']]];

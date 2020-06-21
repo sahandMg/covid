@@ -40,7 +40,7 @@ class ShopController extends Controller
             $name = time().'.'.$request->file('img')->getClientOriginalExtension();
             $request->file('img')->move(public_path('images'),$name);
             $shop->img = $name;
-            $shop->admin_id = Auth::guard('admin')->id();
+//            $shop->admin_id = Auth::guard('admin')->id();
             $shop->save();
         }catch (\Exception $exception){
 
@@ -174,7 +174,8 @@ class ShopController extends Controller
         }
     }
 
-    //    ============ Removing an Item  ============
+
+    //    ============ Return Shop Items list to user & admin  ============
 
     /*
      * Data Needed : p_name,token
@@ -196,36 +197,45 @@ class ShopController extends Controller
 
         try{
 
-            if(Auth::guard('admin')->check()){
+            $items = ShopItem::select('p_name','price','desc','img')->get();
+            if (count($items) == 0){
 
-                $items = ShopItem::where('admin_id',Auth::guard('admin')->id())->select('p_name','price','desc','img')->get();
-                if (count($items) == 0){
+                return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'محصولی برای نمایش وجود ندارد']]];
+            }else{
 
-                    return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'محصولی برای نمایش وجود ندارد']]];
-                }else{
-
-                    return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$items]];
-                }
-            }elseif (Auth::guard('user')->check()){
-
-                $shared_user = DB::table('shared_keys')->where('user_id',Auth::guard('user')->id())->first();
-                if(is_null($shared_user)){
-// TODO ???????????
-                    return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'دسترسی به محصولات محدود شده است ']]];
-
-                }else{
-                    $admin_id = $shared_user->admin_id;
-                    $items = ShopItem::where('admin_id',$admin_id)->select('p_name','price','desc','img')->get();
-                    if (count($items) == 0){
-
-                        return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'محصولی برای نمایش وجود ندارد']]];
-                    }else{
-
-                        return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$items]];
-                    }
-
-                }
+                return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$items]];
             }
+
+//            if(Auth::guard('admin')->check()){
+//
+//                $items = ShopItem::where('admin_id',Auth::guard('admin')->id())->select('p_name','price','desc','img')->get();
+//                if (count($items) == 0){
+//
+//                    return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'محصولی برای نمایش وجود ندارد']]];
+//                }else{
+//
+//                    return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$items]];
+//                }
+//            }elseif (Auth::guard('user')->check()){
+//
+//                $shared_user = DB::table('shared_keys')->where('user_id',Auth::guard('user')->id())->first();
+//                if(is_null($shared_user)){
+//// TODO ???????????
+//                    return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'دسترسی به محصولات محدود شده است ']]];
+//
+//                }else{
+//                    $admin_id = $shared_user->admin_id;
+//                    $items = ShopItem::where('admin_id',$admin_id)->select('p_name','price','desc','img')->get();
+//                    if (count($items) == 0){
+//
+//                        return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'محصولی برای نمایش وجود ندارد']]];
+//                    }else{
+//
+//                        return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$items]];
+//                    }
+//
+//                }
+//            }
 
 
 
@@ -254,6 +264,27 @@ class ShopController extends Controller
         }else{
 
             return $resp = ['status'=>404,'body'=>['type'=>'data','message'=>['آدرس یافت نشد']]];
+        }
+    }
+
+
+    //    ============ Return Previous Shopping list  ============
+
+    /*
+     * Data Needed : token
+     * Data returns : data
+     *
+     */
+    public function shoppingList(Request $request){
+
+        try{
+
+
+        }catch (\Exception $exception){
+
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
+
+            return $resp;
         }
     }
 }

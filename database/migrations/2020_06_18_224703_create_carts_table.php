@@ -23,6 +23,7 @@ class CreateCartsTable extends Migration
             $table->string('amount');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
+            $table->boolean('completed')->default(0);
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('trans_id')->references('id')->on('transactions');
             $table->timestamps();

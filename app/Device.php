@@ -12,4 +12,9 @@ class Device extends Model
 
         return $this->belongsTo(Admin::class);
     }
+
+    public function deviceLogs(){
+
+        return $this->hasMany(DeviceLog::class);
+    }
 }

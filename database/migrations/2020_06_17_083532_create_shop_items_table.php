@@ -19,8 +19,8 @@ class CreateShopItemsTable extends Migration
             $table->string('price');
             $table->text('desc');
             $table->string('img');
-            $table->unsignedInteger('admin_id');
-            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
+//            $table->unsignedInteger('admin_id');
+//            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
             $table->timestamps();
         });
     }

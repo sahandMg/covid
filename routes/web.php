@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,3 +23,9 @@ Route::post('signup','AuthController@post_adminSignup')->name('adminSignup');
 Route::get('zarrin/callback','TransactionController@ZarrinCallback');
 Route::get('zarrin/failed','TransactionController@failedPage')->name('PaymentCanceled');
 Route::get('zarrin/success','TransactionController@successPage')->name('PaymentSuccess');
+Route::get('invoice',function(){
+
+//    $cartData = DB::table('carts')->join('carts', 'carts.trans_id', '=', 'transactions.id')->get();
+    return view('email.issueMail');
+//    return view('email.invoiceMail');
+});

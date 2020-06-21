@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Admin;
 use App\Device;
 use App\DeviceLog;
+use App\Repo;
 use App\Report;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class DeviceController extends Controller
      * Data Needed : name,ssid,w_ssid,region,city,unique_id,token
      * Data returns : name,token,message
      */
-    public function add(Request $request){
+    public function add(Request $request,AuthController $authController,Repo $repo){
 
         $validator = Validator::make($request->all(),[
 //            'd_name'=>'required',
@@ -46,7 +47,11 @@ class DeviceController extends Controller
                 $resp = ['status'=>404,'body'=>['type'=>'data','message'=>['err'=>'دستگاه یافت نشد']]];
                 return $resp;
             }else{
+                $token = $authController->switchAccountType($repo);
+                if($token == 400){
 
+                    return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['دسترسی به این قسمت محدود شده است']]];
+                }
                 $device->update(['d_name'=>$request->d_name]);
                 $device->update(['ssid'=>$request->ssid]);
                 $device->update(['w_ssid'=>$request->w_ssid]);
@@ -64,7 +69,7 @@ class DeviceController extends Controller
                 'device_id'=>$device->id,
                 'created_at'=>Carbon::now()
             ]);
-            $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'دستگاه با موفقیت ثبت شد']]];
+            $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'دستگاه با موفقیت ثبت شد','token'=>$token]]];
         }catch (\Exception $exception){
 
             $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
@@ -85,9 +90,9 @@ class DeviceController extends Controller
                 $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err' =>'دستگاه مورد نظر یافت نشد']]];
                 return $resp;
             }else{
-                if($request->has('name')){
+                if($request->has('d_name')){
 
-                    $device->update(['name'=>$request->name]);
+                    $device->update(['d_name'=>$request->d_name]);
                 }
 //                if($request->has('ssid')){
 //
@@ -179,6 +184,7 @@ class DeviceController extends Controller
         //                $device->w_ssid = $request->w_ssid;
         //                $device->city = $request->city;
         //                $device->region = $request->region;
+            $device->created_at = Carbon::now();
             $device->save();
         }
         $d_log = new DeviceLog();
@@ -237,16 +243,29 @@ class DeviceController extends Controller
                 return $resp;
             }
             if(Auth::guard('admin')->check()){
+
                 $admin = Auth::guard('admin')->user();
-                $devices = DB::table('devices')
-                    ->join('device_logs', 'devices.id', '=', 'device_logs.device_id')
-                    ->where('devices.admin_id',$admin->id)->orderBy('device_logs.id','desc')->select('d_name','power','capacity','region','city')->get();
-                if(count($devices) == 0){
+//                $devices = DB::table('devices')
+//                    ->join('device_logs',function($query){
+//                        $query->on('devices.id', '=', 'device_logs.device_id');
+//                    })
+//                    ->where('devices.admin_id',$admin->id)->orderBy('device_logs.id','desc')->select('d_name','power','capacity','region','city')->get();
+                $adminDevices = Device::where('admin_id',$admin->id)->get();
+                $resp = [];
+                foreach ($adminDevices as $adminDevice){
+
+                    $last = $adminDevice->deviceLogs->first();
+                    array_push($resp,['d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
+                }
+
+
+
+                if(is_null($adminDevices)){
 
                     $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'هیچ دستگاهی ثبت نشده است']]];
                     return $resp;
                 }
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$devices]];
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp]];
                 return $resp;
             }
         }catch (\Exception $exception){

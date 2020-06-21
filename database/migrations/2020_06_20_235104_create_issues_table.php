@@ -16,7 +16,7 @@ class CreateIssuesTable extends Migration
         Schema::create('issues', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('img');
+            $table->string('img')->nullable();
             $table->text('desc');
             $table->unsignedInteger('admin_id')->nullable();
             $table->unsignedInteger('user_id')->nullable();

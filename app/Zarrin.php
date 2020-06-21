@@ -23,7 +23,7 @@ class Zarrin
     {
         $this->request = $request;
     }
-    public function create(){
+    public function create($repo){
 
 
         $cart = $this->request['cart'];
@@ -63,8 +63,15 @@ class Zarrin
                 $trans->status = 'unpaid';
                 $trans->amount = $total_price;
                 $trans->authority = $result['Authority'];
-                $trans->user_id = Auth::guard('user')->id();
-                $trans->admin_id = DB::table('shared_keys')->where('user_id', Auth::guard('user')->id())->first()->admin_id;
+                if(Auth::guard('user')->check()){
+
+                    $trans->user_id = Auth::guard('user')->id();
+
+                }elseif(Auth::guard('admin')->check()){
+
+                    $trans->admin_id = Auth::guard('admin')->id();
+                }
+//                $trans->admin_id = DB::table('shared_keys')->where('user_id', Auth::guard('user')->id())->first()->admin_id;
                 $trans->save();
 
                 $basket = new Cart();
@@ -72,9 +79,16 @@ class Zarrin
                 $basket->amount = $total_price;
                 $basket->code = uniqid();
                 $basket->address = $this->request['address'];
-                $basket->user_id = Auth::guard('user')->id();
+                if(Auth::guard('user')->check()){
+
+                    $basket->user_id = Auth::guard('user')->id();
+
+                }elseif(Auth::guard('admin')->check()){
+
+                    $basket->admin_id = Auth::guard('admin')->id();
+                }
                 $basket->trans_id = $trans->id;
-                $basket->email = Auth::guard('user')->user()->email;
+                $basket->email = Auth::guard($repo->getGuard())->user()->email;
 
                 if (isset($this->request['email'])) {
 
@@ -142,6 +156,10 @@ class Zarrin
 
         DB::table('transactions')->where('trans_id', $trans->trans_id)->update([
             'status' => 'paid'
+        ]);
+
+        DB::table('carts')->where('trans_id', $trans->id)->update([
+            'completed' => 1
         ]);
 
 //        TODO Send an Email To user
