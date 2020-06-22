@@ -286,7 +286,7 @@ class AuthController extends Controller
                     return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['کلمه عبور فعلی نادرست است']]];
                 }
             }
-            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$user]];
+            return 200;
 
         }catch (\Exception $exception){
 
@@ -351,7 +351,12 @@ class AuthController extends Controller
 
         $user = Auth::guard($repo->getGuard())->user();
 
-        $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone];
+        if(Auth::guard('admin')->check()){
+
+            $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone,'key'=>$user->key];
+        }else{
+            $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone];
+        }
 
         return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$data]];
     }
