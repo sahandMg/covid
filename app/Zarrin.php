@@ -72,7 +72,7 @@ class Zarrin
                 $trans->save();
 
                 $basket = new Cart();
-                $basket->cart = serialize($this->request);
+                $basket->cart = serialize($this->request['cart']);
                 $basket->amount = $total_price;
                 $basket->code = uniqid();
                 $basket->address = $this->request['address'];

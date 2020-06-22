@@ -39,7 +39,7 @@ Route::get('invoice',function(){
     }
     $data = ['cart'=>$cart,'trans'=>$trans,'user'=>$user];
 
-//    return view('email.invoiceMail',compact('cart','trans','user'));
+    return view('email.invoiceMail',compact('cart','trans','user'));
     Mail::send('email.invoiceMail',$data,function($message)use($cart){
 
         $message->to($cart->email);

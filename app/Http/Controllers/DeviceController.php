@@ -202,7 +202,7 @@ class DeviceController extends Controller
             $time = explode(' ',$dateTime)[1];
 
         if($request->power < 20){
-
+// TODO Send Notification to app
         }
         if($request->capacity < 20){
 
@@ -310,7 +310,7 @@ class DeviceController extends Controller
                 $registered_user = DB::table('shared_keys')->where('user_id',Auth::guard('user')->id())->first();
                 if(!is_null($registered_user)){
 
-                    return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>'شما پیش از این، یک کد ادمین ثبت کرده‌اید']]];
+                    return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>'شما پیش از این، یک کد ادمین ثبت کرده اید']]];
                 }
 
                 if(Auth::guard('admin')->check()){
