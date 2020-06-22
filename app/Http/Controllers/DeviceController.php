@@ -230,15 +230,21 @@ class DeviceController extends Controller
                     return $resp;
                 }
                 $admin_id = $admin_record->admin_id;
-                $devices = DB::table('devices')
-                    ->join('device_logs', 'devices.id', '=', 'device_logs.device_id')
-                    ->where('devices.admin_id',$admin_id)->orderBy('device_logs.id','desc')->select('d_name','power','capacity','region','city')->get();
-                if(count($devices) == 0){
+
+                $adminDevices = Device::where('admin_id',$admin_id)->get();
+                $resp = [];
+                foreach ($adminDevices as $adminDevice){
+
+                    $last = $adminDevice->deviceLogs->first();
+                    array_push($resp,['d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
+                }
+
+                if(is_null($adminDevices)){
 
                     $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'هیچ دستگاهی ثبت نشده است']]];
                     return $resp;
                 }
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$devices]];
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp]];
                 return $resp;
             }
             if(Auth::guard('admin')->check()){
