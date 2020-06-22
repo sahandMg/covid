@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cart;
 use App\Repo;
 use App\ShopItem;
 use Illuminate\Http\Request;
@@ -279,6 +280,28 @@ class ShopController extends Controller
 
         try{
 
+            if(Auth::guard('admin')->check()){
+
+                $carts = Cart::where('admin_id',Auth::guard('admin')->id())->where('completed',1)->get();
+
+            }else{
+
+                $carts = Cart::where('user_id',Auth::guard('user')->id())->where('completed',1)->get();
+
+            }
+
+            if(count($carts) != 0){
+
+                foreach ($carts as $cart){
+
+                    $cart->cart = unserialize($cart->cart);
+                }
+
+                return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$carts]];
+            }else{
+
+                return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['لیست خرید وجود ندارد']]];
+            }
 
         }catch (\Exception $exception){
 

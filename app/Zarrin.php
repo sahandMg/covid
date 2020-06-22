@@ -1,8 +1,5 @@
 <?php
 namespace App;
-
-
-
 use App\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -71,7 +68,7 @@ class Zarrin
 
                     $trans->admin_id = Auth::guard('admin')->id();
                 }
-//                $trans->admin_id = DB::table('shared_keys')->where('user_id', Auth::guard('user')->id())->first()->admin_id;
+
                 $trans->save();
 
                 $basket = new Cart();
@@ -108,6 +105,7 @@ class Zarrin
     }
 
     public function verify(){
+
         $transactionId = $this->request['Authority'];
         $trans = Transaction::where('authority',$transactionId)->first();
         if(is_null($trans)){
@@ -154,15 +152,34 @@ class Zarrin
     private function ZarrinPaymentConfirm($trans)
     {
 
-        DB::table('transactions')->where('trans_id', $trans->trans_id)->update([
+        DB::table('transactions')->where('trans_id', $trans->id)->update([
             'status' => 'paid'
         ]);
 
-        DB::table('carts')->where('trans_id', $trans->id)->update([
-            'completed' => 1
-        ]);
+        $cart = Cart::where('trans_id',$trans->id)->first();
+        $cart->update(['completed' => 1]);
 
-//        TODO Send an Email To user
+        $cart->cart = unserialize($cart->cart);
+        if(!is_null($cart->user_id)){
+            $user = $cart->user;
+        }else{
+            $user = $cart->admin;
+        }
+        $data = ['cart'=>$cart,'trans'=>$trans,'user'=>$user];
+
+        Mail::send('email.invoiceMail',$data,function($message)use($cart){
+
+            $message->to($cart->email);
+            $message->from(env('NoReply'));
+            $message->subject('فاکتور خرید');
+        });
+
+        Mail::send('email.invoiceMail',$data,function($message)use($cart){
+//
+            $message->to(env('SAILS_MAIL'));
+            $message->from(env('NoReply'));
+            $message->subject('فاکتور خرید');
+        });
 
 
     }

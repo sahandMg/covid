@@ -16,6 +16,7 @@ class CreateCartsTable extends Migration
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedInteger('admin_id')->nullable();
             $table->unsignedInteger('trans_id')->nullable();
             $table->text('cart');
             $table->string('code');
@@ -25,6 +26,7 @@ class CreateCartsTable extends Migration
             $table->string('phone')->nullable();
             $table->boolean('completed')->default(0);
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('admin_id')->references('id')->on('admins');
             $table->foreign('trans_id')->references('id')->on('transactions');
             $table->timestamps();
         });

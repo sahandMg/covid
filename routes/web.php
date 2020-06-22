@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,7 +26,32 @@ Route::get('zarrin/failed','TransactionController@failedPage')->name('PaymentCan
 Route::get('zarrin/success','TransactionController@successPage')->name('PaymentSuccess');
 Route::get('invoice',function(){
 
-//    $cartData = DB::table('carts')->join('carts', 'carts.trans_id', '=', 'transactions.id')->get();
-    return view('email.issueMail');
-//    return view('email.invoiceMail');
+
+    $trans = \App\Transaction::where('id',3)->first();
+    $cart = \App\Cart::where('trans_id',3)->first();
+
+    $cart->update(['completed' => 1]);
+    $cart->cart = unserialize($cart->cart);
+    if(!is_null($cart->user_id)){
+        $user = $cart->user;
+    }else{
+        $user = $cart->admin;
+    }
+    $data = ['cart'=>$cart,'trans'=>$trans,'user'=>$user];
+
+//    return view('email.invoiceMail',compact('cart','trans','user'));
+    Mail::send('email.invoiceMail',$data,function($message)use($cart){
+
+        $message->to($cart->email);
+        $message->from(env('NoReply'));
+        $message->subject('فاکتور خرید');
+    });
+
+    Mail::send('email.invoiceMail',$data,function($message)use($cart){
+//
+//        $message->to(env('SAILS_MAIL'));
+//        $message->from(env('NoReply'));
+//        $message->subject('فاکتور خرید');
+    });
+
 });

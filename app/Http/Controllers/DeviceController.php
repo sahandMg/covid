@@ -39,7 +39,6 @@ class DeviceController extends Controller
             return $resp;
         }
 
-
         try{
 
             $device = Device::where('unique_id',$request->unique_id)->first();
