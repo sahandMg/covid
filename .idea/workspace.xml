@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b64c50db-1875-4fa6-8c48-a99feb63239b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/DeviceController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/DeviceController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Zarrin.php" afterPath="$PROJECT_DIR$/app/Zarrin.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/web.php" afterPath="$PROJECT_DIR$/routes/web.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/email/invoiceMail.blade.php" afterPath="$PROJECT_DIR$/resources/views/email/invoiceMail.blade.php" />
     </list>
     <ignored path="covid.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,8 +27,8 @@
       <file leaf-file-name="Zarrin.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Zarrin.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1019">
-              <caret line="74" column="56" selection-start-line="74" selection-start-column="56" selection-end-line="74" selection-end-column="56" />
+            <state relative-caret-position="263">
+              <caret line="167" column="30" selection-start-line="167" selection-start-column="25" selection-end-line="167" selection-end-column="30" />
               <folding>
                 <element signature="e#21#41#0#PHP" expanded="true" />
               </folding>
@@ -77,11 +75,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="api.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="api.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/api.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="67" column="27" selection-start-line="67" selection-start-column="27" selection-end-line="67" selection-end-column="27" />
+            <state relative-caret-position="266">
+              <caret line="67" column="30" selection-start-line="67" selection-start-column="25" selection-end-line="67" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -97,11 +95,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="invoiceMail.blade.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="invoiceMail.blade.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/views/email/invoiceMail.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="463">
-              <caret line="130" column="25" selection-start-line="130" selection-start-column="25" selection-end-line="130" selection-end-column="25" />
+            <state relative-caret-position="268">
+              <caret line="175" column="54" selection-start-line="175" selection-start-column="54" selection-end-line="175" selection-end-column="54" />
               <folding>
                 <element signature="n#style#0;n#td#0;n#tr#2;n#table#0;n#div#4;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -112,8 +110,8 @@
       <file leaf-file-name="TransactionController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/TransactionController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="103">
-              <caret line="43" column="34" selection-start-line="43" selection-start-column="34" selection-end-line="43" selection-end-column="34" />
+            <state relative-caret-position="253">
+              <caret line="43" column="33" selection-start-line="43" selection-start-column="33" selection-end-line="43" selection-end-column="33" />
               <folding>
                 <element signature="e#40#53#0#PHP" expanded="true" />
               </folding>
@@ -175,19 +173,19 @@
         <option value="$PROJECT_DIR$/database/migrations/2020_06_20_235104_create_issues_table.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/IssueController.php" />
         <option value="$PROJECT_DIR$/resources/views/email/issueMail.blade.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/TransactionController.php" />
         <option value="$PROJECT_DIR$/database/migrations/2020_06_17_083532_create_shop_items_table.php" />
         <option value="$PROJECT_DIR$/app/Device.php" />
         <option value="$PROJECT_DIR$/database/migrations/2020_06_18_224703_create_carts_table.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/ShopController.php" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/app/Cart.php" />
-        <option value="$PROJECT_DIR$/resources/views/email/invoiceMail.blade.php" />
         <option value="$PROJECT_DIR$/routes/api.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/AuthController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/DeviceController.php" />
         <option value="$PROJECT_DIR$/app/Zarrin.php" />
         <option value="$PROJECT_DIR$/routes/web.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/TransactionController.php" />
+        <option value="$PROJECT_DIR$/resources/views/email/invoiceMail.blade.php" />
       </list>
     </option>
   </component>
@@ -614,12 +612,12 @@
       <updated>1592307259072</updated>
       <workItem from="1592307263783" duration="102260000" />
       <workItem from="1592652802945" duration="17849000" />
-      <workItem from="1592730654625" duration="29228000" />
+      <workItem from="1592730654625" duration="29632000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="149337000" />
+    <option name="totallyTimeSpent" value="149741000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -633,7 +631,7 @@
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Floobits" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33835617" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33835617" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23667206" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Reviews" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -982,16 +980,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/email/invoiceMail.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="463">
-          <caret line="130" column="25" selection-start-line="130" selection-start-column="25" selection-end-line="130" selection-end-column="25" />
-          <folding>
-            <element signature="n#style#0;n#td#0;n#tr#2;n#table#0;n#div#4;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/ShopController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="718">
@@ -1057,26 +1045,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/TransactionController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="43" column="34" selection-start-line="43" selection-start-column="34" selection-end-line="43" selection-end-column="34" />
-          <folding>
-            <element signature="e#40#53#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Zarrin.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1019">
-          <caret line="74" column="56" selection-start-line="74" selection-start-column="56" selection-end-line="74" selection-end-column="56" />
-          <folding>
-            <element signature="e#21#41#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/web.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
@@ -1087,9 +1055,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/api.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="67" column="27" selection-start-line="67" selection-start-column="27" selection-end-line="67" selection-end-column="27" />
+        <state relative-caret-position="266">
+          <caret line="67" column="30" selection-start-line="67" selection-start-column="25" selection-end-line="67" selection-end-column="30" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/TransactionController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="43" column="33" selection-start-line="43" selection-start-column="33" selection-end-line="43" selection-end-column="33" />
+          <folding>
+            <element signature="e#40#53#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Zarrin.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="167" column="30" selection-start-line="167" selection-start-column="25" selection-end-line="167" selection-end-column="30" />
+          <folding>
+            <element signature="e#21#41#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/email/invoiceMail.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="175" column="54" selection-start-line="175" selection-start-column="54" selection-end-line="175" selection-end-column="54" />
+          <folding>
+            <element signature="n#style#0;n#td#0;n#tr#2;n#table#0;n#div#4;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

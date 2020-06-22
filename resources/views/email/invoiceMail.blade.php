@@ -171,12 +171,12 @@
             <th>ردیف</th>
             </thead>
             <tbody>
-            @for($i=0;$i<count($cartItems['cart']);$i++)
+            @for($i=0;$i<count($cartItems);$i++)
             <tr>
-                <td>{{$cartItems['cart'][$i]['num']*$cartItems['cart'][$i]['price']}}</td>
-                <td>{{$cartItems['cart'][$i]['num']}}</td>
-                <td>{{$cartItems['cart'][$i]['price']}}</td>
-                <td>{{$cartItems['cart'][$i]['name']}}</td>
+                <td>{{$cartItems[$i]['num']*$cartItems[$i]['price']}}</td>
+                <td>{{$cartItems[$i]['num']}}</td>
+                <td>{{$cartItems[$i]['price']}}</td>
+                <td>{{$cartItems[$i]['name']}}</td>
                 <td>{{$i+1}}</td>
             </tr>
             @endfor
