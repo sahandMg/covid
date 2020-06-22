@@ -295,6 +295,12 @@ class AuthController extends Controller
 
     }
 
+    //    ============ Switching user to admin ============
+    /*
+     * Data Needed : token
+     * Data returns :
+     */
+
     public function switchAccountType(Repo $repo){
 
 
@@ -324,9 +330,30 @@ class AuthController extends Controller
         }
 
     }
+
+    //    ============ Checks if user is authenticated or not. uses token middleware, defined on route ============
+    /*
+     * Data Needed : token
+     * Data returns :
+     */
+
     public function userCheck(){
 
-        return  ['status'=>200,'body'=>['type'=>'success','message'=> ['scc'=>'']]];
+        return  ['status'=>200,'body'=>['type'=>'success','message'=> ['ok']]];
+    }
+
+    //    ============ Return User Profile Data ============
+    /*
+     * Data Needed : token
+     * Data returns :
+     */
+    public function userData(Request $request,Repo $repo){
+
+        $user = Auth::guard($repo->getGuard())->user();
+
+        $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone];
+
+        return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$data]];
     }
 
 

@@ -25,6 +25,7 @@ Route::post('login','AuthController@login');
 Route::post('logout','AuthController@logout');
 Route::post('password/recover','AuthController@passwordRecover');
 Route::post('user/check','AuthController@userCheck')->middleware('token');
+Route::post('user/data','AuthController@userData')->middleware('token');
 Route::post('user/update/profile','AuthController@updateProfile')->middleware('token');
 Route::post('user/address','ShopController@userAddress')->middleware('token');
 Route::post('switch-account','AuthController@switchAccountType')->middleware('token');
