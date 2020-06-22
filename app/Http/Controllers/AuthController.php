@@ -260,7 +260,7 @@ class AuthController extends Controller
         try{
 
             $user = Auth::guard($guard)->user();
-
+            dd($user);
             if($request->has('name')){
 
                 $user->update(['name'=>$request->name]);
@@ -273,7 +273,7 @@ class AuthController extends Controller
 
             if($request->has('phone')){
 
-                $user->update(['phone'=>$request->address]);
+                $user->update(['phone'=>$request->phone]);
             }
 
             if($request->has('old_password') && $request->has('password')){
