@@ -260,7 +260,7 @@ class AuthController extends Controller
         try{
 
             $user = Auth::guard($guard)->user();
-            dd($user);
+
             if($request->has('name')){
 
                 $user->update(['name'=>$request->name]);
