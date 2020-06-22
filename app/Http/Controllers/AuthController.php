@@ -351,7 +351,7 @@ class AuthController extends Controller
 
         $user = Auth::guard($repo->getGuard())->user();
 
-        $data = [['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone]];
+        $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone];
 
         return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$data]];
     }
