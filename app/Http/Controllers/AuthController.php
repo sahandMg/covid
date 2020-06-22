@@ -286,7 +286,7 @@ class AuthController extends Controller
                     return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['کلمه عبور فعلی نادرست است']]];
                 }
             }
-            return 200;
+            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$user]];
 
         }catch (\Exception $exception){
 
