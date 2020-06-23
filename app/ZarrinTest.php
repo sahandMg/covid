@@ -36,7 +36,7 @@ class ZarrinTest
         }
 
         $amount = $total_price;
-        $callback = env('ZARRIN_CALLBACK');
+        $callback = 'http://example.com/zarrin/test/callback';
         $data = array('MerchantID' => 'DAsjsahdiuudsuhnuai',
             'Amount' => $amount,
             'CallbackURL' => $callback,
