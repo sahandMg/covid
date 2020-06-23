@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Issue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class IssueController extends Controller
@@ -42,21 +43,38 @@ class IssueController extends Controller
             if(Auth::guard('admin')->check()){
 
                 $issue->admin_id = Auth::guard('admin')->id();
+                $user = Auth::guard('admin')->user();
 
-            }elseif(Auth::guard('user')->check()){
+            }else{
 
                 $issue->user_id = Auth::guard('user')->id();
+                $user = Auth::guard('user')->user();
             }
 
             $issue->save();
+
+            $data = ['issue'=>$issue,'user'=>$user];
+            Mail::send('email.responseMail',$data,function($message)use($user){
+
+                $message->to($user->email);
+                $message->from(env('NoReply'));
+                $message->subject('پیام پشتیبانی');
+            });
+            Mail::send('email.issueMail',$data,function($message)use($user){
+
+                $message->to(env('SUPPORT_MAIL'));
+                $message->from(env('NoReply'));
+                $message->subject('پیام کاربر');
+            });
+
         }catch (\Exception $exception){
 
             $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
             return $resp;
         }
 
-        $resp = ['status'=>200,'body'=>['type'=>'success','message'=>['scc'=>'مشکل شما ثبت شد']]];
-//        TODO Send Email To ???
+        $resp = ['status'=>200,'body'=>['type'=>'success','message'=>['scc'=>'پیام شما ثبت شد']]];
+
         return $resp;
     }
 }

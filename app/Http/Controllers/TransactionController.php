@@ -45,7 +45,7 @@ class TransactionController extends Controller
             if($result["Status"] != 404){
 // TODO How to redirect user to a webpage in app
 
-                return $resp = ['status'=>200,'body'=>['type'=>'link','message'=> ['https://www.zarinpal.com/pg/StartPay/' . $result["Authority"]]]];
+                return $resp = ['status'=>200,'body'=>['type'=>'link','message'=> ['link'=>'https://www.zarinpal.com/pg/StartPay/' . $result["Authority"]]]];
             }else{
 
                 return $resp = ['status'=>500,'body'=>['type'=>'error','message'=> ['err'=>'مشکلی در ارتباط با درگاه پیش آمده است، لطفا دوباره تلاش کنید']]];

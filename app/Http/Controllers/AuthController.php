@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -116,29 +117,6 @@ class AuthController extends Controller
 
         return $resp;
 
-//        if($request->role == '0'){
-
-//            try{
-//                $user = new User();
-//                $user->name = $request->name;
-//                $user->password = Hash::make($request->password);
-//                $user->email = $request->email;
-////            $user->phone = $repo->convertp2e($request->phone);
-//                $user->save();
-//                $token = JWTAuth::fromUser($user);
-//                $user->update(['token'=>$token]);
-//                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'کاربر با موفقیت ثبت شد']]];
-//            }catch (\Exception $exception){
-//
-//                $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
-//            }
-//
-//            return $resp;
-//        }else{
-//
-//            return $this->post_adminSignup($request);
-//        }
-
     }
 
 //    ============ Admin Signup Page View ============
@@ -200,7 +178,9 @@ class AuthController extends Controller
                 $user = User::where('email',$request->email)->first();
                 $user->update(['token'=>$token]);
                 $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'user','code'=>0]]];
-            }elseif($token = Auth::guard('admin')->attempt(['email'=>$request->email,'password'=>$request->password])){
+            }
+            elseif($token = Auth::guard('admin')->attempt(['email'=>$request->email,'password'=>$request->password])){
+
                 $user = Admin::where('email',$request->email)->first();
                 $user->update(['token'=>$token]);
                 $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'admin','code'=> $user->key]]];
@@ -221,8 +201,50 @@ class AuthController extends Controller
         return $resp;
     }
 
+    //      Google login
 
-    //    ============ Logging out the user ============
+    public function redirectToProvider()
+    {
+
+        return Socialite::driver('google')->redirect();
+    }
+//
+//    /**
+//     * @return mixed
+//     * Google Register & Login
+//     */
+    public function handleProviderCallback()
+    {
+
+        $client =  Socialite::driver('google')->stateless()->user();
+        $user = User::where('email',$client->email)->first();
+        $admin = Admin::where('email',$client->email)->first();
+        if(!is_null($user)){
+            $token = Auth::guard('user')->login($user);
+            $user->update(['token'=>$token]);
+            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'user']]];
+
+        }elseif(!is_null($admin)){
+
+            $token = Auth::guard('admin')->login($admin);
+            $admin->update(['token'=>$token]);
+            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'admin','code'=> $user->key]]];
+
+        }else{
+
+            $user = new User();
+            $user->name = $client->name;
+            $user->email = $client->email;
+//            $user->avatar = $client->avatar;
+            $user->save();
+            $token = Auth::guard('user')->login($user);
+            $user->update(['token'=>$token]);
+            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'کاربر با موفقیت ثبت شد']]];
+        }
+
+    }
+//
+//        ============ Logging out the user ============
     /*
      * Data Needed : token
      * Data returns :

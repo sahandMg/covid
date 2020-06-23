@@ -360,8 +360,10 @@ class DeviceController extends Controller
 
                 return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['دستگاهی یافت نشد']]];
             }
-            $deviceReports = DB::table('reports')->where('device_id',$device->id)->orderBy('created_at','desc')->select('id','total_pushed','created_at')->get();
-
+            $deviceReports = DB::table('reports')->where('device_id',$device->id)
+                ->wheredate('created_at','>',Carbon::now()->subMonths(6))
+                ->orderBy('created_at','desc')->select('id','total_pushed','created_at')
+                ->get();
             if(count($deviceReports) == 0){
 
                 return $resp = ['status'=>200,'body'=>['type'=>'error','message'=>['اطلاعاتی برای این دستگاه وجود ندارد']]];
@@ -403,6 +405,7 @@ class DeviceController extends Controller
                     }
                     array_push($result,['total_pushed'=>$total_push,'date'=>Jalalian::fromCarbon($today2)->format('%d %B %y').'*'.Jalalian::fromCarbon($today2)->subDays(7)->format('%d %B %y')]);
                     $total_push = 0;
+                    $today2->subDays(7);
                     $i += 1;
                 }
 
@@ -412,8 +415,7 @@ class DeviceController extends Controller
             elseif ($request->filter_name == 'month'){
 
                 $total_push = 0;
-                $endDate = Carbon::parse($deviceReports[count($deviceReports)-1]->created_at);
-                $today = Carbon::now();
+                $endDate = Carbon::parse($deviceReports[count($deviceReports)-1]->created_at)->firstOfMonth();
                 $today2 = Carbon::now();
                 $result = [];
                 $i = 1;
@@ -422,20 +424,16 @@ class DeviceController extends Controller
                     foreach ($deviceReports as $deviceReport){
 
                         $queryDate = Carbon::parse($deviceReport->created_at);
-                        $today = Carbon::now();
+                            if($today2->firstOfMonth()->equalTo($queryDate->firstOfMonth())){
 
-                        if($queryDate->greaterThanOrEqualTo($queryDate->firstOfMonth()) && $queryDate->lessThanOrEqualTo(Carbon::now()->subMonths($i-1))){
-
-                            $total_push = $total_push + $deviceReport->total_pushed;
-
+                                $total_push = $total_push + $deviceReport->total_pushed;
                         }else{
 
                         }
                     }
-                    array_push($result,['total_pushed'=>$total_push,'date'=>$today2.'*'.$today2->subMonths(1)]);
-
+                    array_push($result,['total_pushed'=>$total_push,'date'=>Jalalian::fromCarbon($today2)->format('%B %y')]);
                     $total_push = 0;
-
+                    $today2->subMonths(1);
                     $i += 1;
                 }
                 return $result;

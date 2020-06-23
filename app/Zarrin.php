@@ -22,7 +22,6 @@ class Zarrin
     }
     public function create($repo){
 
-
         $cart = $this->request['cart'];
         $total_price = 0;
         for($i=0;$i<count($cart);$i++){
@@ -74,7 +73,7 @@ class Zarrin
                 $basket = new Cart();
                 $basket->cart = serialize($this->request['cart']);
                 $basket->amount = $total_price;
-                $basket->code = uniqid();
+                $basket->code = rand(10000,20000);
                 $basket->address = $this->request['address'];
                 if(Auth::guard('user')->check()){
 

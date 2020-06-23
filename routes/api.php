@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('signup','AuthController@signup');
 Route::post('login','AuthController@login');
+Route::post('google/login/callback','AuthController@handleProviderCallback');
 Route::post('logout','AuthController@logout');
 Route::post('password/recover','AuthController@passwordRecover');
 Route::post('user/check','AuthController@userCheck')->middleware('token');

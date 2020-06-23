@@ -76,8 +76,11 @@
     <div class="logo">
         <img src="http://joyvpn.xyz/img/jv.png" alt="">
     </div>
-    <h2 class="title">پیام کاربر</h2>
-
+    <h2 class="title">پیام پشتیبانی</h2>
+    <br>
+    <p style="direction: rtl">{{$user->name}} گرامی، پیام شما با موفقیت ثبت شد و در اسرع وقت توسط پشتیبانی پاسخ داده خواهد شد</p>
+    <br>
+    <hr>
 
     <div class="name">
         <p>نام : {{$user->name}}</p>
