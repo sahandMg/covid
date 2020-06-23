@@ -23,13 +23,27 @@ Route::get('/', function () {
 Route::get('@admin/signup','AuthController@adminSignup')->name('adminSignup');
 Route::post('signup','AuthController@post_adminSignup')->name('adminSignup');
 Route::get('zarrin/callback','TransactionController@ZarrinCallback');
+Route::get('zarrin/test/callback','TransactionController@test_ZarrinCallback');
 Route::get('zarrin/failed','TransactionController@failedPage')->name('PaymentCanceled');
 Route::get('zarrin/success','TransactionController@successPage')->name('PaymentSuccess');
 Route::get('google/login','AuthController@redirectToProvider');
 
-Route::get('@admin/add-device','AdminController@add');
-Route::post('@admin/add-device','AdminController@post_add')->name('addDevice');
+Route::get('@admin/product-list','AdminController@itemslist')->name('productList');
 
+Route::get('@admin/add-product','AdminController@add')->name('addproduct');
+Route::post('@admin/add-product','ShopController@addItem')->name('addproduct');
+
+Route::get('@admin/update-product/{name}','AdminController@update')->name('updateProduct');
+Route::post('@admin/update-product/{name}','ShopController@updateItem')->name('updateProduct');
+
+
+//Route::get('@admin/remove-product/{name}','AdminController@remove')->name('removeItem');
+Route::get('@admin/remove-product/{name}','ShopController@removeItem')->name('removeItem');
+
+Route::get('product',function (){
+
+    return view('admin.addItem');
+});
 Route::get('issue',function(){
 
     $issue = \App\Issue::where('user_id',1)->first();

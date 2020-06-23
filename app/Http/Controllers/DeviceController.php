@@ -260,7 +260,7 @@ class DeviceController extends Controller
                 foreach ($adminDevices as $adminDevice){
 
                     $last = $adminDevice->deviceLogs->first();
-                    array_push($resp,['d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
+                    array_push($resp,['unique_id'=>$last->unique_id,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
                 }
 
 
@@ -344,6 +344,7 @@ class DeviceController extends Controller
 
     public function liquidChart(Request $request){
 
+//        return [Auth::guard('user')->id(),Auth::guard('admin')->id()];
         $validator = Validator::make($request->all(),[
             'filter_name'=>'required',
             'unique_id'=>'required',
@@ -366,7 +367,7 @@ class DeviceController extends Controller
                 ->get();
             if(count($deviceReports) == 0){
 
-                return $resp = ['status'=>200,'body'=>['type'=>'error','message'=>['اطلاعاتی برای این دستگاه وجود ندارد']]];
+                return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['اطلاعاتی برای این دستگاه وجود ندارد']]];
             }
             if($request->filter_name == 'day'){
 
@@ -378,7 +379,7 @@ class DeviceController extends Controller
                     array_push($result,['total_pushed'=>$deviceReport->total_pushed,'date'=> Jalalian::fromCarbon(Carbon::parse($deviceReport->created_at))->format('%A %d %B %y') ]);
                 }
 
-                return $result;
+                return $resp = ['status'=>200,'body'=>['type'=>'day','message'=>$result]];
 
             }elseif ($request->filter_name == 'week'){
 
@@ -409,7 +410,7 @@ class DeviceController extends Controller
                     $i += 1;
                 }
 
-                return $result;
+                return $resp = ['status'=>200,'body'=>['type'=>'week','message'=>$result]];
             }
 
             elseif ($request->filter_name == 'month'){
@@ -436,7 +437,7 @@ class DeviceController extends Controller
                     $today2->subMonths(1);
                     $i += 1;
                 }
-                return $result;
+                return $resp = ['status'=>200,'body'=>['type'=>'month','message'=>$result]];
             }
 //            return $deviceReports;
 

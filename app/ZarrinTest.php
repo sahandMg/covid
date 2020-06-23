@@ -25,7 +25,7 @@ class ZarrinTest
         $this->request = $request;
     }
 
-    public function create()
+    public function create($repo)
     {
 
         $cart = $this->request['cart'];
@@ -74,18 +74,32 @@ class ZarrinTest
             $trans->status = 'unpaid';
             $trans->amount = $total_price;
             $trans->authority = $result->Authority;
-            $trans->user_id = Auth::guard('user')->id();
-            $trans->admin_id = DB::table('shared_keys')->where('user_id', Auth::guard('user')->id())->first()->admin_id;
+            if(Auth::guard('user')->check()){
+
+                $trans->user_id = Auth::guard('user')->id();
+
+            }elseif(Auth::guard('admin')->check()){
+
+                $trans->admin_id = Auth::guard('admin')->id();
+            }
+
             $trans->save();
 
             $basket = new Cart();
-            $basket->cart = serialize($this->request);
+            $basket->cart = serialize($this->request['cart']);
             $basket->amount = $total_price;
-            $basket->code = uniqid();
+            $basket->code = rand(10000,20000);
             $basket->address = $this->request['address'];
-            $basket->user_id = Auth::guard('user')->id();
+            if(Auth::guard('user')->check()){
+
+                $basket->user_id = Auth::guard('user')->id();
+
+            }elseif(Auth::guard('admin')->check()){
+
+                $basket->admin_id = Auth::guard('admin')->id();
+            }
             $basket->trans_id = $trans->id;
-            $basket->email = Auth::guard('user')->user()->email;
+            $basket->email = Auth::guard($repo->getGuard())->user()->email;
 
             if (isset($this->request['email'])) {
 
@@ -104,22 +118,16 @@ class ZarrinTest
 
     }
 
-
     public function verify(){
+
         $transactionId = $this->request['Authority'];
         $trans = Transaction::where('authority',$transactionId)->first();
-
         if(is_null($trans)){
             return 'کد تراکنش نادرست است';
         }
         if($trans->status == 'paid'){
             return 'تراکنش تکراری است';
         }
-        if(is_null($cached)){
-
-            return 'تراکنش تکراری است';
-        }
-
 
         $data = array('MerchantID' => env('ZARRIN_TOKEN'), 'Authority' => $transactionId, 'Amount'=>$trans->amount);
         $jsonData = json_encode($data);
@@ -139,129 +147,56 @@ class ZarrinTest
         if ($err) {
             return "cURL Error #:" . $err;
         } else {
-            DB::beginTransaction();
 
-            $cached->update(['closed'=>1]);
-//            if(!is_null($cached)){
-//                $cached->
-//            }
-            DB::commit();
             if ($result['Status'] == '100') {
 
                 $this->ZarrinPaymentConfirm($trans);
 
-                return redirect()->route('RemotePaymentSuccess',['transid'=>$trans->trans_id]);
+                return redirect()->route('PaymentSuccess',['transid'=>$trans->trans_id]);
 
             } else {
-                DB::beginTransaction();
-                $trans->update(['status'=>'canceled']);
-                DB::commit();
-                $char = Emoji::redCircle();
-                $msg = [
-                    'chat_id' => $trans->user_id,
-                    'text' => " $char $char پرداخت شما ناموفق بود. شماره تراکنش : $trans->trans_id",
-                    'parse_mode' => 'HTML',
-                ];
-                TelegramNotification::dispatch($msg);
-                $telegram = new \App\Repo\Telegram(env('BOT_TOKEN'));
-                $options = [array($telegram->buildInlineKeyBoardButton('شروع مجدد','','restart'))];
-                $msg2 = [
-                    'chat_id' => $trans->user_id,
-                    'text' => 'جهت خرید مجدد، کلیک کنید',
-                    'parse_mode' => 'HTML',
-                    'reply_markup' => $telegram->buildInlineKeyboard($options),
-                ];
-                TelegramNotification::dispatch($msg2);
-//                $data = array($msg);
-//                $jsonData = json_encode($data);
-//                $ch = curl_init('https://vitamin-g.ir/api/hook?type=canceled');
-//                curl_setopt($ch, CURLOPT_USERAGENT, 'JOY VPN HandShake');
-//                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-//                curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-//                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-//                    'Content-Type: application/json',
-//                    'Content-Length: ' . strlen($jsonData)
-//                ));
-//                curl_exec($ch);
-//                curl_close($ch);
 
-                return redirect()->route('RemotePaymentCanceled', ['transid' => $trans->trans_id]);
+                DB::table('transactions')->where('trans_id', $trans->trans_id)->update([
+                    'status' => 'canceled'
+                ]);
+                return redirect()->route('PaymentCanceled', ['transid' => $trans->trans_id]);
             }
         }
     }
-//    private function ZarrinPaymentConfirm($trans)
-//    {
-//        // if($trans->service == 'cisco'){
-//        //     $account = Accounts::where('user_id',$trans->user_id)->where('plan_id','!=',3)->where('used',1)->first();
-//        //     // it means that user updated his account. it's NOT a new account
-//        //     if($account !== null){
-//        //         $account->update(['expires_at'=> Carbon::now()->addMonths($trans->plan->month)]);
-//        //     }else{
+    private function ZarrinPaymentConfirm($trans)
+    {
+
+        DB::table('transactions')->where('id', $trans->id)->update([
+            'status' => 'paid'
+        ]);
+
+        $cart = Cart::where('trans_id',$trans->id)->first();
+        $cart->update(['completed' => 1]);
+
+        $cart->cart = unserialize($cart->cart);
+        if(!is_null($cart->user_id)){
+            $user = $cart->user;
+        }else{
+            $user = $cart->admin;
+        }
+        $data = ['cart'=>$cart,'trans'=>$trans,'user'=>$user];
+
+        Mail::send('email.invoiceMail',$data,function($message)use($cart){
+
+            $message->to($cart->email);
+            $message->from(env('NoReply'));
+            $message->subject('فاکتور خرید');
+        });
+
+        Mail::send('email.invoiceMail',$data,function($message)use($cart){
 //
-//
-//        // }
-//
-//        // }elseif ($trans->service == 'openvpn'){
-//        //     $account = Ovpn::where('user_id',$trans->user_id)->where('used',1)->first();
-//        //     // it means that user updated his account. it's NOT a new account
-//        //     if($account !== null){
-//        //         $account->update(['expires_at'=> Carbon::now()->addMonths($trans->plan->month)]);
-//        //     }else{
-//
-//        //         $account = Ovpn::where('plan_id',$trans->plan_id)->where('used',0)->first();
-//        //         $account->update(['used'=>1,'user_id'=>$trans->user_id,'expires_at'=>Carbon::now()->addMonths($trans->plan->month)]);
-//        //     }
-//
-//        // }
-//        DB::beginTransaction();
-//        DB::connection('mysql')->table('transactions')->where('trans_id', $trans->trans_id)->update([
-//            'status' => 'paid'
-//        ]);
-//        $account = Accounts::where('plan_id',$trans->plan_id)->where('used',0)->first();
-//        if($trans->plan_id == 6){
-//            $account->update(['used'=>1,'user_id'=>$trans->user_id,'expires_at'=>Carbon::now()->addDays(21)]);
-//        }else{
-//            $account->update(['used'=>1,'user_id'=>$trans->user_id,'expires_at'=>Carbon::now()->addMonths($trans->plan->month)->addDays(7)]);
-//        }
-//
-//        $trans->update(['account_id'=>$account->id]);
-//
-////  =================  Affiliation Part =================
-//
-//        $ip = IpFinder::find();
-//        $affiliationBuy = Affiliate::where('invitee',$ip)->where('done',0)->first();
-//        if(!is_null($affiliationBuy)){
-//            $affiliationBuy->update(['invitee_id'=>$trans->user_id,'done'=>1]);
-//            $inviterShares = Affiliate::where('inviter',$affiliationBuy->inviter)->get()->sum('done');
-//            if($inviterShares == 1){
-//
-//                $msg = [
-//                    'chat_id' => $affiliationBuy->inviter,
-//                    'text' => Emoji::fire().'تبریک! فقط ۲ کاربر تا حساب رایگان ۱ ماهه فاصله دارید'.Emoji::fire()
-//                ];
-//                TelegramNotification::dispatch($msg);
-//            }
-//            elseif ($inviterShares == 4){
-//                $msg = [
-//                    'chat_id' => $affiliationBuy->inviter,
-//                    'text' => Emoji::fire().'تبریک! فقط ۲ کاربر تا حساب رایگان ۳ ماهه فاصله دارید'.Emoji::fire()
-//                ];
-//                TelegramNotification::dispatch($msg);
-//            }
-//            elseif ($inviterShares == 3){
-//                $this->affiliateReward5($affiliationBuy);
-//            }
-//            elseif ($inviterShares == 6){
-//                $this->affiliateReward10($affiliationBuy);
-//            }
-//        }
-//        DB::commit();
-//        sendNotif::dispatch($trans,$account);
-//
-//    }
+//            $message->to(env('SAILS_MAIL'));
+            $message->from(env('NoReply'));
+            $message->subject('فاکتور خرید');
+        });
 
 
+    }
 
 
 }

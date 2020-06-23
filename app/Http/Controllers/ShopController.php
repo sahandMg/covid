@@ -21,17 +21,27 @@ class ShopController extends Controller
      */
     public function addItem(Request $request){
 
-        $validator = Validator::make($request->all(),[
-
+//        $validator = Validator::make($request->all(),[
+//
+//            'p_name'=>'required|unique:shop_items',
+//            'img'=>'required|mimes:jpeg,bmp,png,jpg|max:1000',
+//            'price'=>'required',
+//            'desc'=>'required'
+//        ]);
+        $this->validate($request,[
             'p_name'=>'required|unique:shop_items',
             'img'=>'required|mimes:jpeg,bmp,png,jpg|max:1000',
             'price'=>'required',
             'desc'=>'required'
         ]);
-        if($validator->fails()){
+//        if($validator->fails()){
+//
+//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
+//            return $resp;
+//        }
+        if($request->password != env('ADMIN_PASS')){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
-            return $resp;
+            return redirect()->back()->with(['error'=>'کد عبور نادرست است']);
         }
         try{
             $shop = new ShopItem();
@@ -48,9 +58,9 @@ class ShopController extends Controller
             $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
             return $resp;
         }
-        $resp = ['status'=>200,'body'=>['type'=>'success','message'=>['scc'=>'محصول ثبت شد']]];
-        return $resp;
-
+//        $resp = ['status'=>200,'body'=>['type'=>'success','message'=>['scc'=>'محصول ثبت شد']]];
+//        return $resp;
+            return redirect()->back()->with(['message'=>'محصول ثبت شد']);
     }
 
     //    ============ Updating an Item information ============
@@ -62,22 +72,31 @@ class ShopController extends Controller
      */
     public function updateItem(Request $request){
 
-        $validator = Validator::make($request->all(),[
+//        $validator = Validator::make($request->all(),[
+//
+//            'p_name'=>'required',
+//        ]);
 
+        $this->validate($request,[
             'p_name'=>'required',
         ]);
-        if($validator->fails()){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
-            return $resp;
+//        if($validator->fails()){
+//
+//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
+//            return $resp;
+//        }
+        if($request->password != env('ADMIN_PASS')){
+
+            return redirect()->back()->with(['error'=>'کد عبور نادرست است']);
         }
-
         $item = ShopItem::where('p_name',$request->p_name_old)->first();
 
         if(is_null($item)){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> ['err'=>'محصول یافت نشد']]];
-            return $resp;
+//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> ['err'=>'محصول یافت نشد']]];
+//            return $resp;
+            return redirect()->back()->with(['error'=>'محصول یافت نشد']);
         }
         try{
 
@@ -128,8 +147,9 @@ class ShopController extends Controller
             return $resp;
         }
 
-        $resp = ['status'=>200,'body'=>['type'=>'success','message'=>['scc'=>'اطلاعات محصول به روز رسانی شد']]];
-        return $resp;
+//        $resp = ['status'=>200,'body'=>['type'=>'success','message'=>['scc'=>'اطلاعات محصول به روز رسانی شد']]];
+//        return $resp;
+        return redirect()->route('productList')->with(['message'=>'اطلاعات محصول به روز رسانی شد']);
     }
 
     //    ============ Removing an Item  ============
@@ -140,31 +160,37 @@ class ShopController extends Controller
      *
      */
 
-    public function removeItem(Request $request){
+    public function removeItem(Request $request,$name){
 
-        $validator = Validator::make($request->all(),[
-
-            'p_name'=>'required',
-        ]);
-        if($validator->fails()){
-
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
-            return $resp;
-        }
+//        $validator = Validator::make($request->all(),[
+//
+//            'p_name'=>'required',
+//        ]);
+//        if($validator->fails()){
+//
+//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
+//            return $resp;
+//        }
+//        $this->validate($request,[
+//            'p_name'=>'required|unique:shop_items',
+//        ]);
+//
         try{
 
-            $item = ShopItem::where('p_name',$request->p_name)->first();
+            $item = ShopItem::where('p_name',$name)->first();
 
             if(is_null($item)){
 
-                $resp = ['status'=>500,'body'=>['type'=>'error','message'=> ['err'=>'محصول یافت نشد']]];
-                return $resp;
+//                $resp = ['status'=>500,'body'=>['type'=>'error','message'=> ['err'=>'محصول یافت نشد']]];
+//                return $resp;
+                return redirect()->back()->with(['error'=>'محصول یافت نشد']);
 
             }else{
                 unlink(public_path('images/'.$item->img));
                 $item->delete();
-                $resp = ['status'=>200,'body'=>['type'=>'success','message'=> ['scc'=>'محصول حذف شد']]];
-                return $resp;
+//                $resp = ['status'=>200,'body'=>['type'=>'success','message'=> ['scc'=>'محصول حذف شد']]];
+//                return $resp;
+                return redirect()->back()->with(['message'=>'محصول حذف شد']);
             }
 
         }catch (\Exception $exception){

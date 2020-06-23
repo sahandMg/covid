@@ -33,6 +33,7 @@ Route::post('switch-account','AuthController@switchAccountType')->middleware('to
 
 Route::post('test',function(Request $request){
 
+    return response(200);
 
 });
 // ======== Device Manager Routes ========
@@ -50,6 +51,7 @@ Route::group(['prefix'=>'device','middleware'=>['token','guest:admin']],function
 Route::post('device/send','DeviceController@sendData')->middleware('device');
 
 // ======== Device General Routes (admin & user) ========
+
 Route::group(['prefix'=>'device','middleware'=>'token'],function() {
 
     Route::post('chart/liquid', 'DeviceController@liquidChart');
@@ -69,6 +71,8 @@ Route::post('shop/item/list','ShopController@itemsList')->middleware('token');
 Route::group(['prefix'=>'trans','middleware'=>'token'],function (){
 
     Route::post('create','TransactionController@create');
+
+    Route::post('test/create','TransactionController@test_create');
 });
 
 Route::post('issue','IssueController@create')->middleware('token');
