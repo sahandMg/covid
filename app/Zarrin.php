@@ -151,7 +151,7 @@ class Zarrin
     private function ZarrinPaymentConfirm($trans)
     {
 
-        DB::table('transactions')->where('trans_id', $trans->id)->update([
+        DB::table('transactions')->where('id', $trans->id)->update([
             'status' => 'paid'
         ]);
 
