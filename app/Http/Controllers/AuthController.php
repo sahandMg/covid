@@ -10,6 +10,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
@@ -57,6 +58,13 @@ class AuthController extends Controller
                     $user->update(['password'=>Hash::make($str)]);
 //                    TODO SEND EMAIL
                 }
+
+                Mail::send('email.recover',['pass'=>$str],function($message)use($user){
+
+                    $message->to($user->email);
+                    $message->from(env('NoReply'));
+                    $message->subject('فراموشی کلمه عبور');
+                });
 
                 return $resp = ['status'=>200,'body'=>['type'=>'error','message'=>['کلمه عبور جدید به ایمیل شما ارسال شد']]];
 
@@ -182,6 +190,7 @@ class AuthController extends Controller
             elseif($token = Auth::guard('admin')->attempt(['email'=>$request->email,'password'=>$request->password])){
 
                 $user = Admin::where('email',$request->email)->first();
+                
                 $user->update(['token'=>$token]);
                 $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'admin','code'=> $user->key]]];
             }

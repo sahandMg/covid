@@ -217,7 +217,7 @@ class DeviceController extends Controller
      * Data returns : devices_list
      */
 
-    public function get_Devices(Request $request){
+    public function get_Devices(Request $request,Repo $repo){
 
         try{
 
@@ -238,6 +238,7 @@ class DeviceController extends Controller
                     $last = $adminDevice->deviceLogs->first();
                     array_push($resp,['d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
                 }
+
 
                 if(is_null($adminDevices)){
 
@@ -260,6 +261,7 @@ class DeviceController extends Controller
                 foreach ($adminDevices as $adminDevice){
 
                     $last = $adminDevice->deviceLogs->first();
+
                     array_push($resp,['unique_id'=>$last->unique_id,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
                 }
 
@@ -274,8 +276,7 @@ class DeviceController extends Controller
                 return $resp;
             }
         }catch (\Exception $exception){
-
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage().$exception->getLine()]];
             return $resp;
         }
 
