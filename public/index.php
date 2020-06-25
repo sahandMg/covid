@@ -50,7 +50,8 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 */
 
 //$app->bind('path.public', function() {
-//    return base_path() . '/public_html';
+////   base_path() . '/public'
+//    return __DIR__ ;
 //});
 
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);

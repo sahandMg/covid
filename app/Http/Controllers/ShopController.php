@@ -131,7 +131,10 @@ class ShopController extends Controller
 
                     return $resp;
                 }
-                unlink(public_path('images/'.$item->img));
+                if(file_exists(public_path('images/'.$item->img))){
+
+                    unlink(public_path('images/'.$item->img));
+                }
                 $name = time().'.'.$request->file('img')->getClientOriginalExtension();
 
                 $request->file('img')->move(public_path('images'),$name);
@@ -186,7 +189,12 @@ class ShopController extends Controller
                 return redirect()->back()->with(['error'=>'محصول یافت نشد']);
 
             }else{
-                unlink(public_path('images/'.$item->img));
+
+                if(file_exists(public_path('images/'.$item->img))) {
+
+                    unlink(public_path('images/' . $item->img));
+                }
+
                 $item->delete();
 //                $resp = ['status'=>200,'body'=>['type'=>'success','message'=> ['scc'=>'محصول حذف شد']]];
 //                return $resp;
