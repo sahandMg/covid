@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Issue;
+use App\Repo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -20,7 +21,7 @@ class IssueController extends Controller
      *
      */
 
-    public function create(Request $request){
+    public function create(Request $request,Repo $repo){
 
         $validator = Validator::make($request->all(),[
 
@@ -30,7 +31,8 @@ class IssueController extends Controller
         ]);
         if($validator->fails()){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
         try{

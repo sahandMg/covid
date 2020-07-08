@@ -17,7 +17,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+
+    dd(uniqid(str_shuffle('HABIBI')));
+
     return view('welcome');
+
 });
 
 Route::get('@admin/signup','AuthController@adminSignup')->name('adminSignup');

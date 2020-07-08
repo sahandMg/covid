@@ -35,7 +35,8 @@ class DeviceController extends Controller
         ]);
         if($validator->fails()){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$validator->errors()]];
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
 
@@ -127,7 +128,7 @@ class DeviceController extends Controller
      * Data returns : name,token,message
      */
 
-    public function remove(Request $request){
+    public function remove(Request $request,Repo $repo){
 
         $validator = Validator::make($request->all(),[
             'unique_id'=>'required'
@@ -135,7 +136,9 @@ class DeviceController extends Controller
 
         if($validator->fails()){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$validator->errors()]];
+
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
         try{
@@ -288,7 +291,7 @@ class DeviceController extends Controller
      * Data Needed : token,key
      * Data returns : message
      */
-    public function sharing(Request $request){
+    public function sharing(Request $request,Repo $repo){
 
         $validator = Validator::make($request->all(),[
             'key'=>'required'
@@ -296,7 +299,8 @@ class DeviceController extends Controller
 
         if($validator->fails()){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$validator->errors()]];
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
 
@@ -343,7 +347,7 @@ class DeviceController extends Controller
      */
 
 
-    public function liquidChart(Request $request){
+    public function liquidChart(Request $request,Repo $repo){
 
 //        return [Auth::guard('user')->id(),Auth::guard('admin')->id()];
         $validator = Validator::make($request->all(),[
@@ -352,7 +356,8 @@ class DeviceController extends Controller
         ]);
         if($validator->fails()){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$validator->errors()]];
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
         try{
@@ -452,7 +457,7 @@ class DeviceController extends Controller
 
 
 //     TODO !!!!!!!!!!!!  Naqese !!!!!!!!!!
-    public function liquidChart2(Request $request){
+    public function liquidChart2(Request $request,Repo $repo){
 
 
         $validator = Validator::make($request->all(),[
@@ -461,7 +466,8 @@ class DeviceController extends Controller
         ]);
         if($validator->fails()){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$validator->errors()]];
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
         $id = Device::where('unique_id',$request->unique_id)->first()->id;

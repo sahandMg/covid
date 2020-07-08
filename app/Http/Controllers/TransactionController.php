@@ -34,7 +34,8 @@ class TransactionController extends Controller
         ]);
         if($validator->fails()){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
 
@@ -77,7 +78,8 @@ class TransactionController extends Controller
         ]);
         if($validator->fails()){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
 

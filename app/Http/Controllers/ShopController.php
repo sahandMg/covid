@@ -218,7 +218,7 @@ class ShopController extends Controller
      *
      */
 
-    public function itemsList(Request $request){
+    public function itemsList(Request $request,Repo $repo){
 
         $validator = Validator::make($request->all(),[
 
@@ -226,7 +226,8 @@ class ShopController extends Controller
         ]);
         if($validator->fails()){
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
 

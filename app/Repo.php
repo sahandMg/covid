@@ -20,9 +20,15 @@ class Repo
 
     public function responseFormatter($resp){
 
-        foreach ($resp->errors() as $key=>$item){
-            dd($key);
+        $respArr = [];
+        foreach ($resp as $key=>$item){
+
+            for($t=0;$t<count($item);$t++){
+
+                array_push($respArr,$item[$t]);
+            }
         }
+        return $respArr;
     }
 
     public function getGuard(){

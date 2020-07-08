@@ -25,14 +25,17 @@ class AuthController extends Controller
      * Data returns : data
      */
 
-    public function passwordRecover(Request $request){
+    public function passwordRecover(Request $request,Repo $repo){
 
         $validator = Validator::make($request->all(),[
             'email'=>'required'
         ]);
         if($validator->fails()){
 
-            return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$validator->errors()]];
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
+            return $resp;
+
         }
         try{
 
@@ -103,8 +106,8 @@ class AuthController extends Controller
 
                 array_push($temp,$validator->errors()->get($validator->errors()->keys()[$t]));
             }
-//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $temp]];
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$validator->errors()]];
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
 
@@ -113,6 +116,7 @@ class AuthController extends Controller
             $user->name = $request->name;
             $user->password = Hash::make($request->password);
             $user->email = $request->email;
+            $user->key = strtoupper(str_shuffle('HABIBI'));
 //            $user->phone = $repo->convertp2e($request->phone);
             $user->save();
             $token = JWTAuth::fromUser($user);
@@ -172,11 +176,12 @@ class AuthController extends Controller
 
             $temp = [];
 
-            for($t = 0 ; $t < count($validator->errors()->keys()); $t++){
-
-                array_push($temp,$validator->errors()->get($validator->errors()->keys()[$t]));
-            }
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $temp]];
+//            for($t = 0 ; $t < count($validator->errors()->keys()); $t++){
+//
+//                array_push($temp,$validator->errors()->get($validator->errors()->keys()[$t]));
+//            }
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
         try{
@@ -185,20 +190,23 @@ class AuthController extends Controller
 
                 $user = User::where('email',$request->email)->first();
                 $user->update(['token'=>$token]);
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'user','code'=>0]]];
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+                    'role'=>'user','code'=>0,'phone'=>$user->phone,'address'=>$user->address]]];
             }
             elseif($token = Auth::guard('admin')->attempt(['email'=>$request->email,'password'=>$request->password])){
 
                 $user = Admin::where('email',$request->email)->first();
                 
                 $user->update(['token'=>$token]);
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'admin','code'=> $user->key]]];
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+                    'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
             }
             elseif($token = Auth::guard('master')->attempt(['email'=>$request->email,'password'=>$request->password])){
 
                 $user = Master::where('email',$request->email)->first();
                 $user->update(['token'=>$token]);
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'master','code'=>0]]];
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+                    'role'=>'master','code'=>0,'phone'=>$user->phone,'address'=>$user->address]]];
             }
             else{
                 $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'ایمیل و یا کلمه عبور نادرست است']]];
@@ -222,29 +230,33 @@ class AuthController extends Controller
 //     * @return mixed
 //     * Google Register & Login
 //     */
-    public function handleProviderCallback()
+    public function handleProviderCallback(Request $request)
     {
 
-        $client =  Socialite::driver('google')->stateless()->user();
-        $user = User::where('email',$client->email)->first();
-        $admin = Admin::where('email',$client->email)->first();
+//        $client =  Socialite::driver('google')->stateless()->user();
+        $user = User::where('email',$request->email)->first();
+        $admin = Admin::where('email',$request->email)->first();
         if(!is_null($user)){
             $token = Auth::guard('user')->login($user);
             $user->update(['token'=>$token]);
-            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'user']]];
+            $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+                'role'=>'user','code'=>0,'phone'=>$user->phone,'address'=>$user->address]]];
+            return $resp;
 
         }elseif(!is_null($admin)){
 
             $token = Auth::guard('admin')->login($admin);
             $admin->update(['token'=>$token]);
-            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,'role'=>'admin','code'=> $user->key]]];
+            return $resp = $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+                'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
 
         }else{
 
             $user = new User();
-            $user->name = $client->name;
-            $user->email = $client->email;
+            $user->name = $request->name;
+            $user->email = $request->email;
 //            $user->avatar = $client->avatar;
+            $user->key = strtoupper(str_shuffle('HABIBI'));
             $user->save();
             $token = Auth::guard('user')->login($user);
             $user->update(['token'=>$token]);
@@ -344,7 +356,7 @@ class AuthController extends Controller
                 $admin->name = $user->name;
                 $admin->password = $user->password;
                 $admin->email = $user->email;
-                $admin->key = strtoupper(uniqid());
+                $admin->key = $user->key;
                 $admin->save();
                 $token = JWTAuth::fromUser($admin);
                 $admin->update(['token'=>$token]);
