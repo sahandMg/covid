@@ -18,7 +18,7 @@ class DeviceMiddleware
     {
 
 
-        if(!$request->has('pass') || $request->pass != 'raiwan2020'){
+        if(!$request->has('key') || $request->key != 'raiwan2020'){
 
             return response(['status'=>404,'body'=>'Fake Device!']);
         }

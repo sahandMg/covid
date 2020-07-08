@@ -185,7 +185,7 @@ class DeviceController extends Controller
 
             $device = new Device();
             $device->unique_id = $request->unique_id;
-            $device->name = $request->name;
+            $device->d_name = $request->name;
             $device->ssid = $request->password;
             $device->admin_id = $admin->id;
             $device->w_ssid = $request->wifi_ssid;
