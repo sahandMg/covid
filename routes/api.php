@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,11 +32,20 @@ Route::post('user/update/profile','AuthController@updateProfile')->middleware('t
 Route::post('user/address','ShopController@userAddress')->middleware('token');
 Route::post('switch-account','AuthController@switchAccountType')->middleware('token');
 
-Route::post('test',function(Request $request){
+Route::get('test',function(Request $request){
 
-    return response(200);
+    Cache::forget('data');
+    Cache::put('data',$request->all(),2000);
+    return response($request->all());
+
+
 
 });
+Route::get('test2',function (){
+
+    return response(Cache::get('data'));
+});
+
 // ======== Device Manager Routes ========
 
 Route::post('device/add','DeviceController@add')->middleware('token');
@@ -48,7 +58,8 @@ Route::group(['prefix'=>'device','middleware'=>['token','guest:admin']],function
 
 // ======== Device Connections Routes ========
 
-Route::post('device/send','DeviceController@sendData')->middleware('device');
+Route::post('device/send','DeviceController@sendData');
+//Route::post('device/send','DeviceController@sendData')->middleware('device');
 
 // ======== Device General Routes (admin & user) ========
 

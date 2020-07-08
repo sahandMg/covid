@@ -7,6 +7,7 @@ use App\Device;
 use App\DeviceLog;
 use App\Repo;
 use App\Report;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -173,33 +174,37 @@ class DeviceController extends Controller
      * Device Middleware will check the entry data and validate them
      */
 //    TODO Under 20% send Notif. consider type of the message
-    public function sendData(Request $request){
-
+    public function sendData(Request $request,AuthController $authController,Repo $repo){
         $device = Device::where('unique_id',$request->unique_id)->first();
-
+        $user = User::where('key',$request->owner_key)->first();
+        if(is_null($user)){
+            return 404;
+        }
+        $admin = $authController->switchAccountType($repo,$user);
         if(is_null($device)){
 
             $device = new Device();
             $device->unique_id = $request->unique_id;
-        //                $device->name = $request->name;
-        //                $device->ssid = $request->ssid;
-        //                $device->w_ssid = $request->w_ssid;
-        //                $device->city = $request->city;
-        //                $device->region = $request->region;
+            $device->name = $request->name;
+            $device->ssid = $request->password;
+            $device->admin_id = $admin->id;
+            $device->w_ssid = $request->wifi_ssid;
+            $device->city = $request->location;
+            $device->region = $request->region;
             $device->created_at = Carbon::now();
             $device->save();
         }
-        $d_log = new DeviceLog();
-        $d_log->power = $request->power;
-        $d_log->capacity = $request->capacity;
-        $d_log->push = $request->push;
-        $d_log->device_id = $device->id;
+        if($request->has('power')){
 
-        if(!is_null($device->admin)){
-
+            $d_log = new DeviceLog();
+            $d_log->power = $request->power;
+            $d_log->capacity = $request->capacity;
+            $d_log->push = $request->push;
+            $d_log->device_id = $device->id;
             $d_log->admin_id = $device->admin->id;
-        }
             $d_log->save();
+        }
+
             $dateTime = Jalalian::fromCarbon(Carbon::now())->toString();
             $date = explode(' ',$dateTime)[0];
             $time = explode(' ',$dateTime)[1];
@@ -221,6 +226,7 @@ class DeviceController extends Controller
      */
 
     public function get_Devices(Request $request,Repo $repo){
+
 
         try{
 
@@ -275,7 +281,7 @@ class DeviceController extends Controller
                     $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'هیچ دستگاهی ثبت نشده است']]];
                     return $resp;
                 }
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp]];
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
                 return $resp;
             }
         }catch (\Exception $exception){

@@ -344,33 +344,46 @@ class AuthController extends Controller
      * Data returns :
      */
 
-    public function switchAccountType(Repo $repo){
+    public function switchAccountType(Repo $repo,$user){
 
 
-        if($repo->getGuard() == 'user'){
-            $sharedUser = SharedKey::where('user_id',Auth::guard('user')->id())->first();
-            if(is_null($sharedUser)){
-
-                $user = Auth::guard('user')->user();
-                $admin = new Admin();
-                $admin->name = $user->name;
-                $admin->password = $user->password;
-                $admin->email = $user->email;
-                $admin->key = $user->key;
-                $admin->save();
-                $token = JWTAuth::fromUser($admin);
-                $admin->update(['token'=>$token]);
-                $user->update(['email'=>Str::random().'@yy.com']);
-                $token = Auth::guard('admin')->login($admin);
-                return $token;
-            }else{
-                return 400;
-            }
+//        if($repo->getGuard() == 'user'){
+//            $sharedUser = SharedKey::where('user_id',Auth::guard('user')->id())->first();
+//            if(is_null($sharedUser)){
+//
+//                $user = Auth::guard('user')->user();
+//                $admin = new Admin();
+//                $admin->name = $user->name;
+//                $admin->password = $user->password;
+//                $admin->email = $user->email;
+//                $admin->key = $user->key;
+//                $admin->save();
+//                $token = JWTAuth::fromUser($admin);
+//                $admin->update(['token'=>$token]);
+//                $user->update(['email'=>Str::random().'@yy.com']);
+//                $token = Auth::guard('admin')->login($admin);
+//                return $token;
+//            }else{
+//                return 400;
+//            }
 
 //            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['succ'=>'سطح دسترسی ارتقا یافت','token'=>$token]]];
-        }else{
-//            return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['امکان تغییر سطح دسترسی وجود ندارد']]];
-        }
+//        }else{
+////            return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['امکان تغییر سطح دسترسی وجود ندارد']]];
+//        }
+
+        $admin = new Admin();
+        $admin->name = $user->name;
+        $admin->password = $user->password;
+        $admin->email = $user->email;
+        $admin->key = $user->key;
+        $admin->save();
+        $token = JWTAuth::fromUser($admin);
+        $admin->update(['token'=>$token]);
+//        $user->update(['email'=>Str::random().'@yy.com']);
+        $user->delete();
+        $token = Auth::guard('admin')->login($admin);
+        return $admin;
 
     }
 
