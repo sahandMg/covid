@@ -283,7 +283,7 @@ class DeviceController extends Controller
 
                     $last = $adminDevice->deviceLogs->first();
 
-                    array_push($resp,['unique_id'=>$adminDevice,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
+                    array_push($resp,['unique_id'=>$adminDevice->unique_id,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
                 }
 
 
