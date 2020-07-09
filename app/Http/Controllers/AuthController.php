@@ -282,7 +282,9 @@ class AuthController extends Controller
             $user->save();
             $token = Auth::guard('user')->login($user);
             $user->update(['token'=>$token]);
-            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'کاربر با موفقیت ثبت شد']]];
+            $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+                'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
+            return $resp;
         }
 
     }

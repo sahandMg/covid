@@ -32,7 +32,7 @@ Route::post('user/update/profile','AuthController@updateProfile')->middleware('t
 Route::post('user/address','ShopController@userAddress')->middleware('token');
 Route::post('switch-account','AuthController@switchAccountType')->middleware('token');
 
-Route::get('test',function(Request $request){
+Route::post('test',function(Request $request){
 
     Cache::forget('data');
     Cache::put('data',$request->all(),2000);
