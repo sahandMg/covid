@@ -122,8 +122,8 @@ class AuthController extends Controller
             $user->key = strtoupper(str_shuffle('HABIBI').uniqid());
 //            $user->phone = $repo->convertp2e($request->phone);
             $user->save();
-            $token = JWTAuth::fromUser($user);
-            $user->update(['token'=>$token]);
+//            $token = Auth::guard('user')->login($user);
+//            $user->update(['token'=>$token]);
             $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'کاربر با موفقیت ثبت شد']]];
         }catch (\Exception $exception){
 

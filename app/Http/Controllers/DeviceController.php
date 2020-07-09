@@ -180,7 +180,7 @@ class DeviceController extends Controller
 
         $user = User::where('key',$request->owner_key)->first();
 
-        if(is_null($user) || is_null($device)){
+        if(is_null($user)){
             return 404;
         }
 
@@ -192,7 +192,7 @@ class DeviceController extends Controller
             $device->unique_id = $request->unique_id;
             $device->d_name = $request->name;
             $device->ssid = $request->password;
-            $device->admin_id = $admin->id;
+            $device->user_id = $admin->id;
             $device->w_ssid = $request->wifi_ssid;
             $device->city = $request->location;
             $device->region = $request->region;
