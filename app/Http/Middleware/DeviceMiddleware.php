@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Device;
+use App\Repo;
 use Closure;
 
 class DeviceMiddleware
@@ -17,14 +18,17 @@ class DeviceMiddleware
     public function handle($request, Closure $next)
     {
 
+        $repo = new Repo();
 
-        if(!$request->has('key') || $request->key != env('DEVICE_CODE')){
+        $resp = $repo->parseDataToArray($request->all());
+
+        if(!isset($resp['key']) || $resp['key'] != env('DEVICE_CODE')){
 
             return response(['status'=>404,'body'=>'Fake Device!']);
         }
 
 
-        if(!$request->has('unique_id') || !$request->has('power') || !$request->has('capacity') || !$request->has('push')){
+        if(!isset($resp['unique_id']) || !isset($resp['power']) || !isset($resp['capacity']) || !isset($resp['push'])){
 
             return response(['status'=>404,'body'=>'Wrong Packet !']);
         }

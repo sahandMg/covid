@@ -174,7 +174,7 @@ class DeviceController extends Controller
      * Device Middleware will check the entry data and validate them
      */
 //    TODO Under 20% send Notif. consider type of the message
-    public function sendData(Request $request,AuthController $authController){
+    public function sendData(Request $request,AuthController $authController,Repo $repo){
 
         $device = Device::where('unique_id',$request->unique_id)->first();
 
@@ -184,20 +184,32 @@ class DeviceController extends Controller
             return 404;
         }
 
-        Cache::put('data',$request->all(),2000);
+        $resp = $repo->parseDataToArray($request->all());
+
+//        Parsing Data From Device, from json to array
+
+//        $key = array_keys($request->all())[0];
+//        $segments = explode(',',$key);
+//        $resp = [];
+//        for($i=0;$i<count($segments);$i++){
+//            $resp[explode(':',$segments[$i])[0]] = explode(':',$segments[$i])[1];
+//        }
+//      ========================
+
+        Cache::put('data',$resp,2000);
 
         $admin = $authController->switchAccountType($user);
 
         if(is_null($device)){
 
             $device = new Device();
-            $device->unique_id = $request->unique_id;
-            $device->d_name = $request->name;
-            $device->ssid = $request->password;
-            $device->user_id = $admin->id;
-            $device->w_ssid = $request->wifi_ssid;
-            $device->city = $request->location;
-            $device->region = $request->region;
+            $device->unique_id = $resp['unique_id'];
+            $device->d_name = $resp['name'];
+            $device->ssid = $resp['wifi_password'];
+            $device->user_id = $admin['id'];
+            $device->w_ssid = $resp['wifi_ssid'];
+            $device->city = $resp['location'];
+            $device->region = $resp['region'];
             $device->created_at = Carbon::now();
             $device->save();
         }

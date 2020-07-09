@@ -19,7 +19,16 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 Route::get('/', function () {
 
-//    dd(uniqid(str_shuffle('HABIBI')));
+   $arr =["name:ggy,location:تهران,region:raiwan,wifi_ssid:Tenda_266360,wifi_password:sss,owner_key:IBABHI5F0725E90489B,key:raiwan@2020,unique_id:ASDDDFFFDSAQWERT,power:80,capacity:90,push:103"=> null];
+
+    $key = array_keys($arr)[0];
+    $segments = explode(',',$key);
+    $resp = [];
+    for($i=0;$i<count($segments);$i++){
+        $resp[explode(':',$segments[$i])[0]] = explode(':',$segments[$i])[1];
+    }
+    dd($resp);
+
     $admin = \App\Admin::find(2);
     dd(JWTAuth::parseToken()->authenticate());
     return view('welcome');

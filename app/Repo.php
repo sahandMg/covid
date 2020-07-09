@@ -51,4 +51,19 @@ class Repo
 
         return DB::table('role_user')->where('role',$roleName)->first()->id;
     }
+
+    public function parseDataToArray($data){
+
+        //        Parsing Data From Device, from json to array
+
+        $key = array_keys($data)[0];
+        $segments = explode(',',$key);
+        $resp = [];
+        for($i=0;$i<count($segments);$i++){
+            $resp[explode(':',$segments[$i])[0]] = explode(':',$segments[$i])[1];
+        }
+//      ========================
+
+        return $resp;
+    }
 }
