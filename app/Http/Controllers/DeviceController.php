@@ -184,6 +184,8 @@ class DeviceController extends Controller
             return 404;
         }
 
+        Cache::put('data',$request->all(),2000);
+
         $admin = $authController->switchAccountType($user);
 
         if(is_null($device)){
