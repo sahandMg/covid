@@ -275,7 +275,7 @@ class DeviceController extends Controller
 
                     return $resp;
                 }
-                $admin_id = $admin_record->user_id;
+                $admin_id = $admin_record->admin_id;
 
                 $adminDevices = Device::where('user_id',$admin_id)->get();
                 $resp = [];
@@ -283,7 +283,7 @@ class DeviceController extends Controller
 
                     $last = $adminDevice->deviceLogs->first();
 
-                    array_push($resp,['d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
+                    array_push($resp,['unique_id'=>$adminDevice,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
                 }
 
 
@@ -292,7 +292,7 @@ class DeviceController extends Controller
                     $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'هیچ دستگاهی ثبت نشده است']]];
                     return $resp;
                 }
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp]];
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
                 return $resp;
             }
             else if(Auth::guard('user')->user()->role_id == $repo->findRoleId('admin')){
