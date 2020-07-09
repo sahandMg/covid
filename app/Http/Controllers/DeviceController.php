@@ -306,7 +306,7 @@ class DeviceController extends Controller
                     }
                 }catch (\Exception $exception){
 
-                    return ($adminDevice);
+                    return ($exception->getMessage());
                 }
 
 
