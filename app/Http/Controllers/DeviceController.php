@@ -233,6 +233,8 @@ class DeviceController extends Controller
     public function get_Devices(Request $request,Repo $repo){
 
 
+        return Auth::guard('user')->user();
+
         try{
 
             if(Auth::guard('user')->user()->role_id == $repo->findRoleId('user')){
