@@ -278,12 +278,12 @@ class AuthController extends Controller
             $user->name = $request->name;
             $user->email = $request->email;
 //            $user->avatar = $client->avatar;
-            $user->key = strtoupper(str_shuffle('HABIBI'));
+            $user->key = strtoupper(str_shuffle('HABIBI').uniqid());
             $user->save();
             $token = Auth::guard('user')->login($user);
             $user->update(['token'=>$token]);
             $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-                'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
+                'role'=>'user','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
             return $resp;
         }
 
