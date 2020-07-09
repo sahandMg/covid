@@ -184,7 +184,9 @@ class DeviceController extends Controller
             return 404;
         }
 
-        $resp = $repo->parseDataToArray($request->all());
+        try{
+
+            $resp = $repo->parseDataToArray($request->all());
 
 //        Parsing Data From Device, from json to array
 
@@ -196,45 +198,51 @@ class DeviceController extends Controller
 //        }
 //      ========================
 
-        Cache::put('data',$resp,2000);
+            Cache::put('data',$resp,2000);
 
-        $admin = $authController->switchAccountType($user);
+            $admin = $authController->switchAccountType($user);
 
-        if(is_null($device)){
+            if(is_null($device)){
 
-            $device = new Device();
-            $device->unique_id = $resp['unique_id'];
-            $device->d_name = $resp['name'];
-            $device->ssid = $resp['wifi_password'];
-            $device->user_id = $admin['id'];
-            $device->w_ssid = $resp['wifi_ssid'];
-            $device->city = $resp['location'];
-            $device->region = $resp['region'];
-            $device->created_at = Carbon::now();
-            $device->save();
-        }
-        if($request->has('power')){
+                $device = new Device();
+                $device->unique_id = $resp['unique_id'];
+                $device->d_name = $resp['name'];
+                $device->ssid = $resp['wifi_password'];
+                $device->user_id = $admin['id'];
+                $device->w_ssid = $resp['wifi_ssid'];
+                $device->city = $resp['location'];
+                $device->region = $resp['region'];
+                $device->created_at = Carbon::now();
+                $device->save();
+            }
+            if($request->has('power')){
 
-            $d_log = new DeviceLog();
-            $d_log->power = $resp['power'];
-            $d_log->capacity = $resp['capacity'];
-            $d_log->push = $resp['push'];
-            $d_log->device_id = $device->id;
-            $d_log->user_id = $device->user->id;
-            $d_log->save();
-        }
+                $d_log = new DeviceLog();
+                $d_log->power = $resp['power'];
+                $d_log->capacity = $resp['capacity'];
+                $d_log->push = $resp['push'];
+                $d_log->device_id = $device->id;
+                $d_log->user_id = $device->user->id;
+                $d_log->save();
+            }
 
             $dateTime = Jalalian::fromCarbon(Carbon::now())->toString();
             $date = explode(' ',$dateTime)[0];
             $time = explode(' ',$dateTime)[1];
 
-        if($request->power < 20){
+            if($request->power < 20){
 // TODO Send Notification to app
-        }
-        if($request->capacity < 20){
+            }
+            if($request->capacity < 20){
 
-        }
+            }
             return ['status'=>200,'date'=>$date,'time'=>$time];
+
+        }catch (\Exception $exception){
+
+            return $exception->getMessage();
+        }
+
     }
 
     //    ============ send device list to related admin and user (if admin key has been registered before)  ============
