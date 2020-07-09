@@ -250,7 +250,7 @@ class AuthController extends Controller
 //        $admin = Admin::where('email',$request->email)->first();
         if(!is_null($user)){
             $token = Auth::guard('user')->login($user);
-
+            $user->update(['token'=>$token]);
             if($user->role_id == $repo->findRoleId('user') ){
 
                 $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
