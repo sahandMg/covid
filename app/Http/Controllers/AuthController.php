@@ -242,7 +242,7 @@ class AuthController extends Controller
 //     * @return mixed
 //     * Google Register & Login
 //     */
-    public function handleProviderCallback(Request $request)
+    public function handleProviderCallback(Request $request,Repo $repo)
     {
 
 //        $client =  Socialite::driver('google')->stateless()->user();
@@ -250,9 +250,17 @@ class AuthController extends Controller
 //        $admin = Admin::where('email',$request->email)->first();
         if(!is_null($user)){
             $token = Auth::guard('user')->login($user);
-            $user->update(['token'=>$token]);
-            $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-                'role'=>'user','code'=>0,'phone'=>$user->phone,'address'=>$user->address]]];
+
+            if($user->role_id == $repo->findRoleId('user') ){
+
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+                    'role'=>'user','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
+            }else{
+
+                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+                    'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
+            }
+
             return $resp;
 
         }
