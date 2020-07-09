@@ -20,8 +20,6 @@ class CreateTransactionsTable extends Migration
             $table->string('status')->nullable();
             $table->text('authority')->nullable();
             $table->unsignedInteger('user_id')->nullable();
-            $table->unsignedInteger('admin_id')->nullable();
-            $table->foreign('admin_id')->references('id')->on('admins');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });

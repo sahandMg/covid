@@ -58,8 +58,8 @@ Route::group(['prefix'=>'device','middleware'=>['token','guest:admin']],function
 
 // ======== Device Connections Routes ========
 
-Route::post('device/send','DeviceController@sendData');
-//Route::post('device/send','DeviceController@sendData')->middleware('device');
+//Route::post('device/send','DeviceController@sendData');
+Route::post('device/send','DeviceController@sendData')->middleware('device');
 
 // ======== Device General Routes (admin & user) ========
 

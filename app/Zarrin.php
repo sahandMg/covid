@@ -63,10 +63,11 @@ class Zarrin
 
                     $trans->user_id = Auth::guard('user')->id();
 
-                }elseif(Auth::guard('admin')->check()){
-
-                    $trans->admin_id = Auth::guard('admin')->id();
                 }
+//                elseif(Auth::guard('admin')->check()){
+//
+//                    $trans->admin_id = Auth::guard('admin')->id();
+//                }
 
                 $trans->save();
 
@@ -79,10 +80,11 @@ class Zarrin
 
                     $basket->user_id = Auth::guard('user')->id();
 
-                }elseif(Auth::guard('admin')->check()){
-
-                    $basket->admin_id = Auth::guard('admin')->id();
                 }
+//                elseif(Auth::guard('admin')->check()){
+//
+//                    $basket->admin_id = Auth::guard('admin')->id();
+//                }
                 $basket->trans_id = $trans->id;
                 $basket->email = Auth::guard($repo->getGuard())->user()->email;
 

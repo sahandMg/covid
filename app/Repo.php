@@ -9,6 +9,8 @@
 namespace App;
 
 
+use Illuminate\Support\Facades\DB;
+
 class Repo
 {
     public function convertp2e($input){
@@ -16,6 +18,12 @@ class Repo
         $persian = ['۰', '۱', '۲', '۳', '۴', '٤', '۵', '٥', '٦', '۶', '۷', '۸', '۹'];
         $english = [ 0 ,  1 ,  2 ,  3 ,  4 ,  4 ,  5 ,  5 ,  6 ,  6 ,  7 ,  8 ,  9 ];
         return str_replace($persian, $english, $input);
+    }
+    public function converte2p($input){
+
+        $persian = ['۰', '۱', '۲', '۳', '۴', '٤', '۵', '٥', '٦', '۶', '۷', '۸', '۹'];
+        $english = [ 0 ,  1 ,  2 ,  3 ,  4 ,  4 ,  5 ,  5 ,  6 ,  6 ,  7 ,  8 ,  9 ];
+        return str_replace($english,$persian , $input);
     }
 
     public function responseFormatter($resp){
@@ -38,5 +46,9 @@ class Repo
             if(auth()->guard($guard)->check()) return $guard;
 
         }
+    }
+    public function findRoleId($roleName){
+
+        return DB::table('role_user')->where('role',$roleName)->first()->id;
     }
 }

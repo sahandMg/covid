@@ -15,15 +15,15 @@ class CreateDevicesTable extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('unique_id')->unique();
-            $table->string('d_name')->nullable();
-            $table->string('ssid')->nullable();
-            $table->string('w_ssid')->nullable();
-            $table->string('password')->nullable();
-            $table->string('region')->nullable();
-            $table->string('city')->nullable();
-            $table->unsignedInteger('admin_id')->nullable();
-            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
+            $table->string('unique_id',32)->unique();
+            $table->string('d_name',32)->nullable();
+            $table->string('ssid',32)->nullable();
+            $table->string('w_ssid',32)->nullable();
+            $table->string('password',64)->nullable();
+            $table->string('region',32)->nullable();
+            $table->string('city',32)->nullable();
+            $table->unsignedInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

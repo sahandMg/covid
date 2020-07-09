@@ -18,8 +18,6 @@ class CreateSharedKeysTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('admin_id');
             $table->string('key');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -15,9 +15,9 @@ class CreateAdminDeviceTable extends Migration
     {
         Schema::create('admin_device', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('admin_id');
+            $table->unsignedInteger('user_id');
             $table->unsignedInteger('device_id');
-            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('device_id')->references('id')->on('devices')->onDelete('cascade');
             $table->timestamps();
         });

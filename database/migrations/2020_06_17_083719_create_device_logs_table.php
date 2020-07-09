@@ -19,9 +19,9 @@ class CreateDeviceLogsTable extends Migration
             $table->unsignedInteger('capacity');
             $table->unsignedInteger('push');
             $table->unsignedInteger('device_id')->nullable();
-            $table->unsignedInteger('admin_id')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
             $table->foreign('device_id')->references('id')->on('devices')->onDelete('set null');
-            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('set null');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });
     }

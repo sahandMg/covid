@@ -9,6 +9,7 @@ use App\SharedKey;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -39,11 +40,12 @@ class AuthController extends Controller
         }
         try{
 
-            $admin = Admin::where('email',$request->email)->first();
+//            $admin = Admin::where('email',$request->email)->first();
 
             $user = User::where('email',$request->email)->first();
 
-            if(is_null($admin) && is_null($user)){
+            if(is_null($user)){
+//            if(is_null($admin) && is_null($user)){
 
                 return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['ایمیل در سیستم ثبت نشده است']]];
 
@@ -51,11 +53,11 @@ class AuthController extends Controller
 
                 $str = Str::random();
 
-                if(!is_null($admin)){
-
-                    $admin->update(['password'=>Hash::make($str)]);
-//                    TODO SEND EMAIL
-                }
+//                if(!is_null($admin)){
+//
+//                    $admin->update(['password'=>Hash::make($str)]);
+////                    TODO SEND EMAIL
+//                }
                 if(!is_null($user)){
 
                     $user->update(['password'=>Hash::make($str)]);
@@ -116,7 +118,7 @@ class AuthController extends Controller
             $user->name = $request->name;
             $user->password = Hash::make($request->password);
             $user->email = $request->email;
-            $user->key = strtoupper(str_shuffle('HABIBI'));
+            $user->key = strtoupper(str_shuffle('HABIBI').uniqid());
 //            $user->phone = $repo->convertp2e($request->phone);
             $user->save();
             $token = JWTAuth::fromUser($user);
@@ -144,14 +146,15 @@ class AuthController extends Controller
      * Data Needed : name,email,Password,phone
      * Data returns : name,token
      */
-    public function post_adminSignup($request){
+    public function post_adminSignup($request,Repo $repo){
 
-        $admin = new Admin();
+        $admin = new User();
         $admin->name = $request->name;
         $admin->password = Hash::make($request->password);
         $admin->email = $request->email;
 //        $admin->phone = $repo->convertp2e($request->phone);
-        $admin->key = strtoupper(uniqid());
+        $admin->key = strtoupper(str_shuffle('HABIBI').uniqid());
+        $admin->role_id = $repo->findRoleId('admin');
         $admin->save();
 // !!!!!!!!!! DO NOT CHANGE THE RETURN FORMAT !!!!!!!!!!!!
         return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'ادمین با موفقیت ثبت شد']]];
@@ -186,28 +189,37 @@ class AuthController extends Controller
         }
         try{
 
+//            if($token = Auth::guard('user')->attempt(['email'=>$request->email,'password'=>$request->password])){
             if($token = Auth::guard('user')->attempt(['email'=>$request->email,'password'=>$request->password])){
 
                 $user = User::where('email',$request->email)->first();
                 $user->update(['token'=>$token]);
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-                    'role'=>'user','code'=>0,'phone'=>$user->phone,'address'=>$user->address]]];
-            }
-            elseif($token = Auth::guard('admin')->attempt(['email'=>$request->email,'password'=>$request->password])){
+                if($user->role_id == $repo->findRoleId('user') ){
 
-                $user = Admin::where('email',$request->email)->first();
-                
-                $user->update(['token'=>$token]);
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-                    'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
-            }
-            elseif($token = Auth::guard('master')->attempt(['email'=>$request->email,'password'=>$request->password])){
+                    $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+                        'role'=>'user','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
+                }else{
 
-                $user = Master::where('email',$request->email)->first();
-                $user->update(['token'=>$token]);
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-                    'role'=>'master','code'=>0,'phone'=>$user->phone,'address'=>$user->address]]];
+                    $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+                        'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
+                }
+
             }
+//            elseif($token = Auth::guard('admin')->attempt(['email'=>$request->email,'password'=>$request->password])){
+//
+//                $user = Admin::where('email',$request->email)->first();
+//
+//                $user->update(['token'=>$token]);
+//                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+//                    'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
+//            }
+//            elseif($token = Auth::guard('master')->attempt(['email'=>$request->email,'password'=>$request->password])){
+//
+//                $user = Master::where('email',$request->email)->first();
+//                $user->update(['token'=>$token]);
+//                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+//                    'role'=>'master','code'=>0,'phone'=>$user->phone,'address'=>$user->address]]];
+//            }
             else{
                 $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'ایمیل و یا کلمه عبور نادرست است']]];
             }
@@ -235,7 +247,7 @@ class AuthController extends Controller
 
 //        $client =  Socialite::driver('google')->stateless()->user();
         $user = User::where('email',$request->email)->first();
-        $admin = Admin::where('email',$request->email)->first();
+//        $admin = Admin::where('email',$request->email)->first();
         if(!is_null($user)){
             $token = Auth::guard('user')->login($user);
             $user->update(['token'=>$token]);
@@ -243,14 +255,16 @@ class AuthController extends Controller
                 'role'=>'user','code'=>0,'phone'=>$user->phone,'address'=>$user->address]]];
             return $resp;
 
-        }elseif(!is_null($admin)){
-
-            $token = Auth::guard('admin')->login($admin);
-            $admin->update(['token'=>$token]);
-            return $resp = $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-                'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
-
-        }else{
+        }
+//        elseif(!is_null($admin)){
+//
+//            $token = Auth::guard('admin')->login($admin);
+//            $admin->update(['token'=>$token]);
+//            return $resp = $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
+//                'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
+//
+//        }
+        else{
 
             $user = new User();
             $user->name = $request->name;
@@ -344,46 +358,21 @@ class AuthController extends Controller
      * Data returns :
      */
 
-    public function switchAccountType(Repo $repo,$user){
+    public function switchAccountType($user){
 
+        $repo = new Repo();
 
-//        if($repo->getGuard() == 'user'){
-//            $sharedUser = SharedKey::where('user_id',Auth::guard('user')->id())->first();
-//            if(is_null($sharedUser)){
-//
-//                $user = Auth::guard('user')->user();
-//                $admin = new Admin();
-//                $admin->name = $user->name;
-//                $admin->password = $user->password;
-//                $admin->email = $user->email;
-//                $admin->key = $user->key;
-//                $admin->save();
-//                $token = JWTAuth::fromUser($admin);
-//                $admin->update(['token'=>$token]);
-//                $user->update(['email'=>Str::random().'@yy.com']);
-//                $token = Auth::guard('admin')->login($admin);
-//                return $token;
-//            }else{
-//                return 400;
-//            }
-
-//            return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['succ'=>'سطح دسترسی ارتقا یافت','token'=>$token]]];
-//        }else{
-////            return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['امکان تغییر سطح دسترسی وجود ندارد']]];
-//        }
-
-        $admin = new Admin();
-        $admin->name = $user->name;
-        $admin->password = $user->password;
-        $admin->email = $user->email;
-        $admin->key = $user->key;
-        $admin->save();
-        $token = JWTAuth::fromUser($admin);
-        $admin->update(['token'=>$token]);
-//        $user->update(['email'=>Str::random().'@yy.com']);
-        $user->delete();
-        $token = Auth::guard('admin')->login($admin);
-        return $admin;
+//        $admin = new Admin();
+//        $admin->name = $user->name;
+//        $admin->password = $user->password;
+//        $admin->email = $user->email;
+//        $admin->key = $user->key;
+//        $admin->save();
+//        $token = JWTAuth::fromUser($admin);
+        $user->update(['role_id'=>$repo->findRoleId('admin')]);
+//        $user->delete();
+//        $token = Auth::guard('user')->login($admin);
+        return $user;
 
     }
 
@@ -405,14 +394,16 @@ class AuthController extends Controller
      */
     public function userData(Request $request,Repo $repo){
 
-        $user = Auth::guard($repo->getGuard())->user();
+        $user = Auth::guard('user')->user();
 
-        if(Auth::guard('admin')->check()){
-
-            $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone,'key'=>$user->key];
-        }else{
-            $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone];
-        }
+//        if(Auth::guard('admin')->check()){
+//
+//            $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone,'key'=>$user->key];
+//        }
+//        else{
+//            $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone];
+//        }
+        $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone];
 
         return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$data]];
     }

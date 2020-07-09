@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Providers\RouteServiceProvider;
+use App\Repo;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
@@ -23,8 +24,9 @@ class RedirectIfAuthenticated
     {
 
 //        Check Token privileges
+        $repo = new Repo();
 
-        if (!Auth::guard($guard)->check()) {
+        if (Auth::guard('user')->user()->role_id != $repo->findRoleId('admin')) {
             return response(['status'=>404,'body'=>['type'=>'error','message'=>['دسترسی به این قسمت محدود شده است']]]);
         }
 

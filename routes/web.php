@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +19,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    dd(uniqid(str_shuffle('HABIBI')));
-
+//    dd(uniqid(str_shuffle('HABIBI')));
+    $admin = \App\Admin::find(2);
+    dd(JWTAuth::parseToken()->authenticate());
     return view('welcome');
 
 });

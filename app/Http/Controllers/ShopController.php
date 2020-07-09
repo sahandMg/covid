@@ -292,7 +292,7 @@ class ShopController extends Controller
      */
     public function userAddress(Request $request,Repo $repo){
 
-        $user = Auth::guard($repo->getGuard())->user();
+        $user = Auth::guard('user')->user();
         if(!is_null($user->address)){
 
             return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>[$user->address]]];
@@ -315,15 +315,16 @@ class ShopController extends Controller
 
         try{
 
-            if(Auth::guard('admin')->check()){
-
-                $carts = Cart::where('admin_id',Auth::guard('admin')->id())->where('completed',1)->get();
-
-            }else{
-
-                $carts = Cart::where('user_id',Auth::guard('user')->id())->where('completed',1)->get();
-
-            }
+//            if(Auth::guard('admin')->check()){
+//
+//                $carts = Cart::where('admin_id',Auth::guard('admin')->id())->where('completed',1)->get();
+//
+//            }else{
+//
+//                $carts = Cart::where('user_id',Auth::guard('user')->id())->where('completed',1)->get();
+//
+//            }
+            $carts = Cart::where('user_id',Auth::guard('user')->id())->where('completed',1)->get();
 
             if(count($carts) != 0){
 

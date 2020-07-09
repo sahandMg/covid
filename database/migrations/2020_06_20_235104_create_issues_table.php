@@ -18,10 +18,10 @@ class CreateIssuesTable extends Migration
             $table->string('title');
             $table->string('img')->nullable();
             $table->text('desc');
-            $table->unsignedInteger('admin_id')->nullable();
+//            $table->unsignedInteger('admin_id')->nullable();
             $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
+//            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
             $table->timestamps();
         });
     }

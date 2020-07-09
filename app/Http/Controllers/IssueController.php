@@ -42,19 +42,19 @@ class IssueController extends Controller
 //            $name = time().'.'.$request->file('img')->getClientOriginalExtension();
 //            $request->file('img')->move(public_path('images'),$name);
 //            $issue->img = $name;
-            if(Auth::guard('admin')->check()){
-
-                $issue->admin_id = Auth::guard('admin')->id();
-                $user = Auth::guard('admin')->user();
-
-            }else{
-
-                $issue->user_id = Auth::guard('user')->id();
-                $user = Auth::guard('user')->user();
-            }
-
+//            if(Auth::guard('user')->role_id == $repo->findRoleId('admin')){
+//
+//                $issue->admin_id = Auth::guard('user')->id();
+//                $user = Auth::guard('user')->user();
+//
+//            }else{
+//
+//                $issue->user_id = Auth::guard('user')->id();
+//                $user = Auth::guard('user')->user();
+//            }
+            $issue->user_id = Auth::guard('user')->id();
+            $user = Auth::guard('user')->user();
             $issue->save();
-
             $data = ['issue'=>$issue,'user'=>$user];
             Mail::send('email.responseMail',$data,function($message)use($user){
 
