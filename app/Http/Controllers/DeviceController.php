@@ -214,7 +214,7 @@ class DeviceController extends Controller
                 $device->created_at = Carbon::now();
                 $device->save();
             }
-            if($request->has('power')){
+            if(isset($resp['power'])){
 
                 $d_log = new DeviceLog();
                 $d_log->power = $resp['power'];
