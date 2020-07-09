@@ -242,7 +242,7 @@ class DeviceController extends Controller
                 $admin_record = DB::table('shared_keys')->where('user_id',$user->id)->first();
                 if(is_null($admin_record)){
 
-                    $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>'نیاز به تایید ادمین دارید']]];
+                    $resp = ['status'=>200,'body'=>['type'=>'error','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
                     return $resp;
                 }
                 $admin_id = $admin_record->user_id;
