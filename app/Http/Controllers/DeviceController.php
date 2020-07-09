@@ -176,18 +176,17 @@ class DeviceController extends Controller
 //    TODO Under 20% send Notif. consider type of the message
     public function sendData(Request $request,AuthController $authController,Repo $repo){
 
-        $device = Device::where('unique_id',$request->unique_id)->first();
-
-        $user = User::where('key',$request->owner_key)->first();
-
-        if(is_null($user)){
-            return 404;
-        }
-
         try{
 
             $resp = $repo->parseDataToArray($request->all());
 
+            $device = Device::where('unique_id',$resp['unique_id'])->first();
+
+            $user = User::where('key',$resp['owner_key'])->first();
+
+            if(is_null($user)){
+                return 404;
+            }
 //        Parsing Data From Device, from json to array
 
 //        $key = array_keys($request->all())[0];
