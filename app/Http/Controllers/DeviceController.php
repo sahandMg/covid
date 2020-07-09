@@ -233,7 +233,7 @@ class DeviceController extends Controller
     public function get_Devices(Request $request,Repo $repo){
 
 
-        return Auth::guard('user')->user();
+        return ['status'=>200,'body'=>['type'=>'data','message'=> Auth::guard('user')->user()]];
 
         try{
 
