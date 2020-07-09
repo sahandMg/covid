@@ -213,6 +213,14 @@ class DeviceController extends Controller
                 $device->region = $resp['region'];
                 $device->created_at = Carbon::now();
                 $device->save();
+            }else{
+
+                $device->update(['d_name'=>$resp['name']]);
+                $device->update(['ssid'=>$resp['wifi_password']]);
+                $device->update(['w_ssid'=>$resp['wifi_ssid']]);
+                $device->update(['city'=>$resp['location']]);
+                $device->update(['region'=>$resp['region']]);
+
             }
             if(isset($resp['power'])){
 
