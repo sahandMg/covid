@@ -216,9 +216,9 @@ class DeviceController extends Controller
         if($request->has('power')){
 
             $d_log = new DeviceLog();
-            $d_log->power = $request->power;
-            $d_log->capacity = $request->capacity;
-            $d_log->push = $request->push;
+            $d_log->power = $resp['power'];
+            $d_log->capacity = $resp['capacity'];
+            $d_log->push = $resp['push'];
             $d_log->device_id = $device->id;
             $d_log->user_id = $device->user->id;
             $d_log->save();
