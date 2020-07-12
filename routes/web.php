@@ -17,21 +17,99 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function ($notification_id) {
 
-   $arr =["name:ggy,location:تهران,region:raiwan,wifi_ssid:Tenda_266360,wifi_password:sss,owner_key:IBABHI5F0725E90489B,key:raiwan@2020,unique_id:ASDDDFFFDSAQWERT,power:80,capacity:90,push:103"=> null];
 
-    $key = array_keys($arr)[0];
-    $segments = explode(',',$key);
-    $resp = [];
-    for($i=0;$i<count($segments);$i++){
-        $resp[explode(':',$segments[$i])[0]] = explode(':',$segments[$i])[1];
-    }
-    dd($resp);
+//    $ch = curl_init();
+//    curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications/{notification_id}?app_id=".env('ONESIGNAL_APP_ID'));
+//    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
+//        'Authorization: Basic '.env('ONESIGNAL_REST_API_KEY')));
+//    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+//    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+//    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+//
+//    $response = curl_exec($ch);
+//    curl_close($ch);
+//    $return["allresponses"] = $response;
+//    $return = json_encode( $return);
+//
+//    print("\n\nJSON received:\n");
+//    print($return);
+//    print("\n");
 
-    $admin = \App\Admin::find(2);
-    dd(JWTAuth::parseToken()->authenticate());
-    return view('welcome');
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://onesignal.com/api/v1/notifications?app_id=".env('ONESIGNAL_APP_ID'),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            "Authorization: Basic ".env('ONESIGNAL_REST_API_KEY'),
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+
+    curl_close($curl);
+
+     dd($response,200);
+
+});
+
+Route::get('notif',function(){
+
+    $content      = array(
+        "en" => 'English Message'
+    );
+    $hashes_array = array();
+    array_push($hashes_array, array(
+        "id" => "like-button",
+        "text" => "Like",
+        "icon" => "http://i.imgur.com/N8SN8ZS.png",
+        "url" => "https//covid.sahand-moghadam.ir"
+    ));
+    array_push($hashes_array, array(
+        "id" => "like-button-2",
+        "text" => "Like2",
+        "icon" => "http://i.imgur.com/N8SN8ZS.png",
+        "url" => "https//covid.sahand-moghadam.ir"
+    ));
+    $fields = array(
+        'app_id' => env("ONESIGNAL_APP_ID"),
+        'included_segments' => array(
+            'All'
+        ),
+        'data' => array(
+            "foo" => "bar"
+        ),
+        'contents' => $content,
+        'web_buttons' => $hashes_array
+    );
+
+    $fields = json_encode($fields);
+    print("\nJSON sent:\n");
+    print($fields);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json; charset=utf-8',
+        'Authorization: Basic '.env('ONESIGNAL_REST_API_KEY')
+    ));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
 
 });
 

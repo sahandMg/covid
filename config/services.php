@@ -33,6 +33,10 @@ return [
         'client_id' => env('CLIENT_ID'),         // Your GitHub Client ID
         'client_secret' => env('CLIENT_SECRET'), // Your GitHub Client Secret
         'redirect' => env('GOOGLE_REDIRECT'),
-    ]
+    ],
+    'onesignal' => [
+        'app_id' => env('ONESIGNAL_APP_ID'),
+        'rest_api_key' => env('ONESIGNAL_REST_API_KEY')
+    ],
 
 ];
