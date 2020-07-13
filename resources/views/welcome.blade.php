@@ -28,6 +28,7 @@
                 head.appendChild(script);
             })()
         </script>
+        {{----}}
         <!-- END NAJVA PUSH NOTIFICATION -->
 
 
