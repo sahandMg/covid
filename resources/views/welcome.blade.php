@@ -9,15 +9,27 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
-        <script src="js/onesignal.js" async=""></script>
-        <script>
-            window.OneSignal = window.OneSignal || [];
-            OneSignal.push(function() {
-                OneSignal.init({
-                    appId: "7afc521d-1b52-46a1-8e4b-686525cb4734",
-                });
-            });
+        <link rel="manifest" href="/manifest.json">
+        <!-- Najva Push Notification -->
+        <script type="text/javascript">
+            (function(){
+                var now = new Date();
+                var version = now.getFullYear().toString() + "0" + now.getMonth() + "0" + now.getDate() +
+                        "0" + now.getHours();
+                var head = document.getElementsByTagName("head")[0];
+                var link = document.createElement("link");
+                link.rel = "stylesheet";
+                link.href = "https://app.najva.com/static/css/local-messaging.css" + "?v=" + version;
+                head.appendChild(link);
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.async = true;
+                script.src = "https://app.najva.com/static/js/scripts/sahand-moghadam-website-16001-ebcc1665-cdb8-4c7b-8e42-835e24c7a8fd.js" + "?v=" + version;
+                head.appendChild(script);
+            })()
         </script>
+        <!-- END NAJVA PUSH NOTIFICATION -->
+
 
         <!-- Styles -->
         <style>
