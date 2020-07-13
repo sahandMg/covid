@@ -21,183 +21,35 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 Route::get('/', function () {
 
-
-    $user = \App\User::find(3);
-    $user->notify(new \App\Notifications\PowerNotification());
-//    AIzaSyDPZ5pawLuPhIhjQf6bhJhCzvAdP-axT5Q
-//client id : 294272939478-ogckpr8p76m60sfsghms0kfi52j1n0ql.apps.googleusercontent.com
-//    client secret
-
-     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL,  'https://fcm.googleapis.com/v1/%5BPARENT%5D/messages:send?key=AIzaSyDPZ5pawLuPhIhjQf6bhJhCzvAdP-axT5Q');
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        'Content-Type: application/json',
-        'Accept: application/json',
-        'Authorization: Bearer 294272939478-ogckpr8p76m60sfsghms0kfi52j1n0ql.apps.googleusercontent.com'));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_HEADER, FALSE);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-
-    $response = curl_exec($ch);
-    curl_close($ch);
-    $return["allresponses"] = $response;
-    $return = json_encode( $return);
-
-//    $queries =  DB::table('devices')->join('device_logs', 'devices.id', '=', 'device_logs.device_id')
-//        ->where('device_logs.created_at','<',Carbon::today())->where('device_logs.created_at','>',Carbon::yesterday())
-//        ->select('device_id','push','devices.user_id','device_logs.created_at')->get();
-//    $deviceArr = [];
-//    $deviceOwner = [];
-//    try{
-//
-//        foreach ($queries as $query){
-//
-//            if(!in_array($query->device_id,array_keys($deviceArr))){
-//                $deviceArr[$query->device_id] = $query->push;
-//            }else{
-//                $deviceArr[$query->device_id] = $deviceArr[$query->device_id] + $query->push;
-//            }
-//            if(!in_array($query->device_id,array_keys($deviceOwner))){
-//
-//                $deviceOwner[$query->device_id] = $query->user_id;
-//            }
-//        }
-//
-//        foreach($deviceArr as $key=>$item){
-//
-//            $report = new Report();
-//            $report->total_pushed = $item;
-//            $report->device_id = $key;
-//            $report->user_id = $deviceOwner[$key];
-//            $report->save();
-//        }
-//    }catch (\Exception $exception){
-//
-//        dd($exception->getMessage());
-//    }
-
-
-//    $ch = curl_init();
-//    curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications/{notification_id}?app_id=".env('ONESIGNAL_APP_ID'));
-//    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
-//        'Authorization: Basic '.env('ONESIGNAL_REST_API_KEY')));
-//    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-//    curl_setopt($ch, CURLOPT_HEADER, FALSE);
-//    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-//
-//    $response = curl_exec($ch);
-//    curl_close($ch);
-//    $return["allresponses"] = $response;
-//    $return = json_encode( $return);
-//
-//    print("\n\nJSON received:\n");
-//    print($return);
-//    print("\n");
-
-//    $curl = curl_init();
-//
-//    curl_setopt_array($curl, array(
-//        CURLOPT_URL => "https://onesignal.com/api/v1/notifications?app_id=".env('ONESIGNAL_APP_ID'),
-//        CURLOPT_RETURNTRANSFER => true,
-//        CURLOPT_ENCODING => "",
-//        CURLOPT_MAXREDIRS => 10,
-//        CURLOPT_TIMEOUT => 30,
-//        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-//        CURLOPT_CUSTOMREQUEST => "GET",
-//        CURLOPT_HTTPHEADER => array(
-//            "Authorization: Basic ".env('ONESIGNAL_REST_API_KEY'),
-//        ),
-//    ));
-//
-//    $response = curl_exec($curl);
-//    $err = curl_error($curl);
-//
-//    curl_close($curl);
-//
-//     dd($response,200);
-
-});
-
-Route::get('notif',function(){
-
-    $content      = array(
-        "en" => 'اخطار باتری ! ',
-        "content"=>'سطح باتری زیر ۲۰ درصد است'
-    );
-    $hashes_array = array();
-    array_push($hashes_array, array(
-        "id" => "like-button",
-        "text" => "Like",
-        "icon" => "http://i.imgur.com/N8SN8ZS.png",
-        "url" => "http//covid.sahand-moghadam.ir"
-    ));
-    array_push($hashes_array, array(
-        "id" => "like-button-2",
-        "text" => "Like2",
-        "icon" => "http://i.imgur.com/N8SN8ZS.png",
-        "url" => "http//covid.sahand-moghadam.ir"
-    ));
-    $fields = array(
-        'app_id' => env("ONESIGNAL_APP_ID"),
-        'included_segments' => array(
-            'All'
-        ),
-        'data' => array(
-            "foo" => "bar"
-        ),
-        'contents' => $content,
-        'web_buttons' => $hashes_array
-    );
-
-    $fields = json_encode($fields);
-    print("\nJSON sent:\n");
-    print($fields);
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        'Content-Type: application/json; charset=utf-8',
-        'Authorization: Basic '.env('ONESIGNAL_REST_API_KEY')
-    ));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_HEADER, FALSE);
-    curl_setopt($ch, CURLOPT_POST, TRUE);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-
-    $response = curl_exec($ch);
-    curl_close($ch);
-
+    return view('welcome');
 
 });
 
 Route::get('notif2',function(){
 
-    $url = "https://app.najva.com/api/v1/notifications/";
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'cache-control' => 'no-cache',
-        'content-type' => 'application/json',
-        'authorization' => 'Token 535de69c6613f810ab193ac011fca5241211b1b8'
-    ]);
-    $fields = json_encode([
-        "api_key"=>"ebcc1665-cdb8-4c7b-8e42-835e24c7a8fd",
-        "title"=>"اخطاریه ۲",
-        "body"=>"بدو باتریت تموم شد",
-        "onclick_action"=>"open-app",
-        "url"=>"http://covid.sahand-moghadam.ir",
-    ]);
 
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_HEADER, FALSE);
-    curl_setopt($ch, CURLOPT_POST, TRUE);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    $api_key = env('NAJVA_API_KEY');
+    $token = env('NAJVA_TOKEN');
 
-    $response = curl_exec($ch);
-    curl_close($ch);
-    dd($response);
-
+    $notification = new \App\NajvaNotif(true);
+    $notification->title = "اخطار باتری!";
+    $notification->body = "ظرفیت باتری دستگاه منطقه ۲۲ طبقه سوم در دوم زیر ۲۰ درصد است";
+    $notification->onClickAction = "open-link";
+    $notification->url = "http://covid.sahand-moghadam.ir";
+    $notification->content = "nothing special";
+    $notification->json = array(
+        'key'=>'value',
+        'key2'=>'value2'
+    );
+    $notification->icon = "https://www.ait-themes.club/wp-content/uploads/cache/images/2020/02/guestblog_featured/guestblog_featured-482918665.jpg";
+    $notification->image = "https://www.ait-themes.club/wp-content/uploads/cache/images/2020/02/guestblog_featured/guestblog_featured-482918665.jpg";
+    $time = Carbon::now()->addSeconds(5)->format("Y-m-d H:i:s");
+    $time = str_replace(' ','T',$time);
+    $notification->sentTime = $time;
+//    dd(Carbon::now()->format("Y-m-d H:i:s"));
+    $najva = new \App\Najva($api_key,$token);
+    $result = $najva->sendNotification($notification);
+    echo $result;
 });
 
 Route::get('@admin/signup','AuthController@adminSignup')->name('adminSignup');
