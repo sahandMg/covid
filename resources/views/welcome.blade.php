@@ -9,6 +9,16 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
+        <script src="js/onesignal.js" async=""></script>
+        <script>
+            window.OneSignal = window.OneSignal || [];
+            OneSignal.push(function() {
+                OneSignal.init({
+                    appId: "7afc521d-1b52-46a1-8e4b-686525cb4734",
+                });
+            });
+        </script>
+
         <!-- Styles -->
         <style>
             html, body {

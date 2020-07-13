@@ -41,35 +41,39 @@ class ReportCommand extends Command
      */
     public function handle()
     {
-        $queries =  DB::table('devices')->join('device_logs', 'devices.id', '=', 'device_logs.device_id')->select('device_id','push','devices.admin_id','device_logs.created_at')->get();
+        $queries =  DB::table('devices')->join('device_logs', 'devices.id', '=', 'device_logs.device_id')
+            ->where('device_logs.created_at','<',Carbon::today())->where('device_logs.created_at','>',Carbon::yesterday())
+            ->select('device_id','push','devices.user_id','device_logs.created_at')->get();
         $deviceArr = [];
         $deviceOwner = [];
+        try{
 
-        foreach ($queries as $query){
-            $queryDate = Carbon::parse($query->created_at);
-            $today = Carbon::today();
-            $yesterday = Carbon::yesterday();
-            if($queryDate->greaterThanOrEqualTo($yesterday) && $queryDate->lessThan($today)){
+            foreach ($queries as $query){
 
                 if(!in_array($query->device_id,array_keys($deviceArr))){
                     $deviceArr[$query->device_id] = $query->push;
                 }else{
                     $deviceArr[$query->device_id] = $deviceArr[$query->device_id] + $query->push;
                 }
-            }
-            if(!in_array($query->device_id,array_keys($deviceOwner))){
+                if(!in_array($query->device_id,array_keys($deviceOwner))){
 
-                $deviceOwner[$query->device_id] = $query->admin_id;
+                    $deviceOwner[$query->device_id] = $query->user_id;
+                }
             }
-        }
-        foreach($deviceArr as $key=>$item){
 
-            $report = new Report();
-            $report->total_pushed = $item;
-            $report->device_id = $key;
-            $report->admin_id = $deviceOwner[$key];
-            $report->save();
+            foreach($deviceArr as $key=>$item){
+
+                $report = new Report();
+                $report->total_pushed = $item;
+                $report->device_id = $key;
+                $report->admin_id = $deviceOwner[$key];
+                $report->save();
+            }
+        }catch (\Exception $exception){
+
+            dd($exception);
         }
+
 
     }
 }

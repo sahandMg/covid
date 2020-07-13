@@ -111,7 +111,7 @@ class DeviceController extends Controller
 
                     $device->update(['region'=>$request->region]);
                 }
-                $device->update(['admin_id'=> Auth::guard('admin')->id()]);
+                $device->update(['user_id'=> Auth::guard('user')->id()]);
 
                 $resp = ['status'=>200,'body'=>['type'=>'success','message'=>['scc' =>'اطلاعات دستگاه به روز رسانی شد']]];
             }
@@ -259,16 +259,118 @@ class DeviceController extends Controller
      * Data returns : devices_list
      */
 
-    public function get_Devices(Request $request,Repo $repo){
+//    public function get_Devices(Request $request,Repo $repo){
+//
+//
+//
+//
+//        try{
+//
+//            if(Auth::guard('user')->user()->role_id == $repo->findRoleId('user')){
+//                $user = Auth::guard('user')->user();
+//                $admin_record = DB::table('shared_keys')->where('user_id',$user->id)->first();
+//                if(is_null($admin_record)){
+//
+//                    $resp = ['status'=>404,'body'=>['type'=>'data','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+//
+//                    return $resp;
+//                }
+//                $admin_id = $admin_record->admin_id;
+//
+//                $adminDevices = Device::where('user_id',$admin_id)->get();
+//                if(count($adminDevices->toArray()) == 0){
+//
+//                    $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'هیچ دستگاهی ثبت نشده است']]];
+//                    return $resp;
+//                }
+//                $resp = [];
+//                foreach ($adminDevices as $adminDevice){
+//
+//                    $last = $adminDevice->deviceLogs->first();
+//
+//                    array_push($resp,['unique_id'=>$adminDevice->unique_id,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
+//                }
+//
+//
+//
+//                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+//                return $resp;
+//            }
+//            else if(Auth::guard('user')->user()->role_id == $repo->findRoleId('admin')){
+//
+//                $admin = Auth::guard('user')->user();
+////                $devices = DB::table('devices')
+////                    ->join('device_logs',function($query){
+////                        $query->on('devices.id', '=', 'device_logs.device_id');
+////                    })
+////                    ->where('devices.admin_id',$admin->id)->orderBy('device_logs.id','desc')->select('d_name','power','capacity','region','city')->get();
+//                $adminDevices = Device::where('user_id',$admin->id)->get();
+//                $resp = [];
+//                try{
+//                    foreach ($adminDevices as $adminDevice){
+//
+//                        $last = $adminDevice->deviceLogs->first();
+//
+//                        array_push($resp,['unique_id'=>$adminDevice->unique_id,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
+//                    }
+//                }catch (\Exception $exception){
+//
+//                    return ($exception->getMessage());
+//                }
+//
+//
+//
+//
+//                if(is_null($adminDevices)){
+//
+//                    $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'هیچ دستگاهی ثبت نشده است']]];
+//                    return $resp;
+//                }
+//                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+//                return $resp;
+//            }
+//        }catch (\Exception $exception){
+//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage().$exception->getLine()]];
+//            return $resp;
+//        }
+//
+//    }
+
+    //    ============ send device list to related admin and user (if admin key has been registered before)  ============
+
+    /*
+     * Data Needed : token,date
+     * Data returns : message
+     */
+
+    public function get_Devices_update(Request $request,Repo $repo){
 
 
+        $validator = Validator::make($request->all(),[
+            'date'=>'required'
+        ]);
 
+        if($validator->fails()){
+
+
+            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
+            return $resp;
+        }
 
         try{
 
+            $date = $request->date;
+
+//            USER SIDE
+
             if(Auth::guard('user')->user()->role_id == $repo->findRoleId('user')){
+
                 $user = Auth::guard('user')->user();
                 $admin_record = DB::table('shared_keys')->where('user_id',$user->id)->first();
+
+//                checks shared key, if admin code hasn't been shared, user can't see devices
+
                 if(is_null($admin_record)){
 
                     $resp = ['status'=>404,'body'=>['type'=>'data','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
@@ -277,62 +379,98 @@ class DeviceController extends Controller
                 }
                 $admin_id = $admin_record->admin_id;
 
-                $adminDevices = Device::where('user_id',$admin_id)->get();
+                $adminDevices = Device::where('user_id',$admin_id)->where('updated_at','>',Carbon::parse($date))->get();
                 $resp = [];
-                foreach ($adminDevices as $adminDevice){
 
-                    $last = $adminDevice->deviceLogs->first();
+//                Means that there is no new devices on the app
 
-                    array_push($resp,['unique_id'=>$adminDevice->unique_id,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
+                if(count($adminDevices->toArray()) == 0){
+
+                    $devices =  DB::table('devices')->where('devices.user_id',$admin_id)->where('device_logs.updated_at','>',Carbon::parse($date))
+                        ->join('device_logs','device_logs.device_id','=','devices.id')->select('unique_id','d_name','power','capacity','region','city')->get();
+
+//               Means that there is no new data for devices
+
+                    if(count($devices->toArray()) == 0){
+
+                        $resp = ['status'=>404,'body'=>['type'=>'error','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                        return $resp;
+                    }else{
+
+                        $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$devices,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+
+                        return $resp;
+                    }
                 }
+                else{
 
-
-                if(is_null($adminDevices)){
-
-                    $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'هیچ دستگاهی ثبت نشده است']]];
-                    return $resp;
-                }
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
-                return $resp;
-            }
-            else if(Auth::guard('user')->user()->role_id == $repo->findRoleId('admin')){
-
-                $admin = Auth::guard('user')->user();
-//                $devices = DB::table('devices')
-//                    ->join('device_logs',function($query){
-//                        $query->on('devices.id', '=', 'device_logs.device_id');
-//                    })
-//                    ->where('devices.admin_id',$admin->id)->orderBy('device_logs.id','desc')->select('d_name','power','capacity','region','city')->get();
-                $adminDevices = Device::where('user_id',$admin->id)->get();
-                $resp = [];
-                try{
                     foreach ($adminDevices as $adminDevice){
 
                         $last = $adminDevice->deviceLogs->first();
 
-                        array_push($resp,['unique_id'=>$adminDevice->unique_id,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
+                        array_push($resp,[
+
+                            'unique_id'=>$adminDevice->unique_id,'d_name'=>$adminDevice->d_name,
+                            'power'=>$last->power,'capacity'=>$last->capacity,
+                            'region'=>$adminDevice->region,'city'=>$adminDevice->city
+                        ]);
                     }
-                }catch (\Exception $exception){
 
-                    return ($exception->getMessage());
-                }
-
-
-
-
-                if(is_null($adminDevices)){
-
-                    $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'هیچ دستگاهی ثبت نشده است']]];
+                    $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
                     return $resp;
                 }
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
-                return $resp;
+            }
+
+    //        ADMIN SIDE
+
+            else if(Auth::guard('user')->user()->role_id == $repo->findRoleId('admin')){
+
+                $admin = Auth::guard('user')->user();
+                $adminDevices = Device::where('user_id',$admin->id)->where('updated_at','>',Carbon::parse($date))->get();
+
+
+//                No Update for devices. Check device props instead
+
+                if(count($adminDevices->toArray()) == 0){
+
+                    $devices =  DB::table('devices')->where('devices.user_id',$admin->id)->where('device_logs.updated_at','>',Carbon::parse($date))
+                        ->join('device_logs','device_logs.device_id','=','devices.id')->select('unique_id','d_name','power','capacity','region','city')->get();
+
+
+                    if(count($devices->toArray()) == 0){
+
+                        $resp = ['status'=>404,'body'=>['type'=>'error','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                        return $resp;
+                    }else{
+
+                        $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$devices,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+
+                        return $resp;
+                    }
+                }
+                else{
+
+                    $resp = [];
+
+                    try{
+                        foreach ($adminDevices as $adminDevice){
+
+                            $last = $adminDevice->deviceLogs->first();
+
+                            array_push($resp,['unique_id'=>$adminDevice->unique_id,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
+                        }
+                    }catch (\Exception $exception){
+
+                        return ($exception->getMessage());
+                    }
+                    $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                    return $resp;
+                }
             }
         }catch (\Exception $exception){
             $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage().$exception->getLine()]];
             return $resp;
         }
-
     }
 
     //    ============ Registering admin key by user  ============
@@ -404,6 +542,7 @@ class DeviceController extends Controller
         $validator = Validator::make($request->all(),[
             'filter_name'=>'required',
             'unique_id'=>'required',
+            'date'=>'required'
         ]);
         if($validator->fails()){
 
@@ -411,6 +550,7 @@ class DeviceController extends Controller
             $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
             return $resp;
         }
+        $date = $request->date;
         try{
 
             $device = Device::where('unique_id',$request->unique_id)->first();
@@ -419,12 +559,13 @@ class DeviceController extends Controller
                 return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['دستگاهی یافت نشد']]];
             }
             $deviceReports = DB::table('reports')->where('device_id',$device->id)
-                ->wheredate('created_at','>',Carbon::now()->subMonths(6))
+                ->where('updated_at','>',Carbon::parse($date))
                 ->orderBy('created_at','desc')->select('id','total_pushed','created_at')
                 ->get();
+
             if(count($deviceReports) == 0){
 
-                return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['اطلاعاتی برای این دستگاه وجود ندارد']]];
+                return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
             }
             if($request->filter_name == 'day'){
 
