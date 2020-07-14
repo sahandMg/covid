@@ -14,7 +14,7 @@ class CreateReportsTable extends Migration
     public function up()
     {
         Schema::create('reports', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->unsignedInteger('total_pushed');
             $table->unsignedInteger('device_id')->nullable();
             $table->unsignedInteger('user_id')->nullable();

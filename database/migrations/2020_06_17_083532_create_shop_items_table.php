@@ -14,7 +14,7 @@ class CreateShopItemsTable extends Migration
     public function up()
     {
         Schema::create('shop_items', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('p_name')->unique();
             $table->string('price');
             $table->text('desc');

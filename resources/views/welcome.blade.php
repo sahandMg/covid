@@ -11,6 +11,11 @@
 
         <link rel="manifest" href="/manifest.json">
         <!-- Najva Push Notification -->
+        <script>
+            window.najvaUserSubscribed = function(najva_user_token){
+                console.log('token '+najva_user_token)
+            }
+        </script>
         <script type="text/javascript">
             (function(){
                 var now = new Date();

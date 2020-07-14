@@ -27,29 +27,16 @@ Route::get('/', function () {
 
 Route::get('notif2',function(){
 
+    $device = \App\Device::find(14);
+    $device_name = $device->d_name;
+    $body = " حجم مایع دستگاه سهند زیر ۲۰ درصد است ";
+    $title = "اخطار حجم مایع";
+    \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->id);
 
-    $api_key = env('NAJVA_API_KEY');
-    $token = env('NAJVA_TOKEN');
 
-    $notification = new \App\NajvaNotif(true);
-    $notification->title = "اخطار باتری!";
-    $notification->body = "ظرفیت باتری دستگاه منطقه ۲۲ طبقه سوم در دوم زیر ۲۰ درصد است";
-    $notification->onClickAction = "open-link";
-    $notification->url = "http://covid.sahand-moghadam.ir";
-    $notification->content = "nothing special";
-    $notification->json = array(
-        'key'=>'value',
-        'key2'=>'value2'
-    );
-    $notification->icon = "https://www.ait-themes.club/wp-content/uploads/cache/images/2020/02/guestblog_featured/guestblog_featured-482918665.jpg";
-    $notification->image = "https://www.ait-themes.club/wp-content/uploads/cache/images/2020/02/guestblog_featured/guestblog_featured-482918665.jpg";
-    $time = Carbon::now()->addSeconds(5)->format("Y-m-d H:i:s");
-    $time = str_replace(' ','T',$time);
-    $notification->sentTime = $time;
-//    dd(Carbon::now()->format("Y-m-d H:i:s"));
-    $najva = new \App\Najva($api_key,$token);
-    $result = $najva->sendNotification($notification);
-    echo $result;
+
+//    ('اخطار','بدووووو');
+//    dd($ev);
 });
 
 Route::get('@admin/signup','AuthController@adminSignup')->name('adminSignup');

@@ -207,11 +207,11 @@ class DeviceController extends Controller
                 $device->unique_id = $resp['unique_id'];
                 $device->d_name = $resp['name'];
                 $device->ssid = $resp['wifi_password'];
-                $device->user_id = $admin['id'];
+                $device->user_id = $admin->id;
                 $device->w_ssid = $resp['wifi_ssid'];
                 $device->city = $resp['location'];
                 $device->region = $resp['region'];
-                $device->created_at = Carbon::now();
+//                $device->created_at = Carbon::now();
                 $device->save();
             }else{
 
@@ -237,10 +237,21 @@ class DeviceController extends Controller
             $date = explode(' ',$dateTime)[0];
             $time = explode(' ',$dateTime)[1];
 
-            if($request->power < 20){
+            if($request->power < env('CAPACITY_THRESHOLD')){
 // TODO Send Notification to app
+
+                $device_name = $device->d_name;
+                $body = " حجم مایع دستگاه $device_name زیر ۲۰ درصد است ";
+                $title = "اخطار حجم مایع";
+                \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->id);
+
             }
-            if($request->capacity < 20){
+            if($request->capacity < env('POWER_THRESHOLD')){
+
+                $device_name = $device->d_name;
+                $body = " زیر ۲۰ درصد است$device_name ظرفیت باتری دستگاه ";
+                $title = "اخطار ظرفیت باتری";
+                \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->id);
 
             }
             return ['status'=>200,'date'=>$date,'time'=>$time];

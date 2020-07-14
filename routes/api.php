@@ -88,3 +88,5 @@ Route::group(['prefix'=>'trans','middleware'=>'token'],function (){
 });
 
 Route::post('issue','IssueController@create')->middleware('token');
+
+Route::post('sync/user','AuthController@SyncUser');

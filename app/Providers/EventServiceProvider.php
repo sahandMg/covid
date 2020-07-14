@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\CapacityNotificationEvent;
+use App\Events\DeviceNotification;
+use App\Events\DeviceNotificationEvent;
+use App\Events\PowerNotificationEvent;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +22,7 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        DeviceNotificationEvent::class => ['App\Listeners\DeviceNotificationListener'],
     ];
 
     /**

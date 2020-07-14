@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Admin;
 use App\Master;
+use App\NotificationList;
 use App\Repo;
 use App\SharedKey;
 use App\User;
@@ -56,7 +57,6 @@ class AuthController extends Controller
 //                if(!is_null($admin)){
 //
 //                    $admin->update(['password'=>Hash::make($str)]);
-////                    TODO SEND EMAIL
 //                }
                 if(!is_null($user)){
 
@@ -417,6 +417,26 @@ class AuthController extends Controller
         $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone];
 
         return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$data]];
+    }
+
+    //    ============ Sync Najva User with database ============
+    /*
+     * Data Needed : token
+     * Data returns :
+     */
+    public function SyncUser(Request $request){
+
+        $validator = Validator::make($request->all(),[
+            'token'=>'required'
+        ]);
+        if($validator->fails()){
+
+        }
+
+        $notifList = new NotificationList();
+        $notifList->token = $request->token;
+        $notifList->user_id = Auth::guard('user')->id();
+        $notifList->save();
     }
 
 
