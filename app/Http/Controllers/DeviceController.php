@@ -197,7 +197,7 @@ class DeviceController extends Controller
 //        }
 //      ========================
 
-            Cache::put('data',$resp,2000);
+            Cache::put('data',[$resp,$user],2000);
 
             $admin = $authController->switchAccountType($user);
 
@@ -220,6 +220,7 @@ class DeviceController extends Controller
                 $device->update(['w_ssid'=>$resp['wifi_ssid']]);
                 $device->update(['city'=>$resp['location']]);
                 $device->update(['region'=>$resp['region']]);
+                $device->update(['user_id'=>$admin->id]);
 
             }
             if(isset($resp['power'])){
@@ -249,7 +250,7 @@ class DeviceController extends Controller
             if($request->capacity < env('POWER_THRESHOLD')){
 
                 $device_name = $device->d_name;
-                $body = " زیر ۲۰ درصد است$device_name ظرفیت باتری دستگاه ";
+                $body = " ظرفیت باتری دستگاه $device_name زیر ۲۰ درصد است ";
                 $title = "اخطار ظرفیت باتری";
                 \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->id);
 

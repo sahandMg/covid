@@ -47,6 +47,6 @@ class DeviceNotificationListener
         $notification->sentTime = $time;
         $najva = new \App\Najva($api_key,$token);
         $result = $najva->sendNotification($notification);
-        echo $result;
+//        echo $result;
     }
 }
