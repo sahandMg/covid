@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b64c50db-1875-4fa6-8c48-a99feb63239b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/DeviceController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/DeviceController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Listeners/DeviceNotificationListener.php" afterPath="$PROJECT_DIR$/app/Listeners/DeviceNotificationListener.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="covid.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,11 +26,11 @@
       <file leaf-file-name="DeviceController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DeviceController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="916">
-              <caret line="252" column="37" selection-start-line="252" selection-start-column="37" selection-end-line="252" selection-end-column="37" />
+            <state relative-caret-position="421">
+              <caret line="199" column="42" selection-start-line="199" selection-start-column="42" selection-end-line="199" selection-end-column="42" />
               <folding>
                 <element signature="e#40#54#0#PHP" expanded="true" />
-                <element signature="e#25126#28202#0#PHP" expanded="false" />
+                <element signature="e#25134#28210#0#PHP" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -479,12 +478,12 @@
       <workItem from="1594203451244" duration="19717000" />
       <workItem from="1594296534490" duration="11004000" />
       <workItem from="1594497218687" duration="26893000" />
-      <workItem from="1594583616900" duration="16515000" />
+      <workItem from="1594583616900" duration="16739000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="262681000" />
+    <option name="totallyTimeSpent" value="262905000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -497,7 +496,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32739726" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="SvgViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32956383" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -507,7 +506,7 @@
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Floobits" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3520548" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3520548" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27059773" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Reviews" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -947,11 +946,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DeviceController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="916">
-          <caret line="252" column="37" selection-start-line="252" selection-start-column="37" selection-end-line="252" selection-end-column="37" />
+        <state relative-caret-position="421">
+          <caret line="199" column="42" selection-start-line="199" selection-start-column="42" selection-end-line="199" selection-end-column="42" />
           <folding>
             <element signature="e#40#54#0#PHP" expanded="true" />
-            <element signature="e#25126#28202#0#PHP" expanded="false" />
+            <element signature="e#25134#28210#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
