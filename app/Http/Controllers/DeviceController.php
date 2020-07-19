@@ -614,7 +614,8 @@ class DeviceController extends Controller
 
                         }
                     }
-                    array_push($result,['total_pushed'=>$total_push,'date'=>$repo->converte2p(Jalalian::fromCarbon($today2)->format('%d %B %y')).'*'.$repo->converte2p(Jalalian::fromCarbon($today2)->subDays(7)->format('%d %B %y'))]);
+//                    array_push($result,['total_pushed'=>$total_push,'date'=>$repo->converte2p(Jalalian::fromCarbon($today2)->format('Y-m-d')).'*'.$repo->converte2p(Jalalian::fromCarbon($today2)->subDays(7)->format('Y-m-d'))]);
+                    array_push($result,['total_pushed'=>$total_push,'date'=>$repo->converte2p(Jalalian::fromCarbon($today2)->format('Y-m-d'))]);
                     $total_push = 0;
                     $today2->subDays(7);
                     $i += 1;

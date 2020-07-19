@@ -162,7 +162,6 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 //        Irazasyed\JwtAuthGuard\JwtAuthGuardServiceProvider::class,
-
         /*
          * Package Service Providers...
          */

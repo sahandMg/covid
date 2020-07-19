@@ -9,15 +9,18 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
-        <link rel="manifest" href="/manifest.json">
+
         <!-- Najva Push Notification -->
         <script>
             window.najvaUserSubscribed = function(najva_user_token){
-                console.log('token '+najva_user_token)
+
+                console.log(window.najva_user_token)
             }
+
         </script>
         <script type="text/javascript">
-            (function(){
+            (function(najva_user_token){
+                console.log(window.najva_user_token)
                 var now = new Date();
                 var version = now.getFullYear().toString() + "0" + now.getMonth() + "0" + now.getDate() +
                         "0" + now.getHours();
@@ -35,7 +38,6 @@
         </script>
         {{----}}
         <!-- END NAJVA PUSH NOTIFICATION -->
-
 
         <!-- Styles -->
         <style>

@@ -33,10 +33,23 @@ Route::get('notif2',function(){
     $title = "اخطار حجم مایع";
     \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->id);
 
+    $app_id = env('ONESIGNAL_APP_ID');
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/players?app_id=" . $app_id);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
+        'Authorization: Basic '.env('ONESIGNAL_AUTH_KEY')));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    return $response;
 
+});
 
-//    ('اخطار','بدووووو');
-//    dd($ev);
+Route::get('notif3',function(){
+
+    \Berkayk\OneSignal\OneSignalFacade::sendNotificationToUser("Some Message", '290d9ccc-c3df-419c-80ca-68914ce43d1d', $url = null, $data = null);
 });
 
 Route::get('@admin/signup','AuthController@adminSignup')->name('adminSignup');

@@ -30,7 +30,7 @@ class DeviceNotificationListener
         $api_key = env('NAJVA_API_KEY');
         $token = env('NAJVA_TOKEN');
 
-        $notification = new \App\NajvaNotif(true);
+        $notification = new \App\NajvaNotif(false);
         $notification->title = $event->title;
         $notification->body = $event->body;
         $notification->onClickAction = "open-link";
@@ -40,6 +40,7 @@ class DeviceNotificationListener
             'key'=>'value',
             'key2'=>'value2'
         );
+        $notification->subscribersToken = ['129451097','129441009'];
         $notification->icon = "https://www.ait-themes.club/wp-content/uploads/cache/images/2020/02/guestblog_featured/guestblog_featured-482918665.jpg";
         $notification->image = "https://www.ait-themes.club/wp-content/uploads/cache/images/2020/02/guestblog_featured/guestblog_featured-482918665.jpg";
         $time = Carbon::now()->addSeconds(5)->format("Y-m-d H:i:s");
@@ -47,6 +48,6 @@ class DeviceNotificationListener
         $notification->sentTime = $time;
         $najva = new \App\Najva($api_key,$token);
         $result = $najva->sendNotification($notification);
-//        echo $result;
+        echo $result;
     }
 }
