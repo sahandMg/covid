@@ -52,6 +52,42 @@ Route::get('notif3',function(){
     \Berkayk\OneSignal\OneSignalFacade::sendNotificationToUser("Some Message", '290d9ccc-c3df-419c-80ca-68914ce43d1d', $url = null, $data = null);
 });
 
+Route::get('notif4',function (){
+
+    $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+    $token='diWhHpEdy1k:APA91bHfaE_zy4FUJ_GGDmO3XuJNz5qshyMeyjbIvvdLKI-DkR5rzhS00k9Hwc49yKzJLUraUPbu9-H-XOv8hbT-q-omtzXa8-uAv8Ewej52zO1gH0maKoGP4FLCu9FwVlLSpwBDC_3T';
+
+    $notification = [
+        'title' => 'Coming From Firebase',
+        'sound' => true,
+    ];
+
+    $extraNotificationData = ["message" => $notification,"moredata" =>'dd'];
+
+    $fcmNotification = [
+        //'registration_ids' => $tokenList, //multple token array
+        'to'        => $token, //single token
+        'notification' => $notification,
+        'data' => $extraNotificationData
+    ];
+
+    $headers = [
+        'Authorization: key=AAAARIQItdY:APA91bGkOqsrx0pvQ3w-IKLe9WzpDs4aUa48ea8WZoRhb1O9h81V7Wj7hJPqMZ7vr8xv0TTTSOSpgSAXw9WPfH_PbSl1ABZqZsQPTRbCxm5ln1Mq4CcQpZ2_Yio5fVSAtzYwf90DdPvP',
+        'Content-Type: application/json'
+    ];
+
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$fcmUrl);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmNotification));
+    $result = curl_exec($ch);
+    curl_close($ch);
+});
+
 Route::get('@admin/signup','AuthController@adminSignup')->name('adminSignup');
 Route::post('signup','AuthController@post_adminSignup')->name('adminSignup');
 Route::get('zarrin/callback','TransactionController@ZarrinCallback');

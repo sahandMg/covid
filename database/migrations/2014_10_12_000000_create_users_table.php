@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->text('address')->nullable();
             $table->string('key')->nullable();
             $table->text('token')->nullable();
+            $table->text('fcm_token')->nullable();
             $table->tinyInteger('role_id')->default(1);
             $table->rememberToken();
             $table->timestamps();
