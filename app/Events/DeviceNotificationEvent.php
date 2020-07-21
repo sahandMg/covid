@@ -21,13 +21,13 @@ class DeviceNotificationEvent
      */
     public $title;
     public $body;
-    public $user_id;
+    public $fcm_token;
 
-    public function __construct($title,$body,$user_id)
+    public function __construct($title,$body,$fcm_token)
     {
         $this->body = $body;
         $this->title = $title;
-        $this->user_id = $user_id;
+        $this->fcm_token = $fcm_token;
     }
 
     /**

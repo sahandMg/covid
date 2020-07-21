@@ -244,7 +244,7 @@ class DeviceController extends Controller
                 $device_name = $device->d_name;
                 $body = " حجم مایع دستگاه $device_name زیر ۲۰ درصد است ";
                 $title = "اخطار حجم مایع";
-                \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->id);
+                \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->fcm_token);
 
             }
             if($resp['capacity'] < env('POWER_THRESHOLD')){
@@ -252,7 +252,7 @@ class DeviceController extends Controller
                 $device_name = $device->d_name;
                 $body = " ظرفیت باتری دستگاه $device_name زیر ۲۰ درصد است ";
                 $title = "اخطار ظرفیت باتری";
-                \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->id);
+                \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->fcm_token);
 
             }
             return ['status'=>200,'date'=>$date,'time'=>$time];
