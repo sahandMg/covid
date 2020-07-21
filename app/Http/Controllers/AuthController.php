@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use phpDocumentor\Reflection\Types\Null_;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -301,6 +302,7 @@ class AuthController extends Controller
 
     public function logout(){
 
+        Auth::guard('user')->user()->fcm_token = Null;
         JWTAuth::parseToken()->invalidate();
         return  ['status'=>200,'body'=>['type'=>'success','message'=> ['scc'=>'حساب بسته شد']]];
     }

@@ -238,7 +238,7 @@ class DeviceController extends Controller
             $date = explode(' ',$dateTime)[0];
             $time = explode(' ',$dateTime)[1];
 
-            if($resp['power'] < env('CAPACITY_THRESHOLD')){
+            if($resp['capacity'] < env('CAPACITY_THRESHOLD')){
 // TODO Send Notification to app
 
                 $device_name = $device->d_name;
@@ -247,7 +247,7 @@ class DeviceController extends Controller
                 \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->fcm_token);
 
             }
-            if($resp['capacity'] < env('POWER_THRESHOLD')){
+            if($resp['power'] < env('POWER_THRESHOLD')){
 
                 $device_name = $device->d_name;
                 $body = " ظرفیت باتری دستگاه $device_name زیر ۲۰ درصد است ";
@@ -255,7 +255,7 @@ class DeviceController extends Controller
                 \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->fcm_token);
 
             }
-            return ['status'=>200,'date'=>$date,'time'=>$time];
+            return ['status'=>200,'date'=>$date,'time'=>$time,'power_off'=> $device->power_off];
 
         }catch (\Exception $exception){
 

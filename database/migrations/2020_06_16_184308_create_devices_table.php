@@ -22,6 +22,7 @@ class CreateDevicesTable extends Migration
             $table->string('password',64)->nullable();
             $table->string('region',32)->nullable();
             $table->string('city',32)->nullable();
+            $table->boolean('power_off')->default(0);
             $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
