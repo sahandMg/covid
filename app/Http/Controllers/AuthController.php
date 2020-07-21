@@ -302,7 +302,7 @@ class AuthController extends Controller
 
     public function logout(){
 
-        Auth::guard('user')->user()->fcm_token = Null;
+        Auth::guard('user')->user()->update(['fcm_token'=> Null]);
         JWTAuth::parseToken()->invalidate();
         return  ['status'=>200,'body'=>['type'=>'success','message'=> ['scc'=>'حساب بسته شد']]];
     }
