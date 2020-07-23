@@ -55,13 +55,13 @@ class Repo
     public function parseDataToArray($data){
 
         //        Parsing Data From Device, from json to array
+        $resp = json_decode(array_keys($data)[0]);
 
-        $key = array_keys($data)[0];
-        $segments = explode(',',$key);
-        $resp = [];
-        for($i=0;$i<count($segments);$i++){
-            $resp[explode(':',$segments[$i])[0]] = explode(':',$segments[$i])[1];
-        }
+//        $segments = explode(',',$key);
+//        $resp = [];
+//        for($i=0;$i<count($segments);$i++){
+//            $resp[explode(':',$segments[$i])[0]] = explode(':',$segments[$i])[1];
+//        }
 //      ========================
 
         return $resp;

@@ -73,6 +73,7 @@ class ReportCommand extends Command
 
             dd($exception);
         }
+        \App\DeviceLog::where('created_at','<',Carbon::yesterday())->delete();
 
 
     }

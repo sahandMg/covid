@@ -19,64 +19,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class DeviceController extends Controller
 {
-    //    ============ Adding new Device ============
-    /*
-     * Data Needed : name,ssid,w_ssid,region,city,unique_id,token
-     * Data returns : name,token,message
-     */
-//    public function add(Request $request,AuthController $authController,Repo $repo){
-//
-//        $validator = Validator::make($request->all(),[
-////            'd_name'=>'required',
-////            'ssid'=>'required',
-////            'w_ssid'=>'required',
-////            'city'=>'required',
-////            'region'=>'required',
-//            'unique_id'=>'required'
-//        ]);
-//        if($validator->fails()){
-//
-//            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
-//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
-//            return $resp;
-//        }
-//
-//        try{
-//
-//            $device = Device::where('unique_id',$request->unique_id)->first();
-//            if(is_null($device)){
-//                $resp = ['status'=>404,'body'=>['type'=>'data','message'=>['err'=>'دستگاه یافت نشد']]];
-//                return $resp;
-//            }else{
-//                $token = $authController->switchAccountType($repo);
-//                if($token == 400){
-//
-//                    return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['دسترسی به این قسمت محدود شده است']]];
-//                }
-//                $device->update(['d_name'=>$request->d_name]);
-//                $device->update(['ssid'=>$request->ssid]);
-//                $device->update(['w_ssid'=>$request->w_ssid]);
-//                $device->update(['region'=>$request->region]);
-//                $device->update(['city'=>$request->city]);
-//                $device->update(['admin_id'=>Auth::guard('user')->id()]);
-//                if($request->has('password')){
-//                    $device->update(['password'=>$request->password]);
-//                }
-//
-//                DeviceLog::where('device_id',$device->id)->whereNull('admin_id')->update(['admin_id'=> Auth::guard('admin')->id()]);
-//            }
-//            DB::table('admin_device')->insert([
-//                'admin_id'=>Auth::guard('admin')->id(),
-//                'device_id'=>$device->id,
-//                'created_at'=>Carbon::now()
-//            ]);
-//            $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'دستگاه با موفقیت ثبت شد','token'=>$token]]];
-//        }catch (\Exception $exception){
-//
-//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
-//        }
-//        return $resp;
-//    }
 
     //    ============ Updating Device Information ============
     /*
@@ -95,14 +37,6 @@ class DeviceController extends Controller
 
                     $device->update(['d_name'=>$request->d_name]);
                 }
-//                if($request->has('ssid')){
-//
-//                    $device->update(['ssid'=>$request->ssid]);
-//                }
-//                if($request->has('w_ssid')){
-//
-//                    $device->update(['w_ssid'=>$request->w_ssid]);
-//                }
                 if($request->has('city')){
 
                     $device->update(['city'=>$request->city]);
@@ -173,7 +107,6 @@ class DeviceController extends Controller
      * Data returns : time and date
      * Device Middleware will check the entry data and validate them
      */
-//    TODO Under 20% send Notif. consider type of the message
     public function sendData(Request $request,AuthController $authController,Repo $repo){
 
         try{
@@ -204,31 +137,31 @@ class DeviceController extends Controller
             if(is_null($device)){
 
                 $device = new Device();
-                $device->unique_id = $resp['unique_id'];
-                $device->d_name = $resp['name'];
-                $device->ssid = $resp['wifi_password'];
+                $device->unique_id = $resp->unique_id;
+                $device->d_name = $resp->name;
+                $device->ssid = $resp->wifi_password;
                 $device->user_id = $admin->id;
-                $device->w_ssid = $resp['wifi_ssid'];
-                $device->city = $resp['location'];
-                $device->region = $resp['region'];
+                $device->w_ssid = $resp->wifi_ssid;
+                $device->city = $resp->location;
+                $device->region = $resp->region;
 //                $device->created_at = Carbon::now();
                 $device->save();
             }else{
 
-                $device->update(['d_name'=>$resp['name']]);
-                $device->update(['ssid'=>$resp['wifi_password']]);
-                $device->update(['w_ssid'=>$resp['wifi_ssid']]);
-                $device->update(['city'=>$resp['location']]);
-                $device->update(['region'=>$resp['region']]);
+                $device->update(['d_name'=>$resp->name]);
+                $device->update(['ssid'=>$resp->wifi_password]);
+                $device->update(['w_ssid'=>$resp->wifi_ssid]);
+                $device->update(['city'=>$resp->location]);
+                $device->update(['region'=>$resp->region]);
                 $device->update(['user_id'=>$admin->id]);
 
             }
             if(isset($resp['power'])){
 
                 $d_log = new DeviceLog();
-                $d_log->power = $resp['power'];
-                $d_log->capacity = $resp['capacity'];
-                $d_log->push = $resp['push'];
+                $d_log->power = $resp->power;
+                $d_log->capacity = $resp->capacity;
+                $d_log->push = $resp->push;
                 $d_log->device_id = $device->id;
                 $d_log->user_id = $device->user->id;
                 $d_log->save();
@@ -239,8 +172,6 @@ class DeviceController extends Controller
             $time = explode(' ',$dateTime)[1];
 
             if($resp['capacity'] < env('CAPACITY_THRESHOLD')){
-// TODO Send Notification to app
-
                 $device_name = $device->d_name;
                 $body = " حجم مایع دستگاه $device_name زیر ۲۰ درصد است ";
                 $title = "اخطار حجم مایع";
@@ -248,7 +179,6 @@ class DeviceController extends Controller
 
             }
             if($resp['power'] < env('POWER_THRESHOLD')){
-
                 $device_name = $device->d_name;
                 $body = " ظرفیت باتری دستگاه $device_name زیر ۲۰ درصد است ";
                 $title = "اخطار ظرفیت باتری";
@@ -264,89 +194,6 @@ class DeviceController extends Controller
 
     }
 
-    //    ============ send device list to related admin and user (if admin key has been registered before)  ============
-
-    /*
-     * Data Needed : token
-     * Data returns : devices_list
-     */
-
-//    public function get_Devices(Request $request,Repo $repo){
-//
-//
-//
-//
-//        try{
-//
-//            if(Auth::guard('user')->user()->role_id == $repo->findRoleId('user')){
-//                $user = Auth::guard('user')->user();
-//                $admin_record = DB::table('shared_keys')->where('user_id',$user->id)->first();
-//                if(is_null($admin_record)){
-//
-//                    $resp = ['status'=>404,'body'=>['type'=>'data','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
-//
-//                    return $resp;
-//                }
-//                $admin_id = $admin_record->admin_id;
-//
-//                $adminDevices = Device::where('user_id',$admin_id)->get();
-//                if(count($adminDevices->toArray()) == 0){
-//
-//                    $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'هیچ دستگاهی ثبت نشده است']]];
-//                    return $resp;
-//                }
-//                $resp = [];
-//                foreach ($adminDevices as $adminDevice){
-//
-//                    $last = $adminDevice->deviceLogs->first();
-//
-//                    array_push($resp,['unique_id'=>$adminDevice->unique_id,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
-//                }
-//
-//
-//
-//                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
-//                return $resp;
-//            }
-//            else if(Auth::guard('user')->user()->role_id == $repo->findRoleId('admin')){
-//
-//                $admin = Auth::guard('user')->user();
-////                $devices = DB::table('devices')
-////                    ->join('device_logs',function($query){
-////                        $query->on('devices.id', '=', 'device_logs.device_id');
-////                    })
-////                    ->where('devices.admin_id',$admin->id)->orderBy('device_logs.id','desc')->select('d_name','power','capacity','region','city')->get();
-//                $adminDevices = Device::where('user_id',$admin->id)->get();
-//                $resp = [];
-//                try{
-//                    foreach ($adminDevices as $adminDevice){
-//
-//                        $last = $adminDevice->deviceLogs->first();
-//
-//                        array_push($resp,['unique_id'=>$adminDevice->unique_id,'d_name'=>$adminDevice->d_name,'power'=>$last->power,'capacity'=>$last->capacity,'region'=>$adminDevice->region,'city'=>$adminDevice->city]);
-//                    }
-//                }catch (\Exception $exception){
-//
-//                    return ($exception->getMessage());
-//                }
-//
-//
-//
-//
-//                if(is_null($adminDevices)){
-//
-//                    $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'هیچ دستگاهی ثبت نشده است']]];
-//                    return $resp;
-//                }
-//                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
-//                return $resp;
-//            }
-//        }catch (\Exception $exception){
-//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage().$exception->getLine()]];
-//            return $resp;
-//        }
-//
-//    }
 
     //    ============ send device list to related admin and user (if admin key has been registered before)  ============
 
@@ -656,100 +503,7 @@ class DeviceController extends Controller
 
             return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage().' '.$exception->getLine()]];
         }
-
-
     }
-
-
-//     TODO !!!!!!!!!!!!  Naqese !!!!!!!!!!
-    public function liquidChart2(Request $request,Repo $repo){
-
-
-        $validator = Validator::make($request->all(),[
-            'filter_name'=>'required',
-            'unique_id'=>'required',
-        ]);
-        if($validator->fails()){
-
-            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
-            return $resp;
-        }
-        $id = Device::where('unique_id',$request->unique_id)->first()->id;
-        $deviceLogs = DB::table('device_logs')->where('device_id',$id)->get();
-
-        if($request->filter_name == 'week'){
-
-            $logs = DeviceLog::where('created_at','>',Carbon::now()->subDays(7))
-                ->where('created_at','<',Carbon::now())
-                ->get();
-
-        }
-        elseif($request->filter_name == 'month') {
-
-            $logs = $deviceLogs->pluck('created_at')->toArray();
-            $sum = 0;
-            $respArr = [];
-            $years = [];
-            $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
-            for ($i = 0; $i < count($logs); $i++) {
-
-                $date = Carbon::parse($logs[$i])->format('Y');
-                array_push($years, $date);
-            }
-            $years = array_values(array_unique($years));
-            for ($y = 0; $y < count($years); $y++) {
-                for ($m = 0; $m < 12; $m++) {
-
-                    foreach ($deviceLogs as $deviceLog) {
-
-                        if (explode('-', $deviceLog->created_at)[0] == $years[$y]) {
-                            if (explode('-', $deviceLog->created_at)[1] == $months[$m]) {
-
-                                $sum = $sum + $deviceLog->push;
-                            }
-                        }
-                    }
-                    array_push($respArr, ['date' => $years[$y] . ' ' . $months[$m], 'count' => $sum]);
-                    $sum = 0;
-                }
-            }
-            dd($respArr);
-        }
-        elseif($request->filter_name == 'year'){
-
-            $logs = $deviceLogs->pluck('created_at')->toArray();
-            $years = [];
-            for($i=0;$i<count($logs);$i++){
-
-                $date = Carbon::parse($logs[$i])->format('Y');
-                array_push($years,$date);
-            }
-            $years = array_values(array_unique($years));
-            $sum = 0;
-            $respArr = [];
-            for($t=0;$t<count($years);$t++){
-
-                foreach ($deviceLogs as $deviceLog){
-
-                    if(explode('-',$deviceLog->created_at)[0] == $years[$t]){
-
-                        $sum = $sum + $deviceLog->push;
-                    }
-                }
-                array_push($respArr,['date'=>$years[$t],'count'=>$sum]);
-                $sum = 0;
-            }
-            dd($respArr);
-
-        }else{
-
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>'ورودی باید هفته،ماه یا سال باشد']]];
-            return $resp;
-        }
-//        return array_values(array_unique($temp));
-    }
-
     //    ============ Getting Transactions List  ============
 
     /*

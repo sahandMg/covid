@@ -88,6 +88,15 @@ Route::get('notif4',function (){
     curl_close($ch);
 });
 
+Route::get('logs',function(){
+
+    $repo = new \App\Repo();
+    $str = ["{\"name\":\"Devic\",\"location\":\"Istanbol\",\"owner_key\":\"SDKMDLSAAA\",\"region\":\"Anc\",\"key\":\"Raiwan@2020\",\"unique_id\":\"FSDFEERGFSDFEERG\",\"power\":\"0\",\"push\":\"0\",\"capacity\":\"0\"}"=> null];
+    dd($repo->parseDataToArray($str)->unique_id);
+
+
+});
+
 Route::get('@admin/signup','AuthController@adminSignup')->name('adminSignup');
 Route::post('signup','AuthController@post_adminSignup')->name('adminSignup');
 Route::get('zarrin/callback','TransactionController@ZarrinCallback');
@@ -117,9 +126,9 @@ Route::get('issue',function(){
 
     $issue = \App\Issue::where('user_id',1)->first();
     $user = $issue->user;
-    return view('email.responseMail',compact('issue','user'));
+//    return view('email.responseMail',compact('issue','user'));
     $data = ['issue'=>$issue,'user'=>$user];
-    Mail::send('email.issueMail',$data,function($message)use($user){
+    Mail::send('email.responseMail',$data,function($message)use($user){
 
         $message->to('s23.moghadam@gmail.com');
         $message->from(env('NoReply'));
