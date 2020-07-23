@@ -91,8 +91,8 @@ Route::get('notif4',function (){
 Route::get('logs',function(){
 
     $repo = new \App\Repo();
-    $str = ["{\"name\":\"Devic\",\"location\":\"Istanbol\",\"owner_key\":\"SDKMDLSAAA\",\"region\":\"Anc\",\"key\":\"Raiwan@2020\",\"unique_id\":\"FSDFEERGFSDFEERG\",\"power\":\"0\",\"push\":\"0\",\"capacity\":\"0\"}"=> null];
-    dd($repo->parseDataToArray($str)->unique_id);
+//    "{\"name\":\"Devic\",\"location\":\"Istanbol\",\"owner_key\":\"SDKMDLSAAA\",\"region\":\"Anc\",\"key\":\"Raiwan@2020\",\"unique_id\":\"FSDFEERGFSDFEERG\",\"power\":\"0\",\"push\":\"0\",\"capacity\":\"0\"}": null;
+//    $repo->parseDataToArray();
 
 
 });

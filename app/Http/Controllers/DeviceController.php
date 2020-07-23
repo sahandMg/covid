@@ -113,28 +113,18 @@ class DeviceController extends Controller
 
             $resp = $repo->parseDataToArray($request->all());
 
-            $device = Device::where('unique_id',$resp['unique_id'])->first();
-
-            $user = User::where('key',$resp['owner_key'])->first();
+            $device = Device::where('unique_id',$resp->unique_id)->first();
+            $user = User::where('key',$resp->owner_key)->first();
 
             if(is_null($user)){
                 return 404;
             }
-//        Parsing Data From Device, from json to array
 
-//        $key = array_keys($request->all())[0];
-//        $segments = explode(',',$key);
-//        $resp = [];
-//        for($i=0;$i<count($segments);$i++){
-//            $resp[explode(':',$segments[$i])[0]] = explode(':',$segments[$i])[1];
-//        }
-//      ========================
-
-            Cache::put('data',[$resp,$user],2000);
+            Cache::put('data',[$resp,$user],200000);
 
             $admin = $authController->switchAccountType($user);
 
-            if(is_null($device)){
+            if(is_null($resp)){
 
                 $device = new Device();
                 $device->unique_id = $resp->unique_id;
@@ -147,16 +137,22 @@ class DeviceController extends Controller
 //                $device->created_at = Carbon::now();
                 $device->save();
             }else{
+                try{
 
-                $device->update(['d_name'=>$resp->name]);
-                $device->update(['ssid'=>$resp->wifi_password]);
-                $device->update(['w_ssid'=>$resp->wifi_ssid]);
-                $device->update(['city'=>$resp->location]);
-                $device->update(['region'=>$resp->region]);
-                $device->update(['user_id'=>$admin->id]);
+                    $device->update(['d_name'=>$resp->name]);
+                    $device->update(['ssid'=>$resp->wifi_password]);
+                    $device->update(['w_ssid'=>$resp->wifi_ssid]);
+                    $device->update(['city'=>$resp->location]);
+                    $device->update(['region'=>$resp->region]);
+                    $device->update(['user_id'=>$admin->id]);
+                }catch (\Exception $exception){
+
+                    dd($exception->getMessage());
+                }
+
 
             }
-            if(isset($resp['power'])){
+            if(isset($resp->power)){
 
                 $d_log = new DeviceLog();
                 $d_log->power = $resp->power;
@@ -171,14 +167,14 @@ class DeviceController extends Controller
             $date = explode(' ',$dateTime)[0];
             $time = explode(' ',$dateTime)[1];
 
-            if($resp['capacity'] < env('CAPACITY_THRESHOLD')){
+            if($resp->capacity < env('CAPACITY_THRESHOLD')){
                 $device_name = $device->d_name;
                 $body = " حجم مایع دستگاه $device_name زیر ۲۰ درصد است ";
                 $title = "اخطار حجم مایع";
                 \App\Events\DeviceNotificationEvent::dispatch($title,$body,$device->user->fcm_token);
 
             }
-            if($resp['power'] < env('POWER_THRESHOLD')){
+            if($resp->power < env('POWER_THRESHOLD')){
                 $device_name = $device->d_name;
                 $body = " ظرفیت باتری دستگاه $device_name زیر ۲۰ درصد است ";
                 $title = "اخطار ظرفیت باتری";
