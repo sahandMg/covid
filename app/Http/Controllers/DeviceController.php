@@ -124,7 +124,7 @@ class DeviceController extends Controller
 
             $admin = $authController->switchAccountType($user);
 
-            if(is_null($resp)){
+            if(is_null($device)){
 
                 $device = new Device();
                 $device->unique_id = $resp->unique_id;
@@ -133,6 +133,7 @@ class DeviceController extends Controller
                 $device->user_id = $admin->id;
                 $device->w_ssid = $resp->wifi_ssid;
                 $device->city = $resp->location;
+                $device->power_off = 0;
                 $device->region = $resp->region;
 //                $device->created_at = Carbon::now();
                 $device->save();
