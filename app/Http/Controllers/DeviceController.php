@@ -129,9 +129,9 @@ class DeviceController extends Controller
                 $device = new Device();
                 $device->unique_id = $resp->unique_id;
                 $device->d_name = $resp->name;
-                $device->ssid = $resp->wifi_password;
+//                $device->ssid = $resp->wifi_password;
                 $device->user_id = $admin->id;
-                $device->w_ssid = $resp->wifi_ssid;
+//                $device->w_ssid = $resp->wifi_ssid;
                 $device->city = $resp->location;
                 $device->power_off = 0;
                 $device->region = $resp->region;
@@ -141,8 +141,8 @@ class DeviceController extends Controller
                 try{
 
                     $device->update(['d_name'=>$resp->name]);
-                    $device->update(['ssid'=>$resp->wifi_password]);
-                    $device->update(['w_ssid'=>$resp->wifi_ssid]);
+//                    $device->update(['ssid'=>$resp->wifi_password]);
+//                    $device->update(['w_ssid'=>$resp->wifi_ssid]);
                     $device->update(['city'=>$resp->location]);
                     $device->update(['region'=>$resp->region]);
                     $device->update(['user_id'=>$admin->id]);

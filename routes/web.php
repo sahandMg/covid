@@ -88,14 +88,6 @@ Route::get('notif4',function (){
     curl_close($ch);
 });
 
-Route::get('logs',function(){
-
-    $repo = new \App\Repo();
-//    "{\"name\":\"Devic\",\"location\":\"Istanbol\",\"owner_key\":\"SDKMDLSAAA\",\"region\":\"Anc\",\"key\":\"Raiwan@2020\",\"unique_id\":\"FSDFEERGFSDFEERG\",\"power\":\"0\",\"push\":\"0\",\"capacity\":\"0\"}": null;
-//    $repo->parseDataToArray();
-
-
-});
 
 Route::get('@admin/signup','AuthController@adminSignup')->name('adminSignup');
 Route::post('signup','AuthController@post_adminSignup')->name('adminSignup');
