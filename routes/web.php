@@ -104,7 +104,7 @@ Route::post('@admin/add-product','ShopController@addItem')->name('addproduct');
 Route::get('@admin/update-product/{name}','AdminController@update')->name('updateProduct');
 Route::post('@admin/update-product/{name}','ShopController@updateItem')->name('updateProduct');
 
-Route::get('@admin/device-management','DeviceController@management');
+Route::get('@admin/device-management','AdminController@management');
 
 //Route::get('@admin/remove-product/{name}','AdminController@remove')->name('removeItem');
 Route::get('@admin/remove-product/{name}','ShopController@removeItem')->name('removeItem');

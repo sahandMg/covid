@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Device;
 use App\ShopItem;
 use Illuminate\Http\Request;
 
@@ -35,5 +36,13 @@ class AdminController extends Controller
 //        }else{
 //
 //        }
+    }
+
+    public function management(){
+
+        $devices = Device::get();
+
+        return view('admin.deviceManagement',compact('devices'));
+
     }
 }

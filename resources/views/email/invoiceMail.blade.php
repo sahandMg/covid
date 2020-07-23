@@ -189,10 +189,10 @@
                 <th>مجموع</th>
                 <td>{{$cart->amount}}</td>
             </tr>
-            <tr>
-                <th>هزینه ارسال</th>
-                <td>25000</td>
-            </tr>
+            {{--<tr>--}}
+                {{--<th>هزینه ارسال</th>--}}
+                {{--<td>25000</td>--}}
+            {{--</tr>--}}
             <tr>
                 <th>قابل پرداخت </th>
                 <td style="font-weight: bold">{{$cart->amount}}</td>
