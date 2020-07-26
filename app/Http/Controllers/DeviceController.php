@@ -229,7 +229,7 @@ class DeviceController extends Controller
 
                 if(is_null($admin_record)){
 
-                    $resp = ['status'=>404,'body'=>['type'=>'data','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                    $resp = ['status'=>404,'body'=>['type'=>'data','message'=>[],'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
 
                     return $resp;
                 }
@@ -249,11 +249,11 @@ class DeviceController extends Controller
 
                     if(count($devices->toArray()) == 0){
 
-                        $resp = ['status'=>404,'body'=>['type'=>'error','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                        $resp = ['status'=>404,'body'=>['type'=>'error','message'=>[],'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
                         return $resp;
                     }else{
 
-                        $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$devices,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                        $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$devices,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
 
                         return $resp;
                     }
@@ -272,7 +272,7 @@ class DeviceController extends Controller
                         ]);
                     }
 
-                    $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                    $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
                     return $resp;
                 }
             }
@@ -295,11 +295,11 @@ class DeviceController extends Controller
 
                     if(count($devices->toArray()) == 0){
 
-                        $resp = ['status'=>404,'body'=>['type'=>'error','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                        $resp = ['status'=>404,'body'=>['type'=>'error','message'=>[],'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
                         return $resp;
                     }else{
 
-                        $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$devices,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                        $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$devices,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
 
                         return $resp;
                     }
@@ -319,7 +319,7 @@ class DeviceController extends Controller
 
                         return ($exception->getMessage());
                     }
-                    $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                    $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
                     return $resp;
                 }
             }
@@ -421,7 +421,7 @@ class DeviceController extends Controller
 
             if(count($deviceReports) == 0){
 
-                return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>[],'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
             }
             if($request->filter_name == 'day'){
 
@@ -433,7 +433,7 @@ class DeviceController extends Controller
                     array_push($result,['total_pushed'=>$deviceReport->total_pushed,'date'=> $repo->converte2p(Jalalian::fromCarbon(Carbon::parse($deviceReport->created_at))->format('Y-m-d')) ]);
                 }
 
-                return $resp = ['status'=>200,'body'=>['type'=>'day','message'=>$result,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                return $resp = ['status'=>200,'body'=>['type'=>'day','message'=>$result,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
 
             }elseif ($request->filter_name == 'week'){
 
@@ -465,7 +465,7 @@ class DeviceController extends Controller
                     $i += 1;
                 }
 
-                return $resp = ['status'=>200,'body'=>['type'=>'week','message'=>$result,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                return $resp = ['status'=>200,'body'=>['type'=>'week','message'=>$result,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
             }
 
             elseif ($request->filter_name == 'month'){
@@ -492,7 +492,7 @@ class DeviceController extends Controller
                     $today2->subMonths(1);
                     $i += 1;
                 }
-                return $resp = ['status'=>200,'body'=>['type'=>'month','message'=>$result,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                return $resp = ['status'=>200,'body'=>['type'=>'month','message'=>$result,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
             }
 //            return $deviceReports;
 

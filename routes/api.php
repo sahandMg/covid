@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('signup','AuthController@signup');
 Route::post('login','AuthController@login');
 Route::post('google/login/callback','AuthController@handleProviderCallback');
-Route::post('logout','AuthController@logout');
+Route::post('logout','AuthController@logout')->middleware('token');
 Route::post('password/recover','AuthController@passwordRecover');
 Route::post('user/check','AuthController@userCheck')->middleware('token');
 Route::post('user/data','AuthController@userData')->middleware('token');
@@ -72,7 +72,7 @@ Route::group(['prefix'=>'device','middleware'=>'token'],function() {
 });
 
 // ======== Shopping Routes ========
-Route::group(['prefix'=>'shop','middleware'=>['token','guest:admin']],function (){
+Route::group(['prefix'=>'shop','middleware'=>'token'],function (){
 
     Route::post('add','ShopController@addItem');
     Route::post('update','ShopController@updateItem');
