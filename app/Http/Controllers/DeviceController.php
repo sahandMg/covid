@@ -139,13 +139,24 @@ class DeviceController extends Controller
                 $device->save();
             }else{
                 try{
+                    if(isset($device->region) && isset($device->location)){
 
-                    $device->update(['d_name'=>$resp->name]);
+                        $device->update(['d_name'=>$resp->name]);
 //                    $device->update(['ssid'=>$resp->wifi_password]);
 //                    $device->update(['w_ssid'=>$resp->wifi_ssid]);
-                    $device->update(['city'=>$resp->location]);
-                    $device->update(['region'=>$resp->region]);
-                    $device->update(['user_id'=>$admin->id]);
+                        $device->update(['city'=>$resp->location]);
+                        $device->update(['region'=>$resp->region]);
+                        $device->update(['user_id'=>$admin->id]);
+                    }
+                    else{
+
+                        $device->update(['d_name'=>$resp->name]);
+//                    $device->update(['ssid'=>$resp->wifi_password]);
+//                    $device->update(['w_ssid'=>$resp->wifi_ssid]);
+                        $device->update(['user_id'=>$admin->id]);
+                    }
+
+
                 }catch (\Exception $exception){
 
                     dd($exception->getMessage());
