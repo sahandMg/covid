@@ -17,6 +17,8 @@ class CreateShopItemsTable extends Migration
             $table->increments('id');
             $table->string('p_name')->unique();
             $table->string('price');
+            $table->string('title');
+            $table->boolean('available')->default(1);
             $table->text('desc');
             $table->string('img');
 //            $table->unsignedInteger('admin_id');
