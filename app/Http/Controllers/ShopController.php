@@ -233,7 +233,7 @@ class ShopController extends Controller
 
         try{
 
-            $items = ShopItem::select('p_name','price','desc','img')->get();
+            $items = ShopItem::select('p_name','price','desc','img','title','available')->get();
             if (count($items) == 0){
 
                 return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'محصولی برای نمایش وجود ندارد']]];
