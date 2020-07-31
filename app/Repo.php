@@ -55,15 +55,15 @@ class Repo
     public function parseDataToArray($data){
 
         //        Parsing Data From Device, from json to array
-        $resp = json_decode(array_keys($data)[0]);
 
-//        $segments = explode(',',$key);
-//        $resp = [];
-//        for($i=0;$i<count($segments);$i++){
-//            $resp[explode(':',$segments[$i])[0]] = explode(':',$segments[$i])[1];
-//        }
-//      ========================
-
+        $resp = json_decode(array_keys($data)[0],true);
+        $resp['d_name'] = $resp['name'];
+        $resp['power_off'] = 0;
         return $resp;
+    }
+
+    public function convertJalali($date){
+
+        return \Morilog\Jalali\CalendarUtils::createCarbonFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s'); //2016-05-8
     }
 }

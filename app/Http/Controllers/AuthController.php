@@ -2,25 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Admin;
-use App\Master;
-use App\NotificationList;
+use App\Http\Controllers\AuthResponsables\AdminSignUp;
+use App\Http\Controllers\AuthResponsables\GoogleLogin;
+use App\Http\Controllers\AuthResponsables\PasswordRecovery;
+use App\Http\Controllers\AuthResponsables\UpdateUserProfile;
+use App\Http\Controllers\AuthResponsables\UserLogin;
+use App\Http\Controllers\AuthResponsables\UserSignUp;
 use App\Repo;
-use App\SharedKey;
-use App\User;
+use App\Services\Auth\RequestValidationService;
+use App\Services\ReturnMsgFormatter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Laravel\Socialite\Facades\Socialite;
-use phpDocumentor\Reflection\Types\Null_;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+
+    private $formatter;
+
+    public function __construct(ReturnMsgFormatter $formatter)
+    {
+        $this->formatter = $formatter;
+    }
 
     //    ============ Recovering Password ============
     /*
@@ -28,110 +31,31 @@ class AuthController extends Controller
      * Data returns : data
      */
 
-    public function passwordRecover(Request $request,Repo $repo){
+    public function passwordRecover(Request $request,RequestValidationService $rq){
 
-        $validator = Validator::make($request->all(),[
-            'email'=>'required'
-        ]);
-        if($validator->fails()){
+        $val = $rq->passwordRecover($request);
+        if(!is_null($val)){
 
-            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
-            return $resp;
-
+            return $val;
         }
-        try{
-
-//            $admin = Admin::where('email',$request->email)->first();
-
-            $user = User::where('email',$request->email)->first();
-
-            if(is_null($user)){
-//            if(is_null($admin) && is_null($user)){
-
-                return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['ایمیل در سیستم ثبت نشده است']]];
-
-            }else{
-
-                $str = Str::random();
-
-//                if(!is_null($admin)){
-//
-//                    $admin->update(['password'=>Hash::make($str)]);
-//                }
-                if(!is_null($user)){
-
-                    $user->update(['password'=>Hash::make($str)]);
-//                    TODO SEND EMAIL
-                }
-
-                Mail::send('email.recover',['pass'=>$str],function($message)use($user){
-
-                    $message->to($user->email);
-                    $message->from(env('NoReply'));
-                    $message->subject('فراموشی کلمه عبور');
-                });
-
-                return $resp = ['status'=>200,'body'=>['type'=>'error','message'=>['کلمه عبور جدید به ایمیل شما ارسال شد']]];
-
-            }
-
-        }catch (\Exception $exception){
-
-            return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
-        }
-
-
+        return new PasswordRecovery($this->formatter);
     }
-
 
 //    ============ Singing Up The User (user guard) ============
     /*
      * Data Needed : name,email,Password,phone,password_confirmation
      * Data returns : name,token
      */
-    public function signup(Request $request,Repo $repo){
+    public function signup(Request $request,RequestValidationService $rq){
 
+        $val = $rq->signup($request);
+        if(!is_null($val)){
 
-
-        $validator = Validator::make($request->all(),[
-            'name'=>'required',
-            'email'=>'required|email|unique:users',
-            'password'=>'required|min:6',
-//            'password'=>'required|confirmed|min:6',
-//            'role'=>'required'
-//            'phone'=>'required|numeric'
-        ]);
-        if($validator->fails()){
-
-            $temp = [];
-
-            for($t = 0 ; $t < count($validator->errors()->keys()); $t++){
-
-                array_push($temp,$validator->errors()->get($validator->errors()->keys()[$t]));
-            }
-            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
-            return $resp;
+            return $val;
         }
 
-        try{
-            $user = new User();
-            $user->name = $request->name;
-            $user->password = Hash::make($request->password);
-            $user->email = $request->email;
-            $user->key = strtoupper(str_shuffle('HABIBI').uniqid());
-//            $user->phone = $repo->convertp2e($request->phone);
-            $user->save();
-//            $token = Auth::guard('user')->login($user);
-//            $user->update(['token'=>$token]);
-            $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'کاربر با موفقیت ثبت شد']]];
-        }catch (\Exception $exception){
+        return new UserSignUp($this->formatter);
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
-        }
-
-        return $resp;
 
     }
 
@@ -150,16 +74,7 @@ class AuthController extends Controller
      */
     public function post_adminSignup($request,Repo $repo){
 
-        $admin = new User();
-        $admin->name = $request->name;
-        $admin->password = Hash::make($request->password);
-        $admin->email = $request->email;
-//        $admin->phone = $repo->convertp2e($request->phone);
-        $admin->key = strtoupper(str_shuffle('HABIBI').uniqid());
-        $admin->role_id = $repo->findRoleId('admin');
-        $admin->save();
-// !!!!!!!!!! DO NOT CHANGE THE RETURN FORMAT !!!!!!!!!!!!
-        return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['scc'=>'ادمین با موفقیت ثبت شد']]];
+       return new AdminSignUp($repo,$this->formatter);
     }
 
 
@@ -169,77 +84,14 @@ class AuthController extends Controller
      * Data returns : name,token
      */
 
-    public function login(Request $request,Repo $repo){
+    public function login(Request $request,Repo $repo,RequestValidationService $rq){
 
 
-        $validator = Validator::make($request->all(),[
-
-            'email'=>'required|email',
-            'password'=>'required|min:6',
-            'fcm_token'=>'required'
-        ]);
-        if($validator->fails()){
-
-            $temp = [];
-
-//            for($t = 0 ; $t < count($validator->errors()->keys()); $t++){
-//
-//                array_push($temp,$validator->errors()->get($validator->errors()->keys()[$t]));
-//            }
-            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
-            return $resp;
+        $val = $rq->login($request);
+        if(!is_null($val)){
+            return $val;
         }
-        try{
-
-//            if($token = Auth::guard('user')->attempt(['email'=>$request->email,'password'=>$request->password])){
-            if($token = Auth::guard('user')->attempt(['email'=>$request->email,'password'=>$request->password])){
-
-                $user = User::where('email',$request->email)->first();
-                $user->update(['token'=>$token]);
-                $user->update(['fcm_token'=>$request->fcm_token]);
-                if($user->role_id == $repo->findRoleId('user') ){
-
-                    $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-                        'role'=>'user','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
-                }else{
-
-                    $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-                        'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
-                }
-
-            }
-//            elseif($token = Auth::guard('admin')->attempt(['email'=>$request->email,'password'=>$request->password])){
-//
-//                $user = Admin::where('email',$request->email)->first();
-//
-//                $user->update(['token'=>$token]);
-//                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-//                    'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
-//            }
-//            elseif($token = Auth::guard('master')->attempt(['email'=>$request->email,'password'=>$request->password])){
-//
-//                $user = Master::where('email',$request->email)->first();
-//                $user->update(['token'=>$token]);
-//                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-//                    'role'=>'master','code'=>0,'phone'=>$user->phone,'address'=>$user->address]]];
-//            }
-            else{
-                $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'ایمیل و یا کلمه عبور نادرست است']]];
-            }
-        }catch (\Exception $exception){
-
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
-        }
-        return $resp;
-    }
-
-    //      Google login
-
-    public function redirectToProvider()
-    {
-
-        return Socialite::driver('google')->redirect();
+        return new UserLogin($repo,$this->formatter);
     }
 //
 //    /**
@@ -249,48 +101,7 @@ class AuthController extends Controller
     public function handleProviderCallback(Request $request,Repo $repo)
     {
 
-//        $client =  Socialite::driver('google')->stateless()->user();
-        $user = User::where('email',$request->email)->first();
-//        $admin = Admin::where('email',$request->email)->first();
-        if(!is_null($user)){
-            $token = Auth::guard('user')->login($user);
-            $user->update(['token'=>$token]);
-            $user->update(['fcm_token'=>$request->fcm_token]);
-            if($user->role_id == $repo->findRoleId('user') ){
-
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-                    'role'=>'user','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
-            }else{
-
-                $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-                    'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
-            }
-
-            return $resp;
-
-        }
-//        elseif(!is_null($admin)){
-//
-//            $token = Auth::guard('admin')->login($admin);
-//            $admin->update(['token'=>$token]);
-//            return $resp = $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-//                'role'=>'admin','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
-//
-//        }
-        else{
-
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-//            $user->avatar = $client->avatar;
-            $user->key = strtoupper(str_shuffle('HABIBI').uniqid());
-            $user->save();
-            $token = Auth::guard('user')->login($user);
-            $user->update(['token'=>$token]);
-            $resp = ['status'=>200,'body'=>['type'=>'data','message'=>['name'=>$user->name,'token'=>$token,
-                'role'=>'user','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]]];
-            return $resp;
-        }
+        return new GoogleLogin($this->formatter,$repo);
 
     }
 //
@@ -303,8 +114,10 @@ class AuthController extends Controller
     public function logout(){
 
         Auth::guard('user')->user()->update(['fcm_token'=> null]);
+
         JWTAuth::parseToken()->invalidate();
-        return  ['status'=>200,'body'=>['type'=>'success','message'=> ['scc'=>'حساب بسته شد']]];
+
+        $this->formatter->create($status = 200, $type = 'data',$message = ['scc'=>'حساب بسته شد']);
     }
 
 
@@ -313,59 +126,10 @@ class AuthController extends Controller
      * Data Needed : token,old_pass,password,password_confirmation,name,address,phone
      * Data returns :
      */
-    public function updateProfile(Request $request, Repo $repo){
+    public function updateProfile(Request $request){
 
 
-        $resp = $this->updateUser($repo->getGuard(),$request);
-
-        if($resp == 200){
-
-            return $resp = ['status'=>200,'body'=>['type'=>'message','message'=>['اطلاعات کاربر به روز شد']]];
-        }else{
-
-            return $resp;
-        }
-
-    }
-// ================ ^^^^^^^^^ ================
-    private function updateUser($guard,$request){
-
-        try{
-
-            $user = Auth::guard($guard)->user();
-
-            if($request->has('name')){
-
-                $user->update(['name'=>$request->name]);
-            }
-
-            if($request->has('address')){
-
-                $user->update(['address'=>$request->address]);
-            }
-
-            if($request->has('phone')){
-
-                $user->update(['phone'=>$request->phone]);
-            }
-
-            if($request->has('old_password') && $request->has('password')){
-
-                if(Hash::check($request->old_password,$user->password)){
-
-                    $user->update(['password'=>Hash::make($request->password)]);
-                }else{
-
-                    return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['کلمه عبور فعلی نادرست است']]];
-                }
-            }
-            return 200;
-
-        }catch (\Exception $exception){
-
-            return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
-        }
-
+        return new UpdateUserProfile($this->formatter);
     }
 
     //    ============ Switching user to admin ============
@@ -378,16 +142,8 @@ class AuthController extends Controller
 
         $repo = new Repo();
 
-//        $admin = new Admin();
-//        $admin->name = $user->name;
-//        $admin->password = $user->password;
-//        $admin->email = $user->email;
-//        $admin->key = $user->key;
-//        $admin->save();
-//        $token = JWTAuth::fromUser($admin);
         $user->update(['role_id'=>$repo->findRoleId('admin')]);
-//        $user->delete();
-//        $token = Auth::guard('user')->login($admin);
+
         return $user;
 
     }
@@ -412,37 +168,9 @@ class AuthController extends Controller
 
         $user = Auth::guard('user')->user();
 
-//        if(Auth::guard('admin')->check()){
-//
-//            $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone,'key'=>$user->key];
-//        }
-//        else{
-//            $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone];
-//        }
         $data = ['name'=>$user->name,'address'=>$user->address,'phone'=>$user->phone];
 
         return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$data]];
     }
-
-    //    ============ Sync Najva User with database ============
-    /*
-     * Data Needed : token
-     * Data returns :
-     */
-    public function SyncUser(Request $request){
-
-        $validator = Validator::make($request->all(),[
-            'token'=>'required'
-        ]);
-        if($validator->fails()){
-
-        }
-
-        $notifList = new NotificationList();
-        $notifList->token = $request->token;
-        $notifList->user_id = Auth::guard('user')->id();
-        $notifList->save();
-    }
-
 
 }

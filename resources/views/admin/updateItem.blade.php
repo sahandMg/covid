@@ -22,6 +22,10 @@
         .form-group{
             direction: rtl;
         }
+        .radio{
+            display: inline-block;
+            width: 30%;
+        }
         label{
             display: block;
             text-align: right;
@@ -118,9 +122,15 @@
                 <label for="p_name">نام محصول</label>
                 <input name="p_name" type="text"  value="{{$product->p_name}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" >
             </div>
+
+            <div class="form-group">
+                <label for="p_title">عنوان محصول</label>
+                <input name="p_title" type="text"  value="{{$product->title}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="عنوان محصول را وارد کنید">
+            </div>
+
             <input name="p_name_old" type="hidden" value="{{$product->p_name}}">
             <div class="form-group">
-                <label for="exampleInputEmail1">قیمت</label>
+                <label for="exampleInputEmail1">قیمت (تومان)</label>
                 <input name="price" type="number"  min="1000"   class="form-control" value="{{$product->price}}" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="قیمت محصول">
             </div>
 
@@ -132,6 +142,16 @@
             <div class="form-group">
                 <label for="exampleInputEmail1">توضیح محصول</label>
                 <input name="desc" type="text" value="{{$product->desc}}"   class="form-control"  id="exampleInputEmail1" aria-describedby="emailHelp" >
+            </div>
+
+            <div class="form-group radio">
+                <label for="available">موجود</label>
+                <input name="available" type="radio"   class="form-control" id="exampleInputEmail1" value="1" aria-describedby="emailHelp" >
+            </div>
+
+            <div class="form-group radio">
+                <label for="available">ناموجود</label>
+                <input name="available" type="radio"   class="form-control radio"  id="exampleInputEmail1" value="0" aria-describedby="emailHelp" >
             </div>
 
             <div class="form-group">

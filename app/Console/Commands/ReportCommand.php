@@ -7,6 +7,7 @@ use App\Report;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ReportCommand extends Command
 {
@@ -15,7 +16,7 @@ class ReportCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'command:report';
+    protected $signature = 'create:report';
 
     /**
      * The console command description.
@@ -42,7 +43,7 @@ class ReportCommand extends Command
     public function handle()
     {
         $queries =  DB::table('devices')->join('device_logs', 'devices.id', '=', 'device_logs.device_id')
-            ->where('device_logs.created_at','<',Carbon::today())->where('device_logs.created_at','>',Carbon::yesterday())
+            ->where('device_logs.created_at','>',Carbon::today())->where('device_logs.created_at','<',Carbon::tomorrow())
             ->select('device_id','push','devices.user_id','device_logs.created_at')->get();
         $deviceArr = [];
         $deviceOwner = [];
@@ -66,12 +67,12 @@ class ReportCommand extends Command
                 $report = new Report();
                 $report->total_pushed = $item;
                 $report->device_id = $key;
-                $report->admin_id = $deviceOwner[$key];
+                $report->user_id = $deviceOwner[$key];
                 $report->save();
             }
         }catch (\Exception $exception){
 
-            dd($exception);
+            Log::warning($exception->getMessage());
         }
         \App\DeviceLog::where('created_at','<',Carbon::yesterday())->delete();
 

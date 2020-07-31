@@ -21,24 +21,15 @@ class ShopController extends Controller
      */
     public function addItem(Request $request){
 
-//        $validator = Validator::make($request->all(),[
-//
-//            'p_name'=>'required|unique:shop_items',
-//            'img'=>'required|mimes:jpeg,bmp,png,jpg|max:1000',
-//            'price'=>'required',
-//            'desc'=>'required'
-//        ]);
+
         $this->validate($request,[
             'p_name'=>'required|unique:shop_items',
             'img'=>'required|mimes:jpeg,bmp,png,jpg|max:1000',
             'price'=>'required',
-            'desc'=>'required'
+            'desc'=>'required',
+            'p_title'=>'required'
         ]);
-//        if($validator->fails()){
-//
-//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
-//            return $resp;
-//        }
+
         if($request->password != env('ADMIN_PASS')){
 
             return redirect()->back()->with(['error'=>'کد عبور نادرست است']);
@@ -48,18 +39,18 @@ class ShopController extends Controller
             $shop->p_name = $request->p_name;
             $shop->desc = $request->desc;
             $shop->price = $request->price;
+            $shop->title = $request->p_title;
+            $shop->available = $request->available;
             $name = time().'.'.$request->file('img')->getClientOriginalExtension();
             $request->file('img')->move(public_path('images'),$name);
             $shop->img = $name;
-//            $shop->admin_id = Auth::guard('admin')->id();
             $shop->save();
         }catch (\Exception $exception){
 
             $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
             return $resp;
         }
-//        $resp = ['status'=>200,'body'=>['type'=>'success','message'=>['scc'=>'محصول ثبت شد']]];
-//        return $resp;
+
             return redirect()->back()->with(['message'=>'محصول ثبت شد']);
     }
 
@@ -72,20 +63,10 @@ class ShopController extends Controller
      */
     public function updateItem(Request $request){
 
-//        $validator = Validator::make($request->all(),[
-//
-//            'p_name'=>'required',
-//        ]);
-
         $this->validate($request,[
             'p_name'=>'required',
         ]);
 
-//        if($validator->fails()){
-//
-//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
-//            return $resp;
-//        }
         if($request->password != env('ADMIN_PASS')){
 
             return redirect()->back()->with(['error'=>'کد عبور نادرست است']);
@@ -100,11 +81,15 @@ class ShopController extends Controller
         }
         try{
 
+
             if($request->has('p_name')){
 
                 $item->update(['p_name'=>$request->p_name]);
             }
+            if($request->has('title')){
 
+                $item->update(['title'=>$request->p_title]);
+            }
             if($request->has('price')){
 
                 $item->update(['price'=>$request->price]);
@@ -112,6 +97,10 @@ class ShopController extends Controller
             if($request->has('desc')){
 
                 $item->update(['desc'=>$request->desc]);
+            }
+            if($request->has('available')){
+
+                $item->update(['available'=>$request->available]);
             }
             if($request->has('img')){
 
@@ -150,8 +139,6 @@ class ShopController extends Controller
             return $resp;
         }
 
-//        $resp = ['status'=>200,'body'=>['type'=>'success','message'=>['scc'=>'اطلاعات محصول به روز رسانی شد']]];
-//        return $resp;
         return redirect()->route('productList')->with(['message'=>'اطلاعات محصول به روز رسانی شد']);
     }
 
@@ -165,27 +152,13 @@ class ShopController extends Controller
 
     public function removeItem(Request $request,$name){
 
-//        $validator = Validator::make($request->all(),[
-//
-//            'p_name'=>'required',
-//        ]);
-//        if($validator->fails()){
-//
-//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $validator->errors()]];
-//            return $resp;
-//        }
-//        $this->validate($request,[
-//            'p_name'=>'required|unique:shop_items',
-//        ]);
-//
+
         try{
 
             $item = ShopItem::where('p_name',$name)->first();
 
             if(is_null($item)){
 
-//                $resp = ['status'=>500,'body'=>['type'=>'error','message'=> ['err'=>'محصول یافت نشد']]];
-//                return $resp;
                 return redirect()->back()->with(['error'=>'محصول یافت نشد']);
 
             }else{
@@ -196,8 +169,7 @@ class ShopController extends Controller
                 }
 
                 $item->delete();
-//                $resp = ['status'=>200,'body'=>['type'=>'success','message'=> ['scc'=>'محصول حذف شد']]];
-//                return $resp;
+
                 return redirect()->back()->with(['message'=>'محصول حذف شد']);
             }
 
@@ -242,38 +214,6 @@ class ShopController extends Controller
                 return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$items]];
             }
 
-//            if(Auth::guard('admin')->check()){
-//
-//                $items = ShopItem::where('admin_id',Auth::guard('admin')->id())->select('p_name','price','desc','img')->get();
-//                if (count($items) == 0){
-//
-//                    return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'محصولی برای نمایش وجود ندارد']]];
-//                }else{
-//
-//                    return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$items]];
-//                }
-//            }elseif (Auth::guard('user')->check()){
-//
-//                $shared_user = DB::table('shared_keys')->where('user_id',Auth::guard('user')->id())->first();
-//                if(is_null($shared_user)){
-//// TODO ???????????
-//                    return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'دسترسی به محصولات محدود شده است ']]];
-//
-//                }else{
-//                    $admin_id = $shared_user->admin_id;
-//                    $items = ShopItem::where('admin_id',$admin_id)->select('p_name','price','desc','img')->get();
-//                    if (count($items) == 0){
-//
-//                        return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'محصولی برای نمایش وجود ندارد']]];
-//                    }else{
-//
-//                        return $resp = ['status'=>200,'body'=>['type'=>'data','message'=>$items]];
-//                    }
-//
-//                }
-//            }
-
-
 
         }catch (\Exception $exception){
 
@@ -315,15 +255,6 @@ class ShopController extends Controller
 
         try{
 
-//            if(Auth::guard('admin')->check()){
-//
-//                $carts = Cart::where('admin_id',Auth::guard('admin')->id())->where('completed',1)->get();
-//
-//            }else{
-//
-//                $carts = Cart::where('user_id',Auth::guard('user')->id())->where('completed',1)->get();
-//
-//            }
             $carts = Cart::where('user_id',Auth::guard('user')->id())->where('completed',1)->get();
 
             if(count($carts) != 0){

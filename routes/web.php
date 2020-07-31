@@ -21,6 +21,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 Route::get('/', function () {
 
+    dd(\Illuminate\Support\Str::random(8));
     return view('welcome');
 
 });

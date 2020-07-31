@@ -30,12 +30,6 @@ class AdminController extends Controller
         $products = ShopItem::get();
 
         return view('admin.itemsList',compact('products'));
-//        if(count($products) == 0){
-//
-//            return 'محصولی یافت نشد';
-//        }else{
-//
-//        }
     }
 
     public function management(){

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class DeviceNotificationEvent
+class MailNotificationEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,15 +19,19 @@ class DeviceNotificationEvent
      *
      * @return void
      */
-    public $title;
-    public $body;
-    public $fcm_token;
+    public $page;
+    public $data;
+    public $recipient;
+    public $sender;
+    public $subject;
 
-    public function __construct($title,$body,$fcm_token)
+    public function __construct($page,$data,$recipient,$sender,$subject)
     {
-        $this->body = $body;
-        $this->title = $title;
-        $this->fcm_token = $fcm_token;
+        $this->page = $page;
+        $this->data = $data;
+        $this->recipient = $recipient;
+        $this->sender = $sender;
+        $this->subject = $subject;
     }
 
     /**

@@ -21,13 +21,13 @@ class DeviceMiddleware
         $repo = new Repo();
         $resp = $repo->parseDataToArray($request->all());
 
-        if(!isset($resp->key) || $resp->key != env('DEVICE_CODE')){
+        if(!isset($resp['key']) || $resp['key'] != env('DEVICE_CODE')){
 
             return response(['status'=>404,'body'=>'Fake Device!']);
         }
 
 
-        if(!isset($resp->unique_id) || !isset($resp->power) || !isset($resp->capacity) || !isset($resp->push)){
+        if(!isset($resp['unique_id']) || !isset($resp['power']) || !isset($resp['capacity']) || !isset($resp['push'])){
 
             return response(['status'=>404,'body'=>'Wrong Packet !']);
         }

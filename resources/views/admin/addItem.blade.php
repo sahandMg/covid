@@ -22,6 +22,11 @@
         .form-group{
             direction: rtl;
         }
+        .radio{
+            display: inline-block;
+            width: 30%;
+
+        }
         label{
             display: block;
             text-align: right;
@@ -121,8 +126,13 @@
                  <input name="p_name" type="text" required value="{{Request::old('p_name')}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="نام محصول را وارد کنید">
                </div>
 
+             <div class="form-group">
+                 <label for="p_title">عنوان محصول</label>
+                 <input name="p_title" type="text" required value="{{Request::old('p_title')}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="عنوان محصول را وارد کنید">
+             </div>
+
                <div class="form-group">
-                 <label for="exampleInputEmail1">قیمت</label>
+                 <label for="exampleInputEmail1">قیمت (تومان) </label>
                  <input name="price" type="number" required min="1000"   class="form-control" value="{{Request::old('price')}}" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="قیمت محصول">
              </div>
 
@@ -135,6 +145,16 @@
                  <label for="exampleInputEmail1">توضیح محصول</label>
                  <input name="desc" type="text" required  class="form-control"  id="exampleInputEmail1" aria-describedby="emailHelp" >
              </div>
+
+             <div class="form-group radio">
+                 <label for="available">موجود</label>
+                 <input name="available" type="radio" required  class="form-control" id="exampleInputEmail1" value="1" aria-describedby="emailHelp" >
+             </div>
+
+             <div class="form-group radio">
+                <label for="available">ناموجود</label>
+                <input name="available" type="radio" required  class="form-control radio"  id="exampleInputEmail1" value="0" aria-describedby="emailHelp" >
+            </div>
 
                <div class="form-group">
                  <label for="exampleInputPassword1">کلمه عبور</label>

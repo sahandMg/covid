@@ -66,7 +66,7 @@ Route::post('device/send','DeviceController@sendData')->middleware('device');
 Route::group(['prefix'=>'device','middleware'=>'token'],function() {
 
     Route::post('chart/liquid', 'DeviceController@liquidChart');
-    Route::post('list', 'DeviceController@get_Devices_update');
+    Route::post('list', 'DeviceController@DeviceList');
 //    Route::post('list/update', 'DeviceController@get_Devices_update');
     Route::post('sharing', 'DeviceController@sharing');
 });
@@ -88,5 +88,3 @@ Route::group(['prefix'=>'trans','middleware'=>'token'],function (){
 });
 
 Route::post('issue','IssueController@create')->middleware('token');
-
-Route::post('sync/user','AuthController@SyncUser');

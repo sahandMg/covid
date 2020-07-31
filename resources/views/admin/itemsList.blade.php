@@ -104,6 +104,7 @@
                 <thead>
                 <th>حذف</th>
                 <th>آپدیت</th>
+                <th>وضعیت</th>
                 <th>عکس</th>
                 <th>توضیحات</th>
                 <th>قیمت</th>
@@ -115,6 +116,7 @@
                         <tr>
                             <td><a href="{{route('removeItem',['name'=>$item->p_name])}}" class="btn remove">حذف</a></td>
                             <td><a href="{{route('updateProduct',['name'=>$item->p_name])}}" class="btn">آپدیت</a></td>
+                            <td>{{$item->available == 1 ? 'موجود':'ناموجود'}}</td>
                             <td><img width="50" src="{{URL::asset('images/'.$item->img)}}" alt=""></td>
                             <td>{{$item->desc}}</td>
                             <td>{{$item->price}}</td>
