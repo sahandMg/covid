@@ -2,28 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b64c50db-1875-4fa6-8c48-a99feb63239b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/Events/DeviceNotificationEvent.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/Listeners/DeviceNotificationListener.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/1592918682.jpeg" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Console/Commands/ReportCommand.php" afterPath="$PROJECT_DIR$/app/Console/Commands/ReportCommand.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Device.php" afterPath="$PROJECT_DIR$/app/Device.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/DeviceLog.php" afterPath="$PROJECT_DIR$/app/DeviceLog.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/AdminController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/AdminController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/AuthController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/AuthController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/DeviceController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/DeviceController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/IssueController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/IssueController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/ShopController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/ShopController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Middleware/DeviceMiddleware.php" afterPath="$PROJECT_DIR$/app/Http/Middleware/DeviceMiddleware.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" afterPath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Providers/EventServiceProvider.php" afterPath="$PROJECT_DIR$/app/Providers/EventServiceProvider.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Repo.php" afterPath="$PROJECT_DIR$/app/Repo.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/migrations/2020_06_16_184308_create_devices_table.php" afterPath="$PROJECT_DIR$/database/migrations/2020_06_16_184308_create_devices_table.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/migrations/2020_06_20_235104_create_issues_table.php" afterPath="$PROJECT_DIR$/database/migrations/2020_06_20_235104_create_issues_table.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/lang/en/validation.php" afterPath="$PROJECT_DIR$/resources/lang/en/validation.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/admin/addItem.blade.php" afterPath="$PROJECT_DIR$/resources/views/admin/addItem.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/admin/itemsList.blade.php" afterPath="$PROJECT_DIR$/resources/views/admin/itemsList.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/admin/updateItem.blade.php" afterPath="$PROJECT_DIR$/resources/views/admin/updateItem.blade.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/api.php" afterPath="$PROJECT_DIR$/routes/api.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/web.php" afterPath="$PROJECT_DIR$/routes/web.php" />
     </list>
@@ -66,11 +45,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ClearLogCommand.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ClearLogCommand.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Console/Commands/ClearLogCommand.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="web.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/web.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -91,6 +80,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="932">
               <caret line="118" column="75" selection-start-line="118" selection-start-column="75" selection-end-line="118" selection-end-column="75" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="api.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/routes/api.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="137">
+              <caret line="26" column="67" selection-start-line="26" selection-start-column="67" selection-end-line="26" selection-end-column="67" />
               <folding />
             </state>
           </provider>
@@ -121,28 +120,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
               <caret line="130" column="37" selection-start-line="130" selection-start-column="37" selection-end-line="130" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IssueController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/IssueController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="22" column="22" selection-start-line="22" selection-start-column="22" selection-end-line="22" selection-end-column="22" />
-              <folding>
-                <element signature="e#40#95#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="api.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/api.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="617">
-              <caret line="89" column="18" selection-start-line="89" selection-start-column="13" selection-end-line="89" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -192,9 +169,7 @@
         <option value="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" />
         <option value="$PROJECT_DIR$/app/DeviceLog.php" />
         <option value="$PROJECT_DIR$/app/Observers/DeviceLogObserver.php" />
-        <option value="$PROJECT_DIR$/routes/api.php" />
         <option value="$PROJECT_DIR$/app/Device.php" />
-        <option value="$PROJECT_DIR$/routes/web.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/AuthResponsables/GoogleLogin.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/AuthResponsables/UserSignUp.php" />
         <option value="$PROJECT_DIR$/vendor/morilog/jalali/src/CalendarUtils.php" />
@@ -220,6 +195,8 @@
         <option value="$PROJECT_DIR$/resources/views/admin/updateItem.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/ShopController.php" />
         <option value="$PROJECT_DIR$/app/Console/Commands/ReportCommand.php" />
+        <option value="$PROJECT_DIR$/routes/web.php" />
+        <option value="$PROJECT_DIR$/routes/api.php" />
       </list>
     </option>
   </component>
@@ -757,7 +734,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
-    <property name="SearchEverywhereHistoryKey" value="api&#9;FILE&#9;file:///Applications/XAMPP/htdocs/covid/routes/api.php&#10;we&#9;FILE&#9;file:///Applications/XAMPP/htdocs/covid/routes/web.php&#10;Auth&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/covid/app/Http/Controllers/AuthController.php&#10;ap&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/covid/routes/api.php&#10;Repo&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/covid/app/Repo.php&#10;repo&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/covid/app/Repo.php&#10;api.php&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/covid/routes/api.php&#10;web&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/covid/routes/web.php" />
+    <property name="SearchEverywhereHistoryKey" value="ap&#9;FILE&#9;file:///Applications/XAMPP/htdocs/covid/routes/api.php&#10;we&#9;FILE&#9;file:///Applications/XAMPP/htdocs/covid/routes/web.php&#10;api&#9;FILE&#9;file:///Applications/XAMPP/htdocs/covid/routes/api.php&#10;Auth&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/covid/app/Http/Controllers/AuthController.php&#10;Repo&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/covid/app/Repo.php&#10;repo&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/covid/app/Repo.php&#10;api.php&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/covid/routes/api.php&#10;web&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/covid/routes/web.php" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/public/2.txt" />
     <property name="FullScreen" value="true" />
   </component>
@@ -844,12 +821,12 @@
       <workItem from="1595678553651" duration="768000" />
       <workItem from="1595923823431" duration="5369000" />
       <workItem from="1595949354866" duration="1643000" />
-      <workItem from="1596139124827" duration="44759000" />
+      <workItem from="1596139124827" duration="45356000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="350554000" />
+    <option name="totallyTimeSpent" value="351151000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -862,7 +839,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1280" y="0" width="1920" height="1080" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32739726" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="SvgViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32956383" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -873,7 +850,7 @@
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Floobits" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24851485" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24851485" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19914803" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Reviews" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1046,14 +1023,6 @@
           <folding>
             <element signature="e#59#72#0#PHP" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/web.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="23" column="41" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1249,14 +1218,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/api.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="617">
-          <caret line="89" column="18" selection-start-line="89" selection-start-column="13" selection-end-line="89" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/IssueController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
@@ -1343,6 +1304,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/web.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/api.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="26" column="67" selection-start-line="26" selection-start-column="67" selection-end-line="26" selection-end-column="67" />
           <folding />
         </state>
       </provider>

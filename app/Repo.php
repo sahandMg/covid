@@ -57,7 +57,11 @@ class Repo
         //        Parsing Data From Device, from json to array
 
         $resp = json_decode(array_keys($data)[0],true);
-        $resp['d_name'] = $resp['name'];
+        if(isset($resp['name'])){
+
+            $resp['d_name'] = $resp['name'];
+        }
+
         $resp['power_off'] = 0;
         return $resp;
     }

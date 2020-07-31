@@ -32,20 +32,6 @@ Route::post('user/update/profile','AuthController@updateProfile')->middleware('t
 Route::post('user/address','ShopController@userAddress')->middleware('token');
 Route::post('switch-account','AuthController@switchAccountType')->middleware('token');
 
-Route::post('test',function(Request $request){
-
-    Cache::forget('data');
-    Cache::put('data',$request->all(),2000);
-    return response($request->all());
-
-
-
-});
-Route::get('test2',function (){
-
-    return response(Cache::get('data'));
-});
-
 // ======== Device Manager Routes ========
 
 Route::post('device/add','DeviceController@add')->middleware('token');
