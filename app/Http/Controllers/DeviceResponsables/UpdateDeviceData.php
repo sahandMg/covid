@@ -16,7 +16,7 @@ class UpdateDeviceData implements Responsable {
 
             gettype($request) == 'object' ? $request = $request->all():$request;
             $device = Device::where('unique_id',$request['unique_id'])->firstOrFail();
-
+            isset($request['location'])?$request['city'] = $request['location']:null;
             $device->update($request);
 
             $device->update(['user_id'=> $device->user->id]);
