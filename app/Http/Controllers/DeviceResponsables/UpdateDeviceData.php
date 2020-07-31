@@ -13,6 +13,8 @@ class UpdateDeviceData implements Responsable {
     public function toResponse($request){
 
         try{
+
+            gettype($request) == 'object' ? $request = $request->all():$request;
             $device = Device::where('unique_id',$request['unique_id'])->firstOrFail();
 
             $device->update($request);
@@ -24,6 +26,8 @@ class UpdateDeviceData implements Responsable {
             Log::error($exception->getMessage());
 
         }
+
+        return $resp = ['status'=>200,'body'=>['type'=>'success','message'=>['scc' =>'اطلاعات دستگاه به روز شد']]];
     }
 }
 

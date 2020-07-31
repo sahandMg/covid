@@ -29,16 +29,16 @@ class DeviceList implements Responsable {
 
 //                checks shared key, if admin code hasn't been shared, user can't see devices
             try{
-                $shared = $user->role_id == $repo->findRoleId('user')?
-                    SharedKey::where('user_id',$user->id)->firstOrFail():
-                    SharedKey::where('admin_id',$user->id)->firstOrFail();
+                $admin_id = $user->role_id == $repo->findRoleId('user')?
+                    SharedKey::where('user_id',$user->id)->firstOrFail()->admin_id:
+                    Auth::guard('user')->id();
             }
             catch (\Exception $exception){
 
                 return  ['status'=>404,'body'=>['type'=>'data','message'=>[],'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
             }
 
-            $admin_id = $shared->admin_id;
+//            $admin_id = $shared->admin_id;
 
             $adminDevices = Device::where('user_id',$admin_id)->where('updated_at','>',Carbon::parse($date))->with('deviceLogs')->get();
 
