@@ -57,7 +57,7 @@ class DeviceList implements Responsable {
 //                        'push' => $last->push,
 //                        'capacity' => $last->capacity,
 //                        'region' => $adminDevice->region,
-//                        'location' => $adminDevice->location
+//                        'city' => $adminDevice->city
 //                    ]);
 //                }
                 $check = [];
@@ -72,7 +72,7 @@ class DeviceList implements Responsable {
                             'push' => $deviceLog->push,
                             'capacity' => $deviceLog->capacity,
                             'region' => $last->region,
-                            'location' => $last->location
+                            'city' => $last->city
                         ]);
                         array_push($check,$deviceLog->device_id);
                     }

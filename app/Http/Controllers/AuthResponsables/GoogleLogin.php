@@ -43,7 +43,7 @@ class GoogleLogin implements Responsable {
             $user = new User();
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->key = strtoupper(str_shuffle('ZINOVAA').strtoupper(Str::random(7)));
+            $user->key = strtoupper(str_shuffle('ZINOVAA').Str::random(7));
             $user->save();
             $token = Auth::guard('user')->login($user);
             $user->update(['token'=>$token]);

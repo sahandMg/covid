@@ -117,7 +117,7 @@ class AuthController extends Controller
 
         JWTAuth::parseToken()->invalidate();
 
-        $this->formatter->create($status = 200, $type = 'data',$message = ['scc'=>'حساب بسته شد']);
+        return $this->formatter->create($status = 200, $type = 'data',$message = ['scc'=>'حساب بسته شد']);
     }
 
 

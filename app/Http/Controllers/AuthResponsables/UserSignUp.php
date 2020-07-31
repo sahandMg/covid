@@ -24,7 +24,7 @@ class UserSignUp implements Responsable
             $user->name = $request->name;
             $user->password = Hash::make($request->password);
             $user->email = $request->email;
-            $user->key = strtoupper(str_shuffle('ZINOVAA').strtoupper(Str::random(7)));
+            $user->key = strtoupper(str_shuffle('ZINOVAA').Str::random(7));
             $user->save();
             $resp = $this->formatter->create($status = 200, $type = 'success',$message = ['scc'=>'کاربر با موفقیت ثبت شد']);
 
