@@ -44,16 +44,21 @@ class AddDevice implements Responsable {
             if(is_null($device)){
 
 //          Creating New Device
-
-
-                $device = Device::create($resp);
-
+                $device = Device::create([
+                    'd_name'=>$resp['name'],
+                    'city'=>$resp['location'],
+                    'region'=>$resp['region'],
+                    'unique_id'=>$resp['unique_id'],
+                    'user_id'=>$resp['user_id'],
+                    'power_off'=>$resp['power_off']
+                ]);
             }else{
                 try{
                     if(isset($resp['region']) && isset($resp['location'])){
 
                         $resp['city'] = $resp['location'];
                         unset($resp['location']);
+
 
 //                        Updating Existing Device Data
 

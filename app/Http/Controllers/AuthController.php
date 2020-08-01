@@ -101,7 +101,7 @@ class AuthController extends Controller
     public function handleProviderCallback(Request $request,Repo $repo)
     {
 
-        return new GoogleLogin($this->formatter,$repo);
+        return new GoogleLogin($repo,$this->formatter);
 
     }
 //

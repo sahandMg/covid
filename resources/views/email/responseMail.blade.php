@@ -74,7 +74,8 @@
 <div class="container">
 
     <div class="logo">
-        <img src="http://joyvpn.xyz/img/jv.png" alt="">
+        {{--<img src="http://joyvpn.xyz/img/jv.png" alt="">--}}
+        <img src="{{public_path('images/logo/log.jpg')}}" alt="">
     </div>
     <h2 class="title">پیام پشتیبانی</h2>
     <br>
