@@ -72,7 +72,8 @@ class DeviceList implements Responsable {
                             'push' => $deviceLog->push,
                             'capacity' => $deviceLog->capacity,
                             'region' => $last->region,
-                            'city' => $last->city
+                            'city' => $last->city,
+                            'date'=>Jalalian::fromCarbon($deviceLog->created_at)->format("Y-m-d H:i:s")
                         ]);
                         array_push($check,$deviceLog->device_id);
                     }

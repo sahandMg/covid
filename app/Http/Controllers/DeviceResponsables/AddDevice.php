@@ -41,9 +41,6 @@ class AddDevice implements Responsable {
 
             $resp['user_id'] = $user->id;
 
-            $resp['city'] = $resp['location'];
-            unset($resp['location']);
-
             if(is_null($device)){
 
 //          Creating New Device
@@ -53,7 +50,10 @@ class AddDevice implements Responsable {
 
             }else{
                 try{
-                    if(isset($resp['region']) && isset($resp['city'])){
+                    if(isset($resp['region']) && isset($resp['location'])){
+
+                        $resp['city'] = $resp['location'];
+                        unset($resp['location']);
 
 //                        Updating Existing Device Data
 
