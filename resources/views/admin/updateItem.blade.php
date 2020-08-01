@@ -141,7 +141,7 @@
 
             <div class="form-group">
                 <label for="exampleInputEmail1">توضیح محصول</label>
-                <input name="desc" type="text" value="{{$product->desc}}"   class="form-control"  id="exampleInputEmail1" aria-describedby="emailHelp" >
+                <input name="desc" type="text" value="{{$product->desc}}" maxlength="200"    class="form-control"  id="exampleInputEmail1" aria-describedby="emailHelp" >
             </div>
 
             <div class="form-group radio">

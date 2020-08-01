@@ -5,6 +5,7 @@ namespace App\Http\Controllers\DeviceResponsables;
 use App\Device;
 use App\DeviceLog;
 use App\Repo;
+use App\SharedKey;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Responsable;
@@ -30,6 +31,11 @@ class AddDevice implements Responsable {
             try{
 
                 $user = User::where('key',$resp['owner_key'])->firstOrFail();
+
+                if(!is_null(SharedKey::where('user_id',$user->id)->first())){
+
+                    return 'اجازه اضافه کردن دستگاه ندارید';
+                }
             }catch (\Exception $exception){
 
                 return 404;

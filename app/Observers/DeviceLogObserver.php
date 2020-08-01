@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\DeviceLog;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class DeviceLogObserver
@@ -15,17 +16,29 @@ class DeviceLogObserver
      */
     public function created(DeviceLog $deviceLog)
     {
+        $id = $deviceLog->device->unique_id;
+
         if($deviceLog->capacity < env('CAPACITY_THRESHOLD')){
             $device_name = $deviceLog->device->d_name;
             $body = " حجم مایع دستگاه $device_name زیر ۲۰ درصد است ";
             $title = "اخطار حجم مایع";
-            \App\Events\DeviceNotificationEvent::dispatch($title,$body,$deviceLog->device->user->fcm_token);
+            if(!Cache::has($id.'_cap')){
+                Cache::forever($id.'_cap',1);
+                \App\Events\DeviceNotificationEvent::dispatch($title,$body,$deviceLog->device->user->fcm_token);
+            }
+        }else{
+            Cache::forget($id.'_cap');
         }
         if($deviceLog->power < env('POWER_THRESHOLD')){
             $device_name = $deviceLog->device->d_name;
             $body = " ظرفیت باتری دستگاه $device_name زیر ۲۰ درصد است ";
             $title = "اخطار ظرفیت باتری";
-            \App\Events\DeviceNotificationEvent::dispatch($title,$body,$deviceLog->device->user->fcm_token);
+            if(!Cache::has($id.'_pow')) {
+                \App\Events\DeviceNotificationEvent::dispatch($title, $body, $deviceLog->device->user->fcm_token);
+                Cache::forever($id . '_pow', 1);
+            }
+        }else{
+            Cache::forget($id.'_pow');
         }
     }
 

@@ -143,7 +143,7 @@
 
              <div class="form-group">
                  <label for="exampleInputEmail1">توضیح محصول</label>
-                 <input name="desc" type="text" required  class="form-control"  id="exampleInputEmail1" aria-describedby="emailHelp" >
+                 <input name="desc" type="text" required  class="form-control" maxlength="200"  id="exampleInputEmail1" aria-describedby="emailHelp" >
              </div>
 
              <div class="form-group radio">

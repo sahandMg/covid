@@ -75,7 +75,7 @@
 
     <div class="logo">
         {{--<img src="http://joyvpn.xyz/img/jv.png" alt="">--}}
-        <img src="{{public_path('images/logo/log.jpg')}}" alt="">
+        <img src="{{URL::asset('images/logo/logo.jpg')}}" alt="">
     </div>
     <h2 class="title">پیام پشتیبانی</h2>
     <br>

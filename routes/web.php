@@ -54,7 +54,7 @@ Route::get('issue',function(){
 
     $issue = \App\Issue::where('user_id',1)->first();
     $user = $issue->user;
-//    return view('email.responseMail',compact('issue','user'));
+    return view('email.responseMail',compact('issue','user'));
     $data = ['issue'=>$issue,'user'=>$user];
     Mail::send('email.responseMail',$data,function($message)use($user){
 
