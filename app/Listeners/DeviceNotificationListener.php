@@ -37,10 +37,10 @@ class DeviceNotificationListener
             'sound' => true,
         ];
 
-        $extraNotificationData = ["message" => $notification,"moredata" =>'dd'];
+        $extraNotificationData = ["message" => $notification];
 
         $fcmNotification = [
-            //'registration_ids' => $tokenList, //multple token array
+            //'registration_ids' => $tokenList, //multiple token array
             'to'        => $token, //single token
             'notification' => $notification,
             'data' => $extraNotificationData

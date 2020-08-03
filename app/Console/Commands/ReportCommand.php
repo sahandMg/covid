@@ -37,13 +37,13 @@ class ReportCommand extends Command
 
     /**
      * Execute the console command.
-     *
+     * Will be executed at 00:05 AM
      * @return mixed
      */
     public function handle()
     {
         $queries =  DB::table('devices')->join('device_logs', 'devices.id', '=', 'device_logs.device_id')
-            ->where('device_logs.created_at','>',Carbon::today())->where('device_logs.created_at','<',Carbon::tomorrow())
+            ->where('device_logs.created_at','>',Carbon::yesterday())->where('device_logs.created_at','<',Carbon::today())
             ->select('device_id','push','devices.user_id','device_logs.created_at')->get();
         $deviceArr = [];
         $deviceOwner = [];
@@ -68,13 +68,15 @@ class ReportCommand extends Command
                 $report->total_pushed = $item;
                 $report->device_id = $key;
                 $report->user_id = $deviceOwner[$key];
+                $report->created_at = Carbon::now()->subDay(1)->endOfDay();
+                $report->updated_at = Carbon::now()->subDay(1)->endOfDay();
                 $report->save();
             }
         }catch (\Exception $exception){
 
             Log::warning($exception->getMessage());
         }
-        \App\DeviceLog::where('created_at','<',Carbon::yesterday())->delete();
+        \App\DeviceLog::where('created_at','<',Carbon::now()->subDays(2))->delete();
 
 
     }

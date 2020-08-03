@@ -21,7 +21,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 Route::get('/', function () {
 
-    dd(\Illuminate\Support\Str::random(8));
+    dd(Carbon::now()->subDay(1)->endOfDay());
     return view('welcome');
 
 });

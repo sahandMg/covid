@@ -10,7 +10,7 @@
     <title>لیست محصولات</title>
     <style>
         .table-box{
-            width: 80%;
+            width: 90%;
             margin: 50px auto;
         }
         .table th{
@@ -108,7 +108,8 @@
                 <th>عکس</th>
                 <th>توضیحات</th>
                 <th>قیمت</th>
-                <th>محصول</th>
+                <th>عنوان</th>
+                <th>نام</th>
                 <th>ردیف</th>
                 </thead>
                 <tbody>
@@ -120,6 +121,7 @@
                             <td><img width="50" src="{{URL::asset('images/'.$item->img)}}" alt=""></td>
                             <td>{{$item->desc}}</td>
                             <td>{{$item->price}}</td>
+                            <td>{{$item->title}}</td>
                             <td>{{$item->p_name}}</td>
                             <td>{{$key+1}}</td>
                         </tr>

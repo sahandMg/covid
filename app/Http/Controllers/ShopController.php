@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Cart;
+use App\Http\Controllers\ShopResponsables\AddItem;
+use App\Http\Controllers\ShopResponsables\UpdateItem;
 use App\Repo;
+use App\Services\Shop\RequestValidationService;
 use App\ShopItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +22,7 @@ class ShopController extends Controller
      * Data returns : data
      *
      */
-    public function addItem(Request $request){
+    public function addItem(Request $request,RequestValidationService $rq){
 
 
         $this->validate($request,[
@@ -30,28 +33,7 @@ class ShopController extends Controller
             'p_title'=>'required'
         ]);
 
-        if($request->password != env('ADMIN_PASS')){
-
-            return redirect()->back()->with(['error'=>'کد عبور نادرست است']);
-        }
-        try{
-            $shop = new ShopItem();
-            $shop->p_name = $request->p_name;
-            $shop->desc = $request->desc;
-            $shop->price = $request->price;
-            $shop->title = $request->p_title;
-            $shop->available = $request->available;
-            $name = time().'.'.$request->file('img')->getClientOriginalExtension();
-            $request->file('img')->move(public_path('images'),$name);
-            $shop->img = $name;
-            $shop->save();
-        }catch (\Exception $exception){
-
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
-            return $resp;
-        }
-
-            return redirect()->back()->with(['message'=>'محصول ثبت شد']);
+      return new AddItem();
     }
 
     //    ============ Updating an Item information ============
@@ -61,85 +43,26 @@ class ShopController extends Controller
      * Data returns : data
      *
      */
-    public function updateItem(Request $request){
+    public function updateItem(Request $request, RequestValidationService $rq){
 
         $this->validate($request,[
             'p_name'=>'required',
         ]);
 
+        $val = $rq->image($request);
+
+        if(!is_null($val)){
+
+            return $val;
+        }
+
         if($request->password != env('ADMIN_PASS')){
 
             return redirect()->back()->with(['error'=>'کد عبور نادرست است']);
         }
-        $item = ShopItem::where('p_name',$request->p_name_old)->first();
 
-        if(is_null($item)){
+        return new UpdateItem();
 
-//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=> ['err'=>'محصول یافت نشد']]];
-//            return $resp;
-            return redirect()->back()->with(['error'=>'محصول یافت نشد']);
-        }
-        try{
-
-
-            if($request->has('p_name')){
-
-                $item->update(['p_name'=>$request->p_name]);
-            }
-            if($request->has('title')){
-
-                $item->update(['title'=>$request->p_title]);
-            }
-            if($request->has('price')){
-
-                $item->update(['price'=>$request->price]);
-            }
-            if($request->has('desc')){
-
-                $item->update(['desc'=>$request->desc]);
-            }
-            if($request->has('available')){
-
-                $item->update(['available'=>$request->available]);
-            }
-            if($request->has('img')){
-
-                $extension = $request->file('img')->getClientOriginalExtension();
-
-                $extensions = ['jpeg','bmp','png','jpg'];
-
-                if($request->file('img')->getSize()/1000 > 1000){
-
-                    $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>'حجم عکس حداکثر باید ۱۰۰۰ کیلوبایت باشد']]];
-
-                    return $resp;
-                }
-                if(!in_array($extension,$extensions)){
-
-                    $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>'باشد jpg,jpeg,bmp,png  عکس باید به یکی از فرمت های  ']]];
-
-                    return $resp;
-                }
-                if(file_exists(public_path('images/'.$item->img))){
-
-                    unlink(public_path('images/'.$item->img));
-                }
-                $name = time().'.'.$request->file('img')->getClientOriginalExtension();
-
-                $request->file('img')->move(public_path('images'),$name);
-
-                $item->update(['img'=>$name]);
-
-
-            }
-        }
-        catch (\Exception $exception){
-
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage()]];
-            return $resp;
-        }
-
-        return redirect()->route('productList')->with(['message'=>'اطلاعات محصول به روز رسانی شد']);
     }
 
     //    ============ Removing an Item  ============

@@ -44,7 +44,6 @@ class TransactionController extends Controller
             $zarrin = new Zarrin($request->all());
             $result = $zarrin->create($repo);
             if($result["Status"] != 404){
-// TODO How to redirect user to a webpage in app
 
                 return $resp = ['status'=>200,'body'=>['type'=>'link','message'=> ['link'=>'https://www.zarinpal.com/pg/StartPay/' . $result["Authority"]]]];
             }else{
@@ -65,52 +64,9 @@ class TransactionController extends Controller
 
         return $zarrin->verify();
 
-//        TODO How to return back to app
+
     }
 
-    public function test_create(Request $request,Repo $repo){
-
-        $validator = Validator::make($request->all(),[
-
-            'cart'=>'required',
-            'address'=>'required',
-            'phone'=>'required',
-        ]);
-        if($validator->fails()){
-
-            $errResp =  $repo->responseFormatter($validator->errors()->getMessages());
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
-            return $resp;
-        }
-
-        try{
-
-            $zarrin = new ZarrinTest($request->all());
-            $result = $zarrin->create($repo);
-            if($result->Status != 404){
-// TODO How to redirect user to a webpage in app
-
-                return $resp = ['status'=>200,'body'=>['type'=>'link','message'=> ['link'=>'https://www.zarinpal.com/pg/StartPay/' . $result->Authority]]];
-            }else{
-
-                return $resp = ['status'=>500,'body'=>['type'=>'error','message'=> ['err'=>'مشکلی در ارتباط با درگاه پیش آمده است، لطفا دوباره تلاش کنید']]];
-            }
-
-        }catch (\Exception $exception){
-
-            return $resp = ['status'=>500,'body'=>['type'=>'error','message'=> $exception->getMessage()]];
-        }
-    }
-
-    public function test_ZarrinCallback(Request $request){
-
-
-        $zarrin = new ZarrinTest($request->all());
-
-        return $zarrin->verify();
-
-//        TODO How to return back to app
-    }
 
     public function failedPage(Request $request){
 
