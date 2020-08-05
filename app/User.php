@@ -54,5 +54,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->fcm_token;
     }
 
+    public function shared(){
+
+        return $this->hasOne(SharedKey::class);
+    }
+
 
 }

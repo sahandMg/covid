@@ -23,11 +23,10 @@ class UserLogin implements Responsable
 
             if($token = Auth::guard('user')->attempt(['email'=>$request->email,'password'=>$request->password])){
 
-                $user = User::where('email',$request->email)->first();
+                $user = User::where('email',$request->email)->with('shared')->first();
                 $user->update(['token'=>$token]);
                 $user->update(['fcm_token'=>$request->fcm_token]);
-
-                $respMsg = ['name'=>$user->name,'token'=>$token,'code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address];
+                $respMsg = ['name'=>$user->name,'token'=>$token,'code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address,'shared'=>is_null($user->shared) ? 0:1];
 
                 $user->role_id == $this->repo->findRoleId('user')?
                     $respMsg['role'] = 'user':

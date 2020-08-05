@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Device;
+use App\DeviceLog;
 use App\Report;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -45,6 +46,7 @@ class ReportCommand extends Command
         $queries =  DB::table('devices')->join('device_logs', 'devices.id', '=', 'device_logs.device_id')
             ->where('device_logs.created_at','>',Carbon::yesterday())->where('device_logs.created_at','<',Carbon::today())
             ->select('device_id','push','devices.user_id','device_logs.created_at')->get();
+
         $deviceArr = [];
         $deviceOwner = [];
         try{

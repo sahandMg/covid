@@ -22,12 +22,12 @@ class GoogleLogin implements Responsable {
     
     public function toResponse($request){
 
-        $user = User::where('email',$request->email)->first();
+        $user = User::where('email',$request->email)->with('shared')->first();
         if(!is_null($user)){
             $token = Auth::guard('user')->login($user);
             $user->update(['token'=>$token]);
             $user->update(['fcm_token'=>$request->fcm_token]);
-            $respMsg = ['name'=>$user->name,'token'=>$token,'code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address];
+            $respMsg = ['name'=>$user->name,'token'=>$token,'code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address,'shared'=>is_null($user->shared) ? 0:1];
             $user->role_id == $this->repo->findRoleId('user')?
                 $respMsg['role'] = 'user':
                 $respMsg['role'] = 'admin';
@@ -47,8 +47,16 @@ class GoogleLogin implements Responsable {
             $user->save();
             $token = Auth::guard('user')->login($user);
             $user->update(['token'=>$token]);
-            $resp = $this->formatter->create($status = 200, $type = 'data',$message = ['name'=>$user->name,'token'=>$token,
-                'role'=>'user','code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address]);
+            $resp = $this->formatter->create($status = 200, $type = 'data',$message =
+                [
+                    'name'=>$user->name,
+                    'token'=>$token,
+                    'role'=>'user',
+                    'code'=>$user->key,
+                    'phone'=>$user->phone,
+                    'address'=>$user->address,
+                    'shared'=>0
+                ]);
             return $resp;
         }
     }

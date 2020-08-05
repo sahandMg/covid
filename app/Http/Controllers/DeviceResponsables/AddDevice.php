@@ -41,7 +41,7 @@ class AddDevice implements Responsable {
                 return 404;
             }
 
-            Cache::put('data',[$resp,$user],200000);
+            Cache::put('data',[$resp,Carbon::now()->format("Y-m-d H:i:s"),$user],200000);
 
 //            Switching account role takes place at DeviceObserver
 

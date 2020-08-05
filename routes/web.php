@@ -1,5 +1,6 @@
 <?php
 
+use App\DeviceLog;
 use App\Report;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -21,14 +22,15 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 Route::get('/', function () {
 
-    dd(Carbon::now()->subDay(1)->endOfDay());
+    $d = DeviceLog::where('device_logs.created_at','>',Carbon::yesterday())->where('device_logs.created_at','<',Carbon::today())->with('device')->sum('push');
+    dd($d);
     return view('welcome');
 
 });
 
 Route::get('@admin/signup','AuthController@adminSignup')->name('adminSignup');
 Route::post('signup','AuthController@post_adminSignup')->name('adminSignup');
-Route::get('zarrin/callback','TransactionController@ZarrinCallback');
+//Route::get('zarrin/callback','TransactionController@ZarrinCallback');
 Route::get('zarrin/test/callback','TransactionController@test_ZarrinCallback');
 Route::get('zarrin/failed','TransactionController@failedPage')->name('PaymentCanceled');
 Route::get('zarrin/success','TransactionController@successPage')->name('PaymentSuccess');
