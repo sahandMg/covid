@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 class UpdateDeviceData implements Responsable {
 
 
-    public function toResponse($request){
+    public function toResponse($request,$updateUser = null){
 
         try{
 
@@ -18,8 +18,12 @@ class UpdateDeviceData implements Responsable {
             $device = Device::where('unique_id',$request['unique_id'])->firstOrFail();
             isset($request['location'])?$request['city'] = $request['location']:null;
             $device->update($request);
-
-            $device->update(['user_id'=> $device->user->id]);
+            if($updateUser == 1){
+                $temp = $device->toArray();
+                $temp['user_id'] = $device->user->id;
+                $device->delete();
+                Device::create($temp);
+            }
 
         }catch (\Exception $exception){
 

@@ -65,10 +65,11 @@ class AddDevice implements Responsable {
                         $resp['city'] = $resp['location'];
                         unset($resp['location']);
 
-
 //                        Updating Existing Device Data
+                        $user->id == $device->user_id ? (new UpdateDeviceData())->toResponse($resp) : (new UpdateDeviceData())->toResponse($resp,$updateUser = 1);
+//                        Device owner may have changed
+                        $device = Device::where('unique_id',$resp['unique_id'])->first();
 
-                        (new UpdateDeviceData())->toResponse($resp);
                     }
 //                       Creating DeviceLog + Sendig Notifications if Needed
 

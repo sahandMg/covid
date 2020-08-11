@@ -76,7 +76,7 @@ class ReportCommand extends Command
             }
         }catch (\Exception $exception){
 
-            Log::warning($exception->getMessage());
+            Log::warning($exception->getMessage().$exception->getLine());
         }
         \App\DeviceLog::where('created_at','<',Carbon::now()->subDays(2))->delete();
 

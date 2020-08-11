@@ -14,11 +14,6 @@ use App\Services\Device\RequestValidationService;
 use App\Services\ReturnMsgFormatter;
 use Illuminate\Http\Request;
 
-
-
-
-
-
 class DeviceController extends Controller
 {
 
@@ -121,7 +116,6 @@ class DeviceController extends Controller
     public function liquidChart(Request $request,RequestValidationService $rq){
 
 //        return [Auth::guard('user')->id(),Auth::guard('admin')->id()];
-
         $val = $rq->chart($request);
         if(!is_null($val)){
 

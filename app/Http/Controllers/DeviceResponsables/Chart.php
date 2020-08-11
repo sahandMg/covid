@@ -11,8 +11,10 @@ namespace App\Http\Controllers\DeviceResponsables;
 
 use App\Device;
 use App\Repo;
+use App\SharedKey;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Morilog\Jalali\Jalalian;
 
@@ -37,6 +39,8 @@ class Chart implements Responsable {
 
                 return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['دستگاهی یافت نشد']]];
             }
+            $user = Auth::guard('user')->user();
+            $user->role_id == $repo->findRoleId('user') ? $id = SharedKey::where('user_id',$user->id)->first()->admin_id:$id = $user->id;
 
             $deviceReports = DB::table('reports')->where('device_id',$device->id)
                 ->where('created_at','>',Carbon::parse($date))
@@ -65,7 +69,7 @@ class Chart implements Responsable {
                 $total_push = 0;
                 $endDate = Carbon::parse($deviceReports[count($deviceReports)-1]->created_at);
                 $today = Carbon::now();
-                $today2 = Carbon::now();
+                $today2 = Carbon::yesterday();
                 $result = [];
                 $i = 1;
                 while ($today->greaterThanOrEqualTo($endDate)){
@@ -96,7 +100,7 @@ class Chart implements Responsable {
 
                 $total_push = 0;
                 $endDate = Carbon::parse($deviceReports[count($deviceReports)-1]->created_at)->firstOfMonth();
-                $today2 = Carbon::now();
+                $today2 = Carbon::yesterday();
                 $result = [];
                 $i = 1;
                 while ($today2->greaterThanOrEqualTo($endDate)){

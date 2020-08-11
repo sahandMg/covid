@@ -43,7 +43,6 @@ class DeviceList implements Responsable {
             $adminDevices = Device::where('user_id',$admin_id)->where('updated_at','>',Carbon::parse($date))->with('deviceLogs')->get();
 
 //                Means that there is no new devices on the app
-
             $deviceLogs = DeviceLog::where('user_id',$admin_id)->orderBy('id','desc')->where('updated_at','>',Carbon::parse($date))->with('device')->get();
 
             $resp2 = [];
