@@ -44,6 +44,7 @@ class Chart implements Responsable {
 
             $deviceReports = DB::table('reports')->where('device_id',$device->id)
                 ->where('created_at','>',Carbon::parse($date))
+                ->where('user_id',$id)
                 ->orderBy('created_at','desc')->select('id','total_pushed','created_at')
                 ->get();
 
