@@ -44,7 +44,7 @@ class ReportCommand extends Command
     public function handle()
     {
         $queries =  DB::table('devices')->join('device_logs', 'devices.id', '=', 'device_logs.device_id')
-            ->where('device_logs.created_at','>',Carbon::yesterday())->where('device_logs.created_at','<',Carbon::tomorrow())
+            ->where('device_logs.created_at','>',Carbon::yesterday())->where('device_logs.created_at','<',Carbon::today())
             ->select('device_id','push','devices.user_id','device_logs.created_at')->get();
 
         $deviceArr = [];

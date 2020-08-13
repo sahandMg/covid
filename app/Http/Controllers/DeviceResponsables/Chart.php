@@ -22,9 +22,9 @@ class Chart implements Responsable {
 
     public function __construct()
     {
-        
+
     }
-    
+
     public function toResponse($request){
 
         $repo = new Repo();
@@ -69,19 +69,21 @@ class Chart implements Responsable {
 
                 $total_push = 0;
                 $endDate = Carbon::parse($deviceReports[count($deviceReports)-1]->created_at);
-                $today = Carbon::now();
+                $today = Carbon::yesterday();
                 $today2 = Carbon::yesterday();
                 $result = [];
                 $i = 1;
+                $days = 0;
                 while ($today->greaterThanOrEqualTo($endDate)){
 
                     foreach ($deviceReports as $deviceReport){
 
                         $queryDate = Carbon::parse($deviceReport->created_at);
-                        $today = Carbon::now();
+                        $today = Carbon::yesterday();
+                        $lastWeekDay = $today->subDays(7*$i);
 
-                        if($queryDate->greaterThanOrEqualTo($today->subDays(7*$i)) && $queryDate->lessThanOrEqualTo(Carbon::now()->subDays(7*($i-1)))){
-
+                        if($queryDate->greaterThanOrEqualTo($lastWeekDay) && $queryDate->lessThan(Carbon::yesterday()->endOfDay()->subDays(7*($i-1)+$days))){
+                            
                             $total_push = $total_push + $deviceReport->total_pushed;
 
                         }else{
@@ -91,8 +93,9 @@ class Chart implements Responsable {
 //                    array_push($result,['total_pushed'=>$total_push,'date'=>$repo->converte2p(Jalalian::fromCarbon($today2)->format('Y-m-d')).'*'.$repo->converte2p(Jalalian::fromCarbon($today2)->subDays(7)->format('Y-m-d'))]);
                     array_push($result,['total_pushed'=>$total_push,'date'=>$repo->converte2p(Jalalian::fromCarbon($today2)->format('Y-m-d'))]);
                     $total_push = 0;
-                    $today2->subDays(7);
+                    $today2->subDays(8);
                     $i += 1;
+                    $days = 1;
                 }
 
                 return $resp = ['status'=>200,'body'=>['type'=>'week','message'=>$result,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];

@@ -18,4 +18,8 @@ class Device extends Model
 
         return $this->hasMany(DeviceLog::class);
     }
+    public function reports(){
+
+        return $this->hasMany(Report::class);
+    }
 }

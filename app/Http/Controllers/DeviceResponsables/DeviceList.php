@@ -43,7 +43,7 @@ class DeviceList implements Responsable {
             $adminDevices = Device::where('user_id',$admin_id)->where('updated_at','>',Carbon::parse($date))->with('deviceLogs')->get();
 
 //                Means that there is no new devices on the app
-            $deviceLogs = DeviceLog::where('user_id',$admin_id)->orderBy('id','desc')->where('updated_at','>',Carbon::parse($date))->with('device')->get();
+            $deviceLogs = DeviceLog::where('user_id',$admin_id)->orderBy('id','desc')->where('created_at','>',Carbon::parse($date))->with('device')->get();
 
             $resp2 = [];
             try {
@@ -63,16 +63,19 @@ class DeviceList implements Responsable {
                 foreach ($deviceLogs as $deviceLog) {
                     if(!in_array($deviceLog->device_id,$check)){
 
-                        $last = $deviceLog->device;
+                        $deviceData = $deviceLog->device;
+                        $lastUsage = $deviceData->reports->sum('total_pushed');
                         array_push($resp2, [
-                            'unique_id' => $last->unique_id,
-                            'd_name' => $last->d_name,
+                            'unique_id' => $deviceData->unique_id,
+                            'd_name' => $deviceData->d_name,
                             'power' => $deviceLog->power,
                             'push' => $deviceLog->push,
+                            'last_usage'=>$lastUsage,
                             'capacity' => $deviceLog->capacity,
-                            'region' => $last->region,
-                            'city' => $last->city,
-                            'date'=>Jalalian::fromCarbon($deviceLog->created_at)->format("Y-m-d H:i:s")
+                            'region' => $deviceData->region,
+                            'city' => $deviceData->city,
+//                            'date'=>Jalalian::fromCarbon($deviceLog->created_at)->format("Y-m-d H:i:s")
+                            'date'=>Carbon::parse($deviceLog->created_at)->format("Y-m-d H:i:s")
                         ]);
                         array_push($check,$deviceLog->device_id);
                     }
@@ -82,13 +85,14 @@ class DeviceList implements Responsable {
 
 
             if(count($adminDevices->toArray()) == 0 && count($deviceLogs->toArray()) == 0) {
-
-                return ['status' => 404, 'body' => ['type' => 'error', 'message' => [], 'date' => Jalalian::now()->format("Y-m-d H:i:s")]];
+//                return ['status' => 404, 'body' => ['type' => 'error', 'message' => [], 'date' => Jalalian::now()->format("Y-m-d H:i:s")]];
+                return ['status' => 404, 'body' => ['type' => 'error', 'message' => [], 'date' => Carbon::now()->format("Y-m-d H:i:s")]];
 
             }
             else if(count($adminDevices->toArray()) == 0 && count($deviceLogs->toArray()) != 0) {
 
-                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+//                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
             }
 //            else if(count($adminDevices->toArray()) != 0 && count($deviceLogs->toArray()) == 0){
 //
@@ -98,7 +102,8 @@ class DeviceList implements Responsable {
 //            }
             else{
 
-                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+//                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
             }
 
         }catch (\Exception $exception){
