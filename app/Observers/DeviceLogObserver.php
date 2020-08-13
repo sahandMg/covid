@@ -20,8 +20,8 @@ class DeviceLogObserver
 
         if($deviceLog->capacity < env('CAPACITY_THRESHOLD')){
             $device_name = $deviceLog->device->d_name;
-            $body = " حجم مایع دستگاه $device_name زیر ۲۰ درصد است ";
-            $title = "اخطار حجم مایع";
+            $body = " حجم الکل دستگاه $device_name زیر ۲۰ درصد است ";
+            $title = "اخطار حجم الکل";
             if(!Cache::has($id.'_cap')){
                 Cache::forever($id.'_cap',1);
                 \App\Events\DeviceNotificationEvent::dispatch($title,$body,$deviceLog->device->user->fcm_token);

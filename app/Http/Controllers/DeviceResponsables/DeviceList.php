@@ -24,7 +24,6 @@ class DeviceList implements Responsable {
         try{
             $repo = new Repo();
             $date = $repo->convertJalali($request->date);
-
             $user = Auth::guard('user')->user();
 
 //                checks shared key, if admin code hasn't been shared, user can't see devices

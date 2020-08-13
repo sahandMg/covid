@@ -62,7 +62,7 @@ class Chart implements Responsable {
                     array_push($result,['total_pushed'=>$deviceReport->total_pushed,'date'=> $repo->converte2p(Jalalian::fromCarbon(Carbon::parse($deviceReport->created_at))->format('Y-m-d')) ]);
                 }
 
-                return $resp = ['status'=>200,'body'=>['type'=>'day','message'=>$result,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+                return $resp = ['status'=>200,'body'=>['type'=>'day','message'=>array_reverse($result),'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
 
             }
             elseif ($request->filter_name == 'week'){
@@ -83,7 +83,7 @@ class Chart implements Responsable {
                         $lastWeekDay = $today->subDays(7*$i);
 
                         if($queryDate->greaterThanOrEqualTo($lastWeekDay) && $queryDate->lessThan(Carbon::yesterday()->endOfDay()->subDays(7*($i-1)+$days))){
-                            
+
                             $total_push = $total_push + $deviceReport->total_pushed;
 
                         }else{

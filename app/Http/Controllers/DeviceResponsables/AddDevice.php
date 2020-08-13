@@ -71,7 +71,7 @@ class AddDevice implements Responsable {
                         $device = Device::where('unique_id',$resp['unique_id'])->first();
 
                     }
-//                       Creating DeviceLog + Sendig Notifications if Needed
+//                       Creating DeviceLog + Sending Notifications if Needed
 
                 }catch (\Exception $exception){
 

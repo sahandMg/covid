@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ShopController extends Controller
 {
@@ -127,8 +128,28 @@ class ShopController extends Controller
         }
 
         try{
-
             $items = ShopItem::select('p_name','price','desc','img','title','available')->get();
+            // Sorting shopping list based on notification title
+            if($request->has('s_title')){
+                Str::contains($request->s_title,'باتری')?$searchedItem = 'باتری':(Str::contains($request->s_title,'الکل')?
+                    $searchedItem = 'الکل':$searchedItem = 0);
+                if($searchedItem == 0){
+
+                    $temp = [];
+                    foreach ($items as $item){
+
+                        if(Str::contains($item->p_name,$searchedItem)){
+                            array_unshift($temp,$item);
+                        }else{
+                            array_push($temp,$item);
+                        }
+                    }
+                    $items = $temp;
+                }
+
+            }
+
+
             if (count($items) == 0){
 
                 return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err'=>'محصولی برای نمایش وجود ندارد']]];
