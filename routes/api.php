@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeviceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -54,7 +55,9 @@ Route::group(['prefix'=>'device','middleware'=>'token'],function() {
     Route::post('chart/liquid', 'DeviceController@liquidChart');
     Route::post('list', 'DeviceController@DeviceList');
 //    Route::post('list/update', 'DeviceController@get_Devices_update');
+    Route::post('report',[DeviceController::class,'deviceReport']);
     Route::post('sharing', 'DeviceController@sharing');
+
 });
 
 // ======== Shopping Routes ========

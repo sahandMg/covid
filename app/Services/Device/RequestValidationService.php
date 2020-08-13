@@ -71,4 +71,16 @@ class RequestValidationService
             return $resp;
         }
     }
+    public function report($request){
+
+        $validator = Validator::make($request->all(),[
+            'unique_id'=>'required',
+        ]);
+        if($validator->fails()){
+
+            $errResp =  (new Repo())->responseFormatter($validator->errors()->getMessages());
+            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>$errResp[0]]]];
+            return $resp;
+        }
+    }
 }

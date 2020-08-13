@@ -7,6 +7,7 @@ use App\DeviceLog;
 use App\Http\Controllers\DeviceResponsables\AddDevice;
 use App\Http\Controllers\DeviceResponsables\Chart;
 use App\Http\Controllers\DeviceResponsables\DeviceList;
+use App\Http\Controllers\DeviceResponsables\deviceReport;
 use App\Http\Controllers\DeviceResponsables\RemoveDeviceData;
 use App\Http\Controllers\DeviceResponsables\Sharing;
 use App\Http\Controllers\DeviceResponsables\UpdateDeviceData;
@@ -132,6 +133,22 @@ class DeviceController extends Controller
      */
     public function transList(){
 
+    }
+
+    //    ============ Device Usage Report (send user devices report including usages)  ============
+
+    /*
+     * Data Needed : token
+     * Data returns : data
+     */
+    public function deviceReport(Request $request,RequestValidationService $rq){
+
+//        $val = $rq->report($request);
+//        if(!is_null($val)){
+//
+//            return $val;
+//        }
+        return new deviceReport();
     }
 
 }

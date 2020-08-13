@@ -70,9 +70,8 @@ Route::get('issue',function(){
 Route::get('invoice',function(){
 
 
-    $trans = \App\Transaction::where('id',3)->first();
-    $cart = \App\Cart::where('trans_id',3)->first();
-
+    $trans = \App\Transaction::where('id',5)->first();
+    $cart = \App\Cart::where('trans_id',5)->first();
     $cart->update(['completed' => 1]);
     $cart->cart = unserialize($cart->cart);
     if(!is_null($cart->user_id)){
@@ -82,18 +81,18 @@ Route::get('invoice',function(){
     }
     $data = ['cart'=>$cart,'trans'=>$trans,'user'=>$user];
 
+    Mail::send('email.invoiceMail',$data,function($message)use($cart){
+
+        $message->to($cart->email);
+        $message->from(env('NoReply'));
+        $message->subject('فاکتور خرید');
+    });
+
 //    Mail::send('email.invoiceMail',$data,function($message)use($cart){
 //
-//        $message->to($cart->email);
+//        $message->to(env('SAILS_MAIL'));
 //        $message->from(env('NoReply'));
 //        $message->subject('فاکتور خرید');
-//    });
-//
-//    Mail::send('email.invoiceMail',$data,function($message)use($cart){
-////
-////        $message->to(env('SAILS_MAIL'));
-////        $message->from(env('NoReply'));
-////        $message->subject('فاکتور خرید');
 //    });
 
 });
