@@ -75,7 +75,7 @@ class Zarrin
                 $basket->cart = serialize($this->request['cart']);
                 $basket->amount = $total_price;
                 $basket->code = rand(10000,20000);
-                $basket->address = $this->request['address'];
+                $basket->address = $this->request['address'].'@*'.$this->request['postal_code'];
                 if(Auth::guard('user')->check()){
 
                     $basket->user_id = Auth::guard('user')->id();
