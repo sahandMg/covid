@@ -22,8 +22,11 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 Route::get('/', function () {
 
-    $d = DeviceLog::where('device_logs.created_at','>',Carbon::yesterday())->where('device_logs.created_at','<',Carbon::today())->with('device')->sum('push');
-    dd($d);
+
+    $deleteUs = \App\DeviceLog::where('created_at','<',Carbon::now())->orderBy('id','desc')->where('device_id',4)->get()->skip(1);
+    foreach ($deleteUs as $delelte){
+        $delelte->delete();
+    }
     return view('welcome');
 
 });

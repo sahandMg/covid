@@ -156,7 +156,7 @@
     <h4>    خریدار : {{$cart->user->name}}</h4>
     <h4>   شماره تماس :  {{$cart->phone}}</h4>
     <h4> آدرس تحویل :  {{explode('@*',$cart->address)[0]}}   </h4>
-    <h4> آدرس کدپستی :  {{explode('@*',$cart->address)[1]}}   </h4>
+    <h4>  کدپستی :  {{explode('@*',$cart->address)[1]}}   </h4>
     </div>
 
     <div class="recieptor">
