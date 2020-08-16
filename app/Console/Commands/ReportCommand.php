@@ -73,7 +73,7 @@ class ReportCommand extends Command
                 $report->created_at = Carbon::now()->subDay(1)->endOfDay();
                 $report->updated_at = Carbon::now()->subDay(1)->endOfDay();
                 $report->save();
-                $deleteUs = \App\DeviceLog::where('created_at','<',Carbon::now())->orderBy('id','desc')->where('device_id',$key)->get()->skip(1);
+                $deleteUs = \App\DeviceLog::where('created_at','<',Carbon::today())->orderBy('id','desc')->where('device_id',$key)->get()->skip(1);
                 foreach ($deleteUs as $delelte){
                     $delelte->delete();
                 }
