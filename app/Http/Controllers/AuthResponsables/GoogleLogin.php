@@ -19,7 +19,6 @@ class GoogleLogin implements Responsable {
         $this->repo = $repo;
         $this->formatter = $formatter;
     }
-    
     public function toResponse($request){
 
         $user = User::where('email',$request->email)->with('shared')->first();
@@ -36,7 +35,6 @@ class GoogleLogin implements Responsable {
 
             return $resp;
         }
-
         else{
 
             $user = new User();
@@ -60,5 +58,4 @@ class GoogleLogin implements Responsable {
         }
     }
 }
-
 ?>
