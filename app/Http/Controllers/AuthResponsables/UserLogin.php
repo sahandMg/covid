@@ -26,7 +26,7 @@ class UserLogin implements Responsable
                 $user = User::where('email',$request->email)->with('shared')->first();
                 $user->update(['token'=>$token]);
                 $user->update(['fcm_token'=>$request->fcm_token]);
-                $respMsg = ['name'=>$user->name,'token'=>$token,'code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address,'postal_code'=>$user->postal_code,'shared'=>is_null($user->shared) ? 0:1];
+                $respMsg = ['name'=>$user->name,'token'=>$token,'code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address,'postal_code'=>$user->postal_code,'n_code'=>$user->n_code,'shared'=>is_null($user->shared) ? 0:1];
 
                 $user->role_id == $this->repo->findRoleId('user')?
                     $respMsg['role'] = 'user':

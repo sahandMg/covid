@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->string('postal_code')->nullable();
-            $table->string('melli')->nullable();
+            $table->string('n_code')->nullable();
             $table->string('key')->nullable();
             $table->text('token')->nullable();
             $table->text('fcm_token')->nullable();
