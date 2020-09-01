@@ -92,12 +92,12 @@ class DeviceList implements Responsable {
 
             if(count($adminDevices->toArray()) == 0 && count($deviceLogs->toArray()) == 0) {
 //                return ['status' => 404, 'body' => ['type' => 'error', 'message' => [], 'date' => Jalalian::now()->format("Y-m-d H:i:s")]];
-                return ['status' => 404, 'body' => ['type' => 'error', 'message' => [], 'date' => Carbon::now()->format("Y-m-d H:i:s")]];
+                return ['status' => 404, 'body' => ['type' => 'error', 'message' => [],'log'=>$deviceEvents, 'date' => Carbon::now()->format("Y-m-d H:i:s")]];
 
             }
             else if(count($adminDevices->toArray()) == 0 && count($deviceLogs->toArray()) != 0) {
 
-                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'logs'=>$deviceEvents,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'log'=>$deviceEvents,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
 //                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
             }
 //            else if(count($adminDevices->toArray()) != 0 && count($deviceLogs->toArray()) == 0){
@@ -109,7 +109,7 @@ class DeviceList implements Responsable {
             else{
 
 //                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
-                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'logs'=>$deviceEvents,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'log'=>$deviceEvents,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
             }
 
         }catch (\Exception $exception){
