@@ -13,9 +13,9 @@ class deviceReport implements Responsable {
 
     public function __construct()
     {
-        
+
     }
-    
+
     public function toResponse($request){
 
         try{
@@ -24,8 +24,10 @@ class deviceReport implements Responsable {
             $devices = Device::where('user_id',$user->id)->get();
             //                checks shared key, if admin code hasn't been shared, user can't see devices
             try{
-                    $user->role_id == $repo->findRoleId('user')?
-                    SharedKey::where('user_id',$user->id)->firstOrFail()->admin_id:null;
+                    if($user->role_id == $repo->findRoleId('user')){
+                        $sharedAdmin = SharedKey::where('user_id',$user->id)->firstOrFail();
+                        $devices = Device::where('user_id',$sharedAdmin->admin_id)->get();
+                    }
             }
             catch (\Exception $exception){
                 return  ['status'=>404,'body'=>['type'=>'data','message'=>[]]];

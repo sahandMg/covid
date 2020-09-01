@@ -11,9 +11,9 @@ class PasswordRecovery implements \Illuminate\Contracts\Support\Responsable
 
     private $formatter;
 
-    public function __construct($fotmatter)
+    public function __construct($formatter)
     {
-        $this->formatter = $fotmatter;
+        $this->formatter = $formatter;
     }
 
     public function toResponse($request)

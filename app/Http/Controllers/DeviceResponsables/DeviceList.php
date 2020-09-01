@@ -23,7 +23,8 @@ class DeviceList implements Responsable {
 
         try{
             $repo = new Repo();
-            $date = $repo->convertJalali($request->date);
+//            $date = $repo->convertJalali($request->date);
+            $date = $request->date;
             $user = Auth::guard('user')->user();
 
 //                checks shared key, if admin code hasn't been shared, user can't see devices
@@ -63,7 +64,11 @@ class DeviceList implements Responsable {
                     if(!in_array($deviceLog->device_id,$check)){
 
                         $deviceData = $deviceLog->device;
-                        $lastUsage = $deviceData->reports->sum('total_pushed');
+                        try{
+                            $lastUsage = $deviceData->reports->sum('total_pushed');
+                        }catch(\Exception $e){
+                            $lastUsage = 0;
+                        }
                         array_push($resp2, [
                             'unique_id' => $deviceData->unique_id,
                             'd_name' => $deviceData->d_name,

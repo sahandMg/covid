@@ -28,7 +28,8 @@ class Chart implements Responsable {
     public function toResponse($request){
 
         $repo = new Repo();
-        $date = $repo->convertJalali($request->date);
+//        $date = $repo->convertJalali($request->date);
+        $date = $request->date;
         try{
 
             try{
