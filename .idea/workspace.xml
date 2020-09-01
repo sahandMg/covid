@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b64c50db-1875-4fa6-8c48-a99feb63239b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/DeviceResponsables/DeviceList.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/DeviceResponsables/DeviceList.php" />
     </list>
     <ignored path="covid.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -56,8 +57,8 @@
       <file leaf-file-name="DeviceList.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DeviceResponsables/DeviceList.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="41" column="139" selection-start-line="41" selection-start-column="135" selection-end-line="41" selection-end-column="139" />
+            <state relative-caret-position="270">
+              <caret line="111" column="84" selection-start-line="111" selection-start-column="84" selection-end-line="111" selection-end-column="84" />
               <folding />
             </state>
           </provider>
@@ -460,12 +461,12 @@
       <workItem from="1597220819538" duration="15457000" />
       <workItem from="1597584046400" duration="2207000" />
       <workItem from="1598167427298" duration="638000" />
-      <workItem from="1598945075282" duration="13972000" />
+      <workItem from="1598945075282" duration="14096000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="425124000" />
+    <option name="totallyTimeSpent" value="425248000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -886,14 +887,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DeviceResponsables/RemoveDeviceData.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="31" column="44" selection-start-line="31" selection-start-column="44" selection-end-line="31" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/AuthResponsables/UpdateUserProfile.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -918,10 +911,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DeviceResponsables/RemoveDeviceData.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="31" column="44" selection-start-line="31" selection-start-column="44" selection-end-line="31" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DeviceResponsables/DeviceList.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="41" column="139" selection-start-line="41" selection-start-column="135" selection-end-line="41" selection-end-column="139" />
+        <state relative-caret-position="270">
+          <caret line="111" column="84" selection-start-line="111" selection-start-column="84" selection-end-line="111" selection-end-column="84" />
           <folding />
         </state>
       </provider>

@@ -51,9 +51,9 @@ class AddDevice implements Responsable {
 
 //          Creating New Device
                 $device = Device::create([
-                    'd_name'=>$resp['name'],
-                    'city'=>$resp['location'],
-                    'region'=>$resp['region'],
+                    'd_name'=>str_replace('_',' ',$resp['name']),
+                    'city'=>str_replace('_',' ',$resp['location']),
+                    'region'=>str_replace('_',' ',$resp['region']),
                     'unique_id'=>$resp['unique_id'],
                     'user_id'=>$resp['user_id'],
                     'power_off'=>$resp['power_off']
