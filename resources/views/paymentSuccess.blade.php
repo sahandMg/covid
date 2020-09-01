@@ -61,7 +61,7 @@
         <h2>تراکنش با موفقیت انجام شد</h2>
         <h3>کد پیگیری تراکنش</h3>
         <h4 style="font-family: Arial">{{$id}}</h4>
-        <a class="btn" href="#">جهت بازگشت به اپلیکیشن کلیک کنید</a>
+        <a class="btn" href="https://devicemanager.com">جهت بازگشت به اپلیکیشن کلیک کنید</a>
     </div>
 </div>
 </body>
