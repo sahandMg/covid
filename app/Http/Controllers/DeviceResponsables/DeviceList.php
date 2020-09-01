@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\DeviceResponsables;
 
 use App\Device;
+use App\DeviceEvent;
 use App\DeviceLog;
 use App\Repo;
 use App\SharedKey;
@@ -38,6 +39,7 @@ class DeviceList implements Responsable {
                 return  ['status'=>404,'body'=>['type'=>'data','message'=>[],'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
             }
 
+            $deviceEvents = DeviceEvent::where('created_at','>',Carbon::parse($date))->where('user_id',$admin_id)->select('unique_id','type')->get();
 //            $admin_id = $shared->admin_id;
 
             $adminDevices = Device::where('user_id',$admin_id)->where('updated_at','>',Carbon::parse($date))->with('deviceLogs')->get();
@@ -95,7 +97,7 @@ class DeviceList implements Responsable {
             }
             else if(count($adminDevices->toArray()) == 0 && count($deviceLogs->toArray()) != 0) {
 
-                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'logs'=>$deviceEvents,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
 //                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
             }
 //            else if(count($adminDevices->toArray()) != 0 && count($deviceLogs->toArray()) == 0){
@@ -107,7 +109,7 @@ class DeviceList implements Responsable {
             else{
 
 //                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
-                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'logs'=>$deviceEvents,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
             }
 
         }catch (\Exception $exception){

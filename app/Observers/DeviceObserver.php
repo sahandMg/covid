@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Device;
+use App\DeviceEvent;
 use App\Log;
 use App\Repo;
 
@@ -20,6 +21,11 @@ class DeviceObserver
 
         $device->user->update(['role_id'=>$repo->findRoleId('admin')]);
 
+//        $newEvent = new DeviceEvent();
+//        $newEvent->type = 'created';
+//        $newEvent->unique_id = $device->unique_id;
+//        $newEvent->save();
+
     }
 
     /**
@@ -30,7 +36,10 @@ class DeviceObserver
      */
     public function updated(Device $device)
     {
-        //
+//        $newEvent = new DeviceEvent();
+//        $newEvent->type = 'update';
+//        $newEvent->unique_id = $device->unique_id;
+//        $newEvent->save();
     }
 
     /**
@@ -41,7 +50,11 @@ class DeviceObserver
      */
     public function deleted(Device $device)
     {
-        //
+        $newEvent = new DeviceEvent();
+        $newEvent->type = 'delete';
+        $newEvent->unique_id = $device->unique_id;
+        $newEvent->user_id = $device->user_id;
+        $newEvent->save();
     }
 
     /**

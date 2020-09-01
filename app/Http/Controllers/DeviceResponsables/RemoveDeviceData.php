@@ -29,7 +29,7 @@ class RemoveDeviceData implements Responsable
         }catch (\Exception $exception){
 
             $resp = ['status'=>404,'body'=>['type'=>'error','message'=>['err' => 'دستگاه موردنظر پیدا نشد']]];
-
+            return $exception->getMessage();
         }
 
         return $resp;
