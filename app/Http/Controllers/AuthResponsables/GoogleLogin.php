@@ -27,7 +27,7 @@ class GoogleLogin implements Responsable {
             $token = Auth::guard('user')->login($user);
             $user->update(['token'=>$token]);
             $user->update(['fcm_token'=>$request->fcm_token]);
-            $respMsg = ['name'=>$user->name,'token'=>$token,'code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address,'shared'=>is_null($user->shared) ? 0:1];
+            $respMsg = ['name'=>$user->name,'token'=>$token,'code'=>$user->key,'phone'=>$user->phone,'address'=>$user->address,'postal_code'=>$user->postal_code,'n_code'=>$user->n_code,'shared'=>is_null($user->shared) ? 0:1];
             $user->role_id == $this->repo->findRoleId('user')?
                 $respMsg['role'] = 'user':
                 $respMsg['role'] = 'admin';
@@ -35,7 +35,6 @@ class GoogleLogin implements Responsable {
             $resp = $this->formatter->create($status = 200, $type = 'data',$message = $respMsg);
 
             return $resp;
-
         }
 
         else{
