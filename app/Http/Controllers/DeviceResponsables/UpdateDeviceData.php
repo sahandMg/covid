@@ -22,7 +22,7 @@ class UpdateDeviceData implements Responsable {
                 $temp = $device->toArray();
                 $temp['region'] = $request['region'];
                 $temp['city'] = $request['city'];
-                $temp['user_id'] = $device->user_id;
+                $temp['user_id'] = $request['user_id'];
                 $device->delete();
                 Device::create($temp);
             }else{
