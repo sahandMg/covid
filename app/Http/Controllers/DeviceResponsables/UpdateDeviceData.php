@@ -17,12 +17,16 @@ class UpdateDeviceData implements Responsable {
             gettype($request) == 'object' ? $request = $request->all():$request;
             $device = Device::where('unique_id',$request['unique_id'])->firstOrFail();
             isset($request['location'])?$request['city'] = $request['location']:null;
-            $device->update($request);
+
             if($updateUser == 1){
                 $temp = $device->toArray();
-                $temp['user_id'] = $device->user->id;
+                $temp['region'] = $request['region'];
+                $temp['city'] = $request['city'];
+                $temp['user_id'] = $device->user_id;
                 $device->delete();
                 Device::create($temp);
+            }else{
+                $device->update($request);
             }
 
         }catch (\Exception $exception){
