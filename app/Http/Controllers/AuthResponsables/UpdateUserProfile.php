@@ -24,7 +24,7 @@ class UpdateUserProfile implements Responsable {
 
             $user = Auth::guard('user')->user();
 
-            $user->update($request->except('password'));
+            $user->update($request->except('password','old_password'));
 
             if($request->has('old_password') && $request->has('password')){
 

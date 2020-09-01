@@ -23,9 +23,9 @@ $factory->define(\App\DeviceLog::class, function (Faker $faker) {
         'power' => rand(1,100),
         'capacity' => rand(1,100),
         'push' => rand(1,100),
-        'user_id'=>24,
-        'device_id'=>rand(2,30),
-        'created_at'=> Carbon::create(rand(2015,2020), rand(1,12), rand(1,29))
+        'user_id'=>1,
+        'device_id'=>1,
+        'created_at'=> Carbon::create(rand(2020,2020), rand(5,9), rand(1,29))
     ];
 });
 
@@ -33,20 +33,20 @@ $factory->define(\App\Device::class, function (Faker $faker) {
     return [
         'unique_id' => uniqid(),
         'd_name' => $faker->name(),
-        'ssid' => rand(1,100),
-        'w_ssid'=> rand(1,100),
+//        'ssid' => rand(1,100),
+//        'w_ssid'=> rand(1,100),
         'region'=>$faker->state,
         'city'=>$faker->city,
-        'user_id'=>24,
-        'created_at'=> Carbon::create(rand(2015,2020), rand(1,12), rand(1,29))
+        'user_id'=>1,
+        'created_at'=> Carbon::create(rand(2020,2020), rand(8,12), rand(1,29))
     ];
 });
 
-$factory->define(\App\Report::class, function (Faker $faker) {
-    return [
-        'device_id' => rand(2,32),
-        'user_id'=> 24,
-        'total_pushed'=> rand(1,100),
-        'created_at'=> Carbon::create(rand(2015,2020), rand(1,12), rand(1,29))
-    ];
-});
+//$factory->define(\App\Report::class, function (Faker $faker) {
+//    return [
+//        'device_id' => rand(2,32),
+//        'user_id'=> 1,
+//        'total_pushed'=> rand(1,100),
+//        'created_at'=> Carbon::create(rand(2015,2020), rand(1,12), rand(1,29))
+//    ];
+//});

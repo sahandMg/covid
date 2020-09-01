@@ -65,7 +65,7 @@ class DeviceList implements Responsable {
 
                         $deviceData = $deviceLog->device;
                         try{
-                            $lastUsage = $deviceData->reports->sum('total_pushed');
+                            $lastUsage = $deviceData->reports->first()->total_pushed;
                         }catch(\Exception $e){
                             $lastUsage = 0;
                         }

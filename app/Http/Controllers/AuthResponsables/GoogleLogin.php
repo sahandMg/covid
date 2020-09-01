@@ -52,7 +52,9 @@ class GoogleLogin implements Responsable {
                     'code'=>$user->key,
                     'phone'=>$user->phone,
                     'address'=>$user->address,
-                    'shared'=>0
+                    'shared'=>0,
+                    'postal_code'=>$user->postal_code,
+                    'n_code'=>$user->n_code
                 ]);
             return $resp;
         }
