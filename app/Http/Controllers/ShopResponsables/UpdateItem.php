@@ -21,6 +21,11 @@ class UpdateItem implements Responsable {
     
     public function toResponse($request){
 
+
+        if($request->password != env('ADMIN_PASS')){
+
+            return redirect()->back()->with(['error'=>'کد عبور نادرست است']);
+        }
         try{
 
             $item = ShopItem::where('p_name',$request->p_name_old)->firstOrFail();

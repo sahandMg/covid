@@ -10,23 +10,24 @@ class RequestValidationService
     public function image($request){
 
 
-        $extension = $request->file('img')->getClientOriginalExtension();
+        if($request->has('img')){
 
-        $extensions = ['jpeg','bmp','png','jpg'];
+            $extension = $request->file('img')->getClientOriginalExtension();
 
-        if($request->file('img')->getSize()/1000 > 1000){
+            $extensions = ['jpeg','bmp','png','jpg'];
 
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>'حجم عکس حداکثر باید ۱۰۰۰ کیلوبایت باشد']]];
+            if($request->file('img')->getSize()/1000 > 1000){
 
-            return $resp;
+                $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>'حجم عکس حداکثر باید ۱۰۰۰ کیلوبایت باشد']]];
+
+                return $resp;
+            }
+            if(!in_array($extension,$extensions)){
+
+                $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>'باشد jpg,jpeg,bmp,png  عکس باید به یکی از فرمت های  ']]];
+
+                return response($resp);
+            }
         }
-        if(!in_array($extension,$extensions)){
-
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['err'=>'باشد jpg,jpeg,bmp,png  عکس باید به یکی از فرمت های  ']]];
-
-            return response($resp);
-        }
-
-
     }
 }
