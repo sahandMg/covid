@@ -60,9 +60,10 @@ class ShopController extends Controller
         if($request->password != env('ADMIN_PASS')){
 
             return redirect()->back()->with(['error'=>'کد عبور نادرست است']);
-        }
+        }else{
 
-        return new UpdateItem();
+            return new UpdateItem();
+        }
 
     }
 

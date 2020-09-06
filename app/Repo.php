@@ -9,7 +9,9 @@
 namespace App;
 
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Morilog\Jalali\Jalalian;
 
 class Repo
 {
@@ -68,6 +70,7 @@ class Repo
 
     public function convertJalali($date){
 
-        return \Morilog\Jalali\CalendarUtils::createCarbonFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s'); //2016-05-8
+//        return \Morilog\Jalali\CalendarUtils::createCarbonFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s'); //2016-05-8
+        return Jalalian::fromCarbon(Carbon::parse($date))->format('Y-m-d H:i:s');
     }
 }

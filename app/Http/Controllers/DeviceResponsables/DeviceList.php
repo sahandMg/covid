@@ -17,9 +17,9 @@ class DeviceList implements Responsable {
 
     public function __construct()
     {
-        
+
     }
-    
+
     public function toResponse($request){
 
         try{
@@ -67,7 +67,7 @@ class DeviceList implements Responsable {
 
                         $deviceData = $deviceLog->device;
                         try{
-                            $lastUsage = $deviceData->reports->first()->total_pushed;
+                            $lastUsage = $deviceData->reports->where('id','desc')->last()->total_pushed;
                         }catch(\Exception $e){
                             $lastUsage = 0;
                         }

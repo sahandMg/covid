@@ -154,12 +154,11 @@
     <h4>    شماره فاکتور : {{$cart->code}}</h4>
     <h4>تاریخ : {{\Morilog\Jalali\Jalalian::fromCarbon(\Carbon\Carbon::parse($cart->updated_at))->format('%A %d %B %y')}} </h4>
     <h4>    خریدار : {{$cart->user->name}}</h4>
+    <h4>  کدملی :  {{explode('@*',$cart->address)[2]}}   </h4>
     <h4>   شماره تماس :  {{$cart->phone}}</h4>
     <h4> آدرس تحویل :  {{explode('@*',$cart->address)[0]}}   </h4>
     <h4>  کدپستی :  {{explode('@*',$cart->address)[1]}}   </h4>
-    <h4>  کدملی :  {{explode('@*',$cart->address)[2]}}   </h4>
     </div>
-
     <div class="recieptor">
 
     </div>

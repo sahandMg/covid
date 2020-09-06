@@ -23,31 +23,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 Route::get('/', function () {
 
-
-    $devices = Device::with(['deviceLogs'=>function($query){
-        $query->where('created_at','>',Carbon::yesterday())
-            ->where('created_at','<',Carbon::today());
-
-    }])->get();
-    $deviceArr = [];
-    foreach ($devices as $device){
-
-        $deviceArr[$device->id] = $device->deviceLogs->sum('push');
-
-            $report = new Report();
-            $report->total_pushed = $device->deviceLogs->sum('push');;
-            $report->device_id = $device->id;
-            $report->user_id = $device->user_id;
-            $report->created_at = Carbon::now()->subDay(1)->endOfDay();
-            $report->updated_at = Carbon::now()->subDay(1)->endOfDay();
-            $report->save();
-            $deleteUs = \App\DeviceLog::where('created_at','<',Carbon::today())->orderBy('id','desc')->where('device_id',$device->id)->get()->skip(1);
-            foreach ($deleteUs as $delelte){
-                $delelte->delete();
-            }
-
-    }
-
 });
 
 Route::get('@admin/signup','AuthController@adminSignup')->name('adminSignup');

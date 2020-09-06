@@ -22,10 +22,6 @@ class UpdateItem implements Responsable {
     public function toResponse($request){
 
 
-        if($request->password != env('ADMIN_PASS')){
-
-            return redirect()->back()->with(['error'=>'کد عبور نادرست است']);
-        }
         try{
 
             $item = ShopItem::where('p_name',$request->p_name_old)->firstOrFail();
@@ -39,7 +35,7 @@ class UpdateItem implements Responsable {
 
             $item->update($request->except('img','p_title','p_name_old','password'));
 
-            if($request->has('title')){
+            if($request->has('p_title')){
 
                 $item->update(['title'=>$request->p_title]);
             }
