@@ -20,6 +20,7 @@ class UpdateDeviceData implements Responsable {
 
             if($updateUser == 1){
                 $temp = $device->toArray();
+                $temp['d_name'] = $request['name'];
                 $temp['region'] = $request['region'];
                 $temp['city'] = $request['city'];
                 $temp['user_id'] = $request['user_id'];
