@@ -27,7 +27,10 @@ class UpdateDeviceData implements Responsable {
                 $device->delete();
                 Device::create($temp);
             }else{
-                $device->update($request);
+                $device->d_name = $request['d_name'];
+                $device->region = $request['region'];
+                $device->city = $request['city'];
+                $device->save();
             }
 
         }catch (\Exception $exception){

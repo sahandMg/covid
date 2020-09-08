@@ -36,10 +36,11 @@ class DeviceObserver
      */
     public function updated(Device $device)
     {
-//        $newEvent = new DeviceEvent();
-//        $newEvent->type = 'update';
-//        $newEvent->unique_id = $device->unique_id;
-//        $newEvent->save();
+        $newEvent = new DeviceEvent();
+        $newEvent->type = 'device_update';
+        $newEvent->unique_id = $device->unique_id;
+        $newEvent->user_id = $device->user_id;
+        $newEvent->save();
     }
 
     /**

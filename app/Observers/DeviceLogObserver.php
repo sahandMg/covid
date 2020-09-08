@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\DeviceEvent;
 use App\DeviceLog;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -40,6 +41,11 @@ class DeviceLogObserver
         }else{
             Cache::forget($id.'_pow');
         }
+        $newEvent = new DeviceEvent();
+        $newEvent->type = 'device_log_update';
+        $newEvent->unique_id = $id;
+        $newEvent->user_id = $deviceLog->device->user_id;;
+        $newEvent->save();
     }
 
     /**

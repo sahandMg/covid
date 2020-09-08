@@ -20,15 +20,115 @@ class DeviceList implements Responsable {
 
     }
 
+//    public function toResponse($request){
+//
+//        try{
+//            $repo = new Repo();
+////            $date = $repo->convertJalali($request->date);
+//            $date = $request->date;
+//            $user = Auth::guard('user')->user();
+//
+////                checks shared key, if admin code hasn't been shared, user can't see devices
+//            try{
+//                $admin_id = $user->role_id == $repo->findRoleId('user')?
+//                    SharedKey::where('user_id',$user->id)->firstOrFail()->admin_id:
+//                    Auth::guard('user')->id();
+//            }
+//            catch (\Exception $exception){
+//
+//                return  ['status'=>404,'body'=>['type'=>'data','message'=>[],'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+//            }
+//
+//            $deviceEvents = DeviceEvent::where('created_at','>',Carbon::parse($date))->where('user_id',$admin_id)->select('unique_id','type')->get();
+////            $admin_id = $shared->admin_id;
+//
+//            $adminDevices = Device::where('user_id',$admin_id)->where('updated_at','>',Carbon::parse($date))->with('deviceLogs')->get();
+//
+////                Means that there is no new devices on the app
+//            $deviceLogs = DeviceLog::where('user_id',$admin_id)->orderBy('id','desc')->where('created_at','>',Carbon::parse($date))->with('device')->get();
+//
+//            $resp2 = [];
+//            try {
+//                foreach ($adminDevices as $adminDevice) {
+//                    $last = $adminDevice->deviceLogs->last();
+//                    try{
+//                        $lastUsage = $adminDevice->reports->last()->total_pushed;
+//                    }catch(\Exception $e){
+//                        $lastUsage = 0;
+//                    }
+//                    array_push($resp, [
+//                        'unique_id' => $adminDevice->unique_id,
+//                        'd_name' => $adminDevice->d_name,
+//                        'power' => $last->power,
+//                        'push' => $last->push,
+//                        'last_usage'=>$lastUsage,
+//                        'capacity' => $last->capacity,
+//                        'region' => $adminDevice->region,
+//                        'city' => $adminDevice->city,
+//                        'date'=>Carbon::parse($adminDevice->updated_at)->format("Y-m-d H:i:s")
+//                    ]);
+//                }
+//                $check = [];
+//                foreach ($deviceLogs as $deviceLog) {
+//                    if(!in_array($deviceLog->device_id,$check)){
+//                        $deviceData = $deviceLog->device;
+//                        try{
+//                            $lastUsage = $deviceData->reports->last()->total_pushed;
+//                        }catch(\Exception $e){
+//                            $lastUsage = 0;
+//                        }
+//                        array_push($resp2, [
+//                            'unique_id' => $deviceData->unique_id,
+//                            'd_name' => $deviceData->d_name,
+//                            'power' => $deviceLog->power,
+//                            'push' => $deviceLog->push,
+//                            'last_usage'=>$lastUsage,
+//                            'capacity' => $deviceLog->capacity,
+//                            'region' => $deviceData->region,
+//                            'city' => $deviceData->city,
+////                            'date'=>Jalalian::fromCarbon($deviceLog->created_at)->format("Y-m-d H:i:s")
+//                            'date'=>Carbon::parse($deviceLog->created_at)->format("Y-m-d H:i:s")
+//                        ]);
+//                        array_push($check,$deviceLog->device_id);
+//                    }
+//
+//                }
+//            }catch (\Exception $exception){}
+//
+//
+//            if(count($adminDevices->toArray()) == 0 && count($deviceLogs->toArray()) == 0) {
+////                return ['status' => 404, 'body' => ['type' => 'error', 'message' => [], 'date' => Jalalian::now()->format("Y-m-d H:i:s")]];
+//                return ['status' => 404, 'body' => ['type' => 'error', 'message' => [],'log'=>$deviceEvents, 'date' => Carbon::now()->format("Y-m-d H:i:s")]];
+//
+//            }
+//            else if(count($adminDevices->toArray()) == 0 && count($deviceLogs->toArray()) != 0) {
+//
+//                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'log'=>$deviceEvents,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+////                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+//            }
+////            else if(count($adminDevices->toArray()) != 0 && count($deviceLogs->toArray()) == 0){
+////
+////                dd('3');
+////                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+////
+////            }
+//            else{
+//
+////                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+//                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp,'log'=>$deviceEvents,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
+//            }
+//
+//        }catch (\Exception $exception){
+//            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage().$exception->getLine()]];
+//            return $resp;
+//        }
+//    }
     public function toResponse($request){
 
-        try{
-            $repo = new Repo();
-//            $date = $repo->convertJalali($request->date);
-            $date = $request->date;
-            $user = Auth::guard('user')->user();
-
-//                checks shared key, if admin code hasn't been shared, user can't see devices
+        $repo = new Repo();
+        $date = $request->date;
+        $user = Auth::guard('user')->user();
+//        checks shared key, if admin code hasn't been shared, user can't see devices
             try{
                 $admin_id = $user->role_id == $repo->findRoleId('user')?
                     SharedKey::where('user_id',$user->id)->firstOrFail()->admin_id:
@@ -38,83 +138,37 @@ class DeviceList implements Responsable {
 
                 return  ['status'=>404,'body'=>['type'=>'data','message'=>[],'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
             }
+        $events = DeviceEvent::where('created_at','>',Carbon::parse($date))->where('user_id',$admin_id)->orderBy('id','desc')->get();
+        $temp = [];
+        $check = [];
+        foreach ($events as $event){
 
-            $deviceEvents = DeviceEvent::where('created_at','>',Carbon::parse($date))->where('user_id',$admin_id)->select('unique_id','type')->get();
-//            $admin_id = $shared->admin_id;
 
-            $adminDevices = Device::where('user_id',$admin_id)->where('updated_at','>',Carbon::parse($date))->with('deviceLogs')->get();
+                if(!in_array($event->unique_id,$check)){
 
-//                Means that there is no new devices on the app
-            $deviceLogs = DeviceLog::where('user_id',$admin_id)->orderBy('id','desc')->where('created_at','>',Carbon::parse($date))->with('device')->get();
-
-            $resp2 = [];
-            try {
-//                foreach ($adminDevices as $adminDevice) {
-//                    $last = $adminDevice->deviceLogs->last();
-//                    array_push($resp, [
-//                        'unique_id' => $adminDevice->unique_id,
-//                        'd_name' => $adminDevice->d_name,
-//                        'power' => $last->power,
-//                        'push' => $last->push,
-//                        'capacity' => $last->capacity,
-//                        'region' => $adminDevice->region,
-//                        'city' => $adminDevice->city
-//                    ]);
-//                }
-                $check = [];
-                foreach ($deviceLogs as $deviceLog) {
-                    if(!in_array($deviceLog->device_id,$check)){
-                        $deviceData = $deviceLog->device;
-                        try{
-                            $lastUsage = $deviceData->reports->last()->total_pushed;
-                        }catch(\Exception $e){
-                            $lastUsage = 0;
-                        }
-                        array_push($resp2, [
-                            'unique_id' => $deviceData->unique_id,
-                            'd_name' => $deviceData->d_name,
-                            'power' => $deviceLog->power,
-                            'push' => $deviceLog->push,
-                            'last_usage'=>$lastUsage,
-                            'capacity' => $deviceLog->capacity,
-                            'region' => $deviceData->region,
-                            'city' => $deviceData->city,
-//                            'date'=>Jalalian::fromCarbon($deviceLog->created_at)->format("Y-m-d H:i:s")
-                            'date'=>Carbon::parse($deviceLog->created_at)->format("Y-m-d H:i:s")
-                        ]);
-                        array_push($check,$deviceLog->device_id);
+                    $deviceWithLog = Device::where('unique_id',$event->unique_id)->with(['deviceLogs'=>function($logs){
+                        $logs->orderBy('id','desc')->first();
+                    }])->with(['reports'=>function($reports){
+                        $reports->orderBy('id','desc')->first();
                     }
-
+                    ])->first();
+                    array_push($temp,[
+                        'unique_id' => $deviceWithLog->unique_id,
+                        'd_name' => $deviceWithLog->d_name,
+                        'power' => $deviceWithLog->deviceLogs[0]->power,
+                        'push' => $deviceWithLog->deviceLogs[0]->push,
+                        'last_usage'=> count($deviceWithLog->reports) == 0 ? 0 : $deviceWithLog->reports[0]->total_pushed,
+                        'capacity' => $deviceWithLog->deviceLogs[0]->capacity,
+                        'region' => $deviceWithLog->region,
+                        'city' => $deviceWithLog->city,
+                        'date'=>Carbon::parse($deviceWithLog->deviceLogs[0]->created_at)->format("Y-m-d H:i:s")
+                    ]);
+                    array_push($check,$event->unique_id);
                 }
-            }catch (\Exception $exception){}
-
-
-            if(count($adminDevices->toArray()) == 0 && count($deviceLogs->toArray()) == 0) {
-//                return ['status' => 404, 'body' => ['type' => 'error', 'message' => [], 'date' => Jalalian::now()->format("Y-m-d H:i:s")]];
-                return ['status' => 404, 'body' => ['type' => 'error', 'message' => [],'log'=>$deviceEvents, 'date' => Carbon::now()->format("Y-m-d H:i:s")]];
 
             }
-            else if(count($adminDevices->toArray()) == 0 && count($deviceLogs->toArray()) != 0) {
 
-                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'log'=>$deviceEvents,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
-//                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
-            }
-//            else if(count($adminDevices->toArray()) != 0 && count($deviceLogs->toArray()) == 0){
-//
-//                dd('3');
-//                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
-//
-//            }
-            else{
-
-//                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
-                return ['status'=>200,'body'=>['type'=>'data','message'=>$resp2,'log'=>$deviceEvents,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
-            }
-
-        }catch (\Exception $exception){
-            $resp = ['status'=>500,'body'=>['type'=>'error','message'=>$exception->getMessage().$exception->getLine()]];
-            return $resp;
-        }
+        return ['status'=>200,'body'=>['type'=>'data','message'=>$temp,'log'=>$events,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
     }
 }
 
