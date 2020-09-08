@@ -134,7 +134,7 @@ class ShopController extends Controller
         }
 
         try{
-            $items = ShopItem::select('p_name','price','desc','img','title','available')->get();
+            $items = ShopItem::select('p_name','price','desc','img','page_img','title','available')->get();
             // Sorting shopping list based on notification title
             if($request->has('s_title')){
                 Str::contains($request->s_title,'باتری')?$searchedItem = 'باتری':(Str::contains($request->s_title,'الکل')?
