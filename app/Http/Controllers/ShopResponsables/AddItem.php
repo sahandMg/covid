@@ -23,6 +23,7 @@ class AddItem implements Responsable {
             return redirect()->back()->with(['error'=>'کد عبور نادرست است']);
         }
         try{
+//            dd($request->file('page_img')->getFilename());
             $shop = new ShopItem();
             $shop->p_name = $request->p_name;
             $shop->desc = $request->desc;
@@ -30,8 +31,11 @@ class AddItem implements Responsable {
             $shop->title = $request->p_title;
             $shop->available = $request->available;
             $name = time().'.'.$request->file('img')->getClientOriginalExtension();
+            $name2 = time().$request->file('page_img')->getFilename().'.'.$request->file('page_img')->getClientOriginalExtension();
             $request->file('img')->move(public_path('images'),$name);
+            $request->file('page_img')->move(public_path('images'),$name2);
             $shop->img = $name;
+            $shop->page_img = $name2;
             $shop->save();
         }catch (\Exception $exception){
 

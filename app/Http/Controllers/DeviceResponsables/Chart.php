@@ -51,7 +51,7 @@ class Chart implements Responsable {
 
             if(count($deviceReports) == 0){
 
-                return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>[],'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+                return $resp = ['status'=>404,'body'=>['type'=>'error','message'=>[],'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
             }
             if($request->filter_name == 'day'){
 
@@ -63,7 +63,7 @@ class Chart implements Responsable {
                     array_push($result,['total_pushed'=>$deviceReport->total_pushed,'date'=> $repo->converte2p(Jalalian::fromCarbon(Carbon::parse($deviceReport->created_at))->format('Y-m-d')) ]);
                 }
 
-                return $resp = ['status'=>200,'body'=>['type'=>'day','message'=>array_reverse($result),'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+                return $resp = ['status'=>200,'body'=>['type'=>'day','message'=>array_reverse($result),'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
 
             }
             elseif ($request->filter_name == 'week'){
@@ -99,7 +99,7 @@ class Chart implements Responsable {
                     $days = 1;
                 }
 
-                return $resp = ['status'=>200,'body'=>['type'=>'week','message'=>$result,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+                return $resp = ['status'=>200,'body'=>['type'=>'week','message'=>$result,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
             }
             elseif ($request->filter_name == 'month'){
 
@@ -125,7 +125,7 @@ class Chart implements Responsable {
                     $today2->subMonths(1);
                     $i += 1;
                 }
-                return $resp = ['status'=>200,'body'=>['type'=>'month','message'=>$result,'date'=>Jalalian::now()->format("Y-m-d H:i:s")]];
+                return $resp = ['status'=>200,'body'=>['type'=>'month','message'=>$result,'date'=>Carbon::now()->format("Y-m-d H:i:s")]];
             }else{
 
                 return $resp = ['status'=>500,'body'=>['type'=>'error','message'=>['این فیلتر موجود نیست']]];

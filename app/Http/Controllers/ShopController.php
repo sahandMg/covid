@@ -29,6 +29,7 @@ class ShopController extends Controller
         $this->validate($request,[
             'p_name'=>'required|unique:shop_items',
             'img'=>'required|mimes:jpeg,bmp,png,jpg|max:1000',
+            'page_img'=>'required|mimes:jpeg,bmp,png,jpg|max:2000',
             'price'=>'required',
             'desc'=>'required',
             'p_title'=>'required'
@@ -91,6 +92,10 @@ class ShopController extends Controller
                 if(file_exists(public_path('images/'.$item->img))) {
 
                     unlink(public_path('images/' . $item->img));
+                }
+                if(file_exists(public_path('images/'.$item->page_img))) {
+
+                    unlink(public_path('images/' . $item->page_img));
                 }
 
                 $item->delete();

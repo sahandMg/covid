@@ -33,7 +33,7 @@ class UpdateItem implements Responsable {
 
         try{
 
-            $item->update($request->except('img','p_title','p_name_old','password'));
+            $item->update($request->except('img','page_img','p_title','p_name_old','password'));
 
             if($request->has('p_title')){
 
@@ -54,6 +54,21 @@ class UpdateItem implements Responsable {
 
 
             }
+            if($request->has('page_img')){
+
+                if(file_exists(public_path('images/'.$item->page_img))){
+
+                    unlink(public_path('images/'.$item->page_img));
+                }
+                $name = time().'.'.$request->file('page_img')->getClientOriginalExtension();
+
+                $request->file('page_img')->move(public_path('images'),$name);
+
+                $item->update(['page_img'=>$name]);
+
+
+            }
+
         }
         catch (\Exception $exception){
 

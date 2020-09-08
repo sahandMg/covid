@@ -93,3 +93,44 @@ Route::get('invoice',function(){
 //    });
 
 });
+
+
+Route::get('mohsen',function(){
+
+        $deviceLogs = DeviceLog::orderBy('id','desc')->with('device')->get();
+
+        $resp2 = [];
+        try {
+//
+            $check = [];
+            foreach ($deviceLogs as $deviceLog) {
+                if (!in_array($deviceLog->device_id, $check)) {
+                    $deviceData = $deviceLog->device;
+                    try {
+                        $lastUsage = $deviceData->reports->last()->total_pushed;
+                    } catch (\Exception $e) {
+                        $lastUsage = 0;
+                    }
+                    array_push($resp2, [
+                        'unique_id' => $deviceData->unique_id,
+                        'd_name' => $deviceData->d_name,
+                        'power' => $deviceLog->power,
+                        'push' => $deviceLog->push,
+                        'last_usage' => $lastUsage,
+                        'capacity' => $deviceLog->capacity,
+                        'region' => $deviceData->region,
+                        'city' => $deviceData->city,
+//                            'date'=>Jalalian::fromCarbon($deviceLog->created_at)->format("Y-m-d H:i:s")
+                        'date' => Carbon::parse($deviceLog->created_at)->format("Y-m-d H:i:s")
+                    ]);
+                    array_push($check, $deviceLog->device_id);
+                }
+
+
+            }
+        }catch (\Exception $e){
+
+        }
+        return $resp2;
+
+});

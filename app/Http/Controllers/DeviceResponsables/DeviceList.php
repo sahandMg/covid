@@ -64,10 +64,9 @@ class DeviceList implements Responsable {
                 $check = [];
                 foreach ($deviceLogs as $deviceLog) {
                     if(!in_array($deviceLog->device_id,$check)){
-
                         $deviceData = $deviceLog->device;
                         try{
-                            $lastUsage = $deviceData->reports->where('id','desc')->last()->total_pushed;
+                            $lastUsage = $deviceData->reports->last()->total_pushed;
                         }catch(\Exception $e){
                             $lastUsage = 0;
                         }

@@ -135,8 +135,13 @@
             </div>
 
             <div class="form-group">
-                <label for="exampleInputEmail1">تصویر محصول</label>
+                <label for="exampleInputEmail1">آیکون محصول</label>
                 <input name="img" type="file"   class="form-control"  id="exampleInputEmail1" aria-describedby="emailHelp" >
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputEmail1">تصویر محصول</label>
+                <input name="page_img" type="file"   class="form-control"  id="exampleInputEmail1" aria-describedby="emailHelp" >
             </div>
 
             <div class="form-group">

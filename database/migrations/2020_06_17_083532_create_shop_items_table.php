@@ -21,6 +21,7 @@ class CreateShopItemsTable extends Migration
             $table->boolean('available')->default(1);
             $table->text('desc');
             $table->string('img');
+            $table->string('page_img');
 //            $table->unsignedInteger('admin_id');
 //            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
             $table->timestamps();
